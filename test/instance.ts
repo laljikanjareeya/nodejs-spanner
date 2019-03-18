@@ -17,12 +17,14 @@
 'use strict';
 
 import * as assert from 'assert';
-import {ApiError} from '@google-cloud/common';
+import { ApiError } from '@google-cloud/common';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
-import {util} from '@google-cloud/common-grpc';
+import { util } from '@google-cloud/common-grpc';
 import * as pfy from '@google-cloud/promisify';
 import * as inst from '../src/instance';
+import { Database } from '../src';
+import { ServiceError } from 'grpc';
 
 const fakePaginator = {
   paginator: {
@@ -78,7 +80,7 @@ describe('Instance', () => {
       },
       '@google-cloud/promisify': fakePfy,
       '@google-cloud/paginator': fakePaginator,
-      './database.js': {Database: FakeDatabase},
+      './database.js': { Database: FakeDatabase },
     }).Instance;
   });
 
@@ -115,7 +117,7 @@ describe('Instance', () => {
     it('should localize the request function', done => {
       const spannerInstance = extend({}, SPANNER);
 
-      spannerInstance.request = function() {
+      spannerInstance.request = function () {
         assert.strictEqual(this, spannerInstance);
         done();
       };
@@ -127,7 +129,7 @@ describe('Instance', () => {
     it('should localize the requestStream function', done => {
       const spannerInstance = extend({}, SPANNER);
 
-      spannerInstance.requestStream = function() {
+      spannerInstance.requestStream = function () {
         assert.strictEqual(this, spannerInstance);
         done();
       };
@@ -153,7 +155,7 @@ describe('Instance', () => {
 
       assert.strictEqual(calledWith.parent, spannerInstance);
       assert.strictEqual(calledWith.id, NAME);
-      assert.deepStrictEqual(calledWith.methods, {create: true});
+      assert.deepStrictEqual(calledWith.methods, { create: true });
 
       calledWith.createMethod(null, options, done);
     });
@@ -436,10 +438,10 @@ describe('Instance', () => {
 
   describe('exists', () => {
     it('should return any non-404 like errors', done => {
-      const error = {code: 3};
+      const error = { code: 3 };
 
-      instance.getMetadata = callback => {
-        callback(error);
+      instance.getMetadata = (callback) => {
+        callback(error as ServiceError);
       };
 
       instance.exists((err, exists) => {
@@ -462,10 +464,10 @@ describe('Instance', () => {
     });
 
     it('should return false if not found error if present', done => {
-      const error = {code: 5};
+      const error = { code: 5 };
 
-      instance.getMetadata = callback => {
-        callback(error);
+      instance.getMetadata = (callback) => {
+        callback(error as ServiceError);
       };
 
       instance.exists((err, exists) => {
@@ -496,7 +498,7 @@ describe('Instance', () => {
     });
 
     describe('autoCreate', () => {
-      const error = new ApiError('Error.');
+      const error = new ApiError('Error.') as ServiceError;
       error.code = 5;
 
       const OPTIONS = {
@@ -576,7 +578,7 @@ describe('Instance', () => {
     });
 
     it('should not auto create without error code 5', done => {
-      const error = new Error('Error.');
+      const error = new Error('Error.') as ServiceError;
       // tslint:disable-next-line no-any
       (error as any).code = 'NOT-5';
 
@@ -599,7 +601,7 @@ describe('Instance', () => {
     });
 
     it('should not auto create unless requested', done => {
-      const error = new ApiError('Error.');
+      const error = new ApiError('Error.') as ServiceError;
       error.code = 5;
 
       instance.getMetadata = callback => {
@@ -617,7 +619,7 @@ describe('Instance', () => {
     });
 
     it('should return an error from getMetadata', done => {
-      const error = new Error('Error.');
+      const error = new Error('Error.') as ServiceError;
 
       instance.getMetadata = callback => {
         callback(error);
@@ -730,9 +732,9 @@ describe('Instance', () => {
         instance.getDatabases(QUERY, (...args) => {
           assert.ifError(args[0]);
           assert.strictEqual(args[0], REQUEST_RESPONSE_ARGS[0]);
-          const database = args[1].pop();
+          const database = args[1]!.pop();
           assert.strictEqual(database, fakeDatabaseInstance);
-          assert.strictEqual(database.metadata, REQUEST_RESPONSE_ARGS[1][0]);
+          assert.strictEqual(database!.metadata, REQUEST_RESPONSE_ARGS[1][0]);
           assert.strictEqual(args[2], REQUEST_RESPONSE_ARGS[2]);
           done();
         });
@@ -744,7 +746,7 @@ describe('Instance', () => {
     it('should correctly call and return request', () => {
       const requestReturnValue = {};
 
-      function callback() {}
+      function callback() { }
 
       instance.request = (config, callback_) => {
         assert.strictEqual(config.client, 'InstanceAdminClient');
@@ -770,7 +772,7 @@ describe('Instance', () => {
     it('should make and return the request', () => {
       const requestReturnValue = {};
 
-      function callback() {}
+      function callback() { }
 
       instance.request = (config, callback_) => {
         assert.strictEqual(config.client, 'InstanceAdminClient');
