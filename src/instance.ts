@@ -21,24 +21,27 @@ import { paginator } from '@google-cloud/paginator';
 import { promisifyAll } from '@google-cloud/promisify';
 import * as extend from 'extend';
 import snakeCase = require('lodash.snakecase');
-import { Database } from './database';
-import { google as dbInstanceAdminClient } from '../proto/spanner_instance_admin';
-import { google as dbDatabaseAdminClient } from '../proto/spanner_database_admin';
-import { Operation as GaxOperation } from 'google-gax/build/src/longrunning';
-import { SessionPoolOptions, SessionPoolInterface } from './session-pool';
-import { SessionPool } from '.';
-import { ServiceError } from 'grpc';
+import {Database} from './database';
+import {google as dbInstanceAdminClient} from '../proto/spanner_instance_admin';
+import {google as dbDatabaseAdminClient} from '../proto/spanner_database_admin';
+import {Operation as GaxOperation} from 'google-gax/build/src/longrunning';
+import {SessionPoolOptions, SessionPoolInterface} from './session-pool';
+import {SessionPool, Spanner} from '.';
+import {ServiceError} from 'grpc';
 
 export type IDatabase = dbDatabaseAdminClient.spanner.admin.database.v1.IDatabase;
 export type IInstance = dbInstanceAdminClient.spanner.admin.instance.v1.IInstance;
-export type LongrunningIOperation = dbInstanceAdminClient.longrunning.Operation;
+export type LongrunningIOperation = dbInstanceAdminClient.longrunning.IOperation;
 
-export type CreateInstanceResponse = [IInstance, GaxOperation, LongrunningIOperation];
-export type CreateDatabaseResponse = [IDatabase, LongrunningIOperation];
-export type DeleteInstanceResponse = [LongrunningIOperation];
+export type CreateInstanceResponse = [Instance, GaxOperation, LongrunningIOperation];
+export type CreateDatabaseResponse = [Database, GaxOperation, LongrunningIOperation];
+export type DeleteInstanceResponse = [dbInstanceAdminClient.protobuf.IEmpty];
 export type ExistsInstanceResponse = [boolean];
-export type GetInstanceResponse = [IInstance, LongrunningIOperation];
-export type GetDatabasesResponse = [IDatabase[], LongrunningIOperation];
+export type GetInstanceResponse = [Instance, IInstance];
+export type GetDatabasesResponse = [
+  Database[],
+  dbDatabaseAdminClient.spanner.admin.database.v1.IListDatabasesRequest,
+  dbDatabaseAdminClient.spanner.admin.database.v1.IListDatabasesResponse];
 export type LongrunningOperationResponse = [GaxOperation, LongrunningIOperation];
 
 export interface CreateDatabaseOptions {
@@ -64,13 +67,13 @@ export interface QueryObject {
 }
 
 export interface CreateInstanceCallback {
-  (err: Error | null, instance: Instance, operation: GaxOperation, apiResponse: LongrunningIOperation): void;
+  (err: Error|null, instance: Instance|null, operation: GaxOperation|null, apiResponse: LongrunningIOperation): void;
 }
 export interface CreateDatabaseCallback {
   (err: Error | null, database?: Database | null, operation?: GaxOperation | null, apiResponse?: LongrunningIOperation): void;
 }
 export interface DeleteInstanceCallback {
-  (err: Error | null, apiResponse: LongrunningIOperation): void;
+  (err: Error|null, apiResponse: dbInstanceAdminClient.protobuf.IEmpty): void;
 }
 export interface ExistsInstanceCallback {
   (err: Error | null, exists: boolean | null): void;
@@ -79,7 +82,7 @@ export interface GetDatabasesCallback {
   (err: Error | null, databases?: Database[], apiResponse?: LongrunningIOperation): void;
 }
 export interface GetInstanceCallback {
-  (err: Error | null, instance?: Instance, apiResponse?: LongrunningIOperation): void;
+  (err: Error|null, instance?: Instance, apiResponse?: IInstance): void;
 }
 export interface GetInstanceMetadataCallback {
   (err: ServiceError | null, metadata?: IInstance, apiResponse?: LongrunningIOperation): void;
@@ -106,7 +109,7 @@ export interface LongRunningOperationCallback {
  */
 class Instance extends common.ServiceObject {
   // "spanner: Spanner" causes flood of errors in test/instance
-  constructor(spanner: any, name: string) {
+  constructor(spanner: Spanner, name: string) {
     const formattedName_ = Instance.formatName_(spanner.projectId, name);
     const methods = {
       /**
@@ -445,8 +448,7 @@ class Instance extends common.ServiceObject {
     });
   }
 
-  get(): Promise<GetInstanceResponse>;
-  get(options: GetConfig): Promise<GetInstanceResponse>;
+  get(options?: GetConfig): Promise<GetInstanceResponse>;
   get(callback: GetInstanceCallback): void;
   get(options: GetConfig, callback: GetInstanceCallback): void;
   /**
