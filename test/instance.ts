@@ -23,8 +23,9 @@ import * as proxyquire from 'proxyquire';
 import { util } from '@google-cloud/common-grpc';
 import * as pfy from '@google-cloud/promisify';
 import * as inst from '../src/instance';
-import { Database } from '../src';
-import { ServiceError } from 'grpc';
+import {Spanner} from '../src';
+import {ServiceError} from 'grpc';
+import * as sinon from 'sinon';
 
 const fakePaginator = {
   paginator: {
@@ -63,13 +64,14 @@ describe('Instance', () => {
   // tslint:disable-next-line variable-name
   let Instance: typeof inst.Instance;
   let instance: inst.Instance;
+  const sandbox = sinon.createSandbox();
 
   const SPANNER = {
     request: util.noop,
     requestStream: util.noop,
     projectId: 'project-id',
     instances_: new Map(),
-  };
+  } as {} as Spanner;
 
   const NAME = 'instance-name';
 
@@ -440,10 +442,8 @@ describe('Instance', () => {
     it('should return any non-404 like errors', done => {
       const error = { code: 3 };
 
-      instance.getMetadata = (callback) => {
-        callback(error as ServiceError);
-      };
-
+     sandbox.stub(instance, 'getMetadata').yields(error);
+      
       instance.exists((err, exists) => {
         assert.strictEqual(err, error);
         assert.strictEqual(exists, null);
@@ -452,9 +452,7 @@ describe('Instance', () => {
     });
 
     it('should return true if error is absent', done => {
-      instance.getMetadata = callback => {
-        callback(null);
-      };
+      sandbox.stub(instance, 'getMetadata').yields(null);
 
       instance.exists((err, exists) => {
         assert.ifError(err);
@@ -466,9 +464,7 @@ describe('Instance', () => {
     it('should return false if not found error if present', done => {
       const error = { code: 5 };
 
-      instance.getMetadata = (callback) => {
-        callback(error as ServiceError);
-      };
+      sandbox.stub(instance, 'getMetadata').callsFake(callback=> callback(error as ServiceError));
 
       instance.exists((err, exists) => {
         assert.ifError(err);
@@ -482,17 +478,13 @@ describe('Instance', () => {
     it('should call getMetadata', done => {
       const options = {};
 
-      instance.getMetadata = () => {
-        done();
-      };
+      sandbox.stub(instance, 'getMetadata').callsFake(() => done());
 
       instance.get(options, assert.ifError);
     });
 
     it('should not require an options object', done => {
-      instance.getMetadata = () => {
-        done();
-      };
+      sandbox.stub(instance, 'getMetadata').callsFake(() => done());
 
       instance.get(assert.ifError);
     });
@@ -516,9 +508,7 @@ describe('Instance', () => {
       beforeEach(() => {
         OPERATION.listeners = {};
 
-        instance.getMetadata = callback => {
-          callback(error);
-        };
+        sandbox.stub(instance, 'getMetadata').callsFake(callback=>callback(error));
 
         instance.create = (options, callback) => {
           callback(null, null, OPERATION);
@@ -586,9 +576,7 @@ describe('Instance', () => {
         autoCreate: true,
       };
 
-      instance.getMetadata = callback => {
-        callback(error);
-      };
+      sandbox.stub(instance, 'getMetadata').callsFake(callback => callback(error));
 
       instance.create = () => {
         throw new Error('Should not create.');
@@ -604,9 +592,7 @@ describe('Instance', () => {
       const error = new ApiError('Error.') as ServiceError;
       error.code = 5;
 
-      instance.getMetadata = callback => {
-        callback(error);
-      };
+      sandbox.stub(instance, 'getMetadata').callsFake(callback => callback(error));
 
       instance.create = () => {
         throw new Error('Should not create.');
@@ -621,9 +607,7 @@ describe('Instance', () => {
     it('should return an error from getMetadata', done => {
       const error = new Error('Error.') as ServiceError;
 
-      instance.getMetadata = callback => {
-        callback(error);
-      };
+      sandbox.stub(instance, 'getMetadata').callsFake(callback => callback(error));
 
       instance.get(err => {
         assert.strictEqual(err, error);
@@ -634,9 +618,7 @@ describe('Instance', () => {
     it('should return self and API response', done => {
       const apiResponse = {};
 
-      instance.getMetadata = callback => {
-        callback(null, apiResponse);
-      };
+      sandbox.stub(instance, 'getMetadata').callsFake(callback => callback(null,apiResponse));
 
       instance.get((err, instance_, apiResponse_) => {
         assert.ifError(err);
