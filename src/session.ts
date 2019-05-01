@@ -30,14 +30,10 @@ import {
   PartitionedDml,
   TimestampBounds,
 } from './transaction';
-import { Database, CreateSessionCallback } from './database';
-import {
-  ServiceObjectConfig,
-  DeleteCallback,
-  Metadata,
-  MetadataCallback,
-} from '@google-cloud/common';
+import { Database } from './database';
+import { ServiceObjectConfig } from '@google-cloud/common';
 import { google as spanner_client } from '../proto/spanner';
+import { BasicCallback, BasicResponse } from './common';
 
 export type GetSessionResponse = [Session, r.Response];
 
@@ -51,6 +47,11 @@ export interface CreateSessionCallback {
 export const enum types {
   ReadOnly = 'readonly',
   ReadWrite = 'readwrite',
+}
+
+export interface CreateSessionCallback {
+  (err: Error | null, session?: Session | null,
+    apiResponse?: spanner_client.spanner.v1.Session): void;
 }
 
 export type GetSessionMetadataCallback = (err: Error | null, metadata?: spanner_client.spanner.v1.ISession
@@ -281,9 +282,7 @@ export class Session extends ServiceObject {
   }
 
   getMetadata(): Promise<[spanner_client.spanner.v1.Session, r.Response]>;
-  getMetadata(callback: GetSessionMetadataCallback):
-    void;
-
+  getMetadata(callback: GetSessionMetadataCallback): void;
   /**
    * @typedef {array} GetSessionMetadataResponse
    * @property {object} 0 The session's metadata.
@@ -333,6 +332,9 @@ export class Session extends ServiceObject {
       callback!
     );
   }
+
+  keepAlive(): Promise<BasicResponse>;
+  keepAlive(callback: BasicCallback): void;
   /**
    * Ping the session with `SELECT 1` to prevent it from expiring.
    *
@@ -346,7 +348,7 @@ export class Session extends ServiceObject {
    *   }
    * });
    */
-  keepAlive(callback?: Promise<[r.Response]>): void | Promise<void> {
+  keepAlive(callback?: BasicCallback): void | Promise<BasicResponse> {
     const reqOpts = {
       session: this.formattedName_,
       sql: 'SELECT 1',

@@ -56,11 +56,6 @@ import {
 } from './transaction-runner';
 import { google as spanner_client } from '../proto/spanner';
 
-export interface CreateSessionCallback {
-  (err: Error | null, session?: Session | null,
-    apiResponse?: spanner_client.spanner.v1.Session): void;
-}
-
 export interface GetDatabaseOptions {
   autoCreate?: boolean;
 }
