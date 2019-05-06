@@ -442,6 +442,8 @@ describe('Instance', () => {
     it('should return any non-404 like errors', done => {
       const error = { code: 3 };
 
+      sandbox.stub(instance, 'getMetadata').yields(error);
+
       instance.exists((err, exists) => {
         assert.strictEqual(err, error);
         assert.strictEqual(exists, null);

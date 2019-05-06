@@ -24,7 +24,7 @@ import snakeCase = require('lodash.snakecase');
 import { Database } from './database';
 import { google as dbInstanceAdminClient } from '../proto/spanner_instance_admin';
 import { google as dbDatabaseAdminClient } from '../proto/spanner_database_admin';
-import { Operation as GaxOperation } from 'google-gax/build/src/longrunning';
+import { Operation as GaxOperation } from 'google-gax/build/src/longRunningCalls/longrunning';
 import { SessionPoolOptions, SessionPoolInterface } from './session-pool';
 import { SessionPool, Spanner } from '.';
 import { ServiceError } from 'grpc';
