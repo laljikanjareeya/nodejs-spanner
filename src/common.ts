@@ -10,7 +10,7 @@ export interface TransactionOptions {
 }
 export interface CreateSessionOptions {
   name: string;
-  labels: { [key: string]: string };
+  labels: { [key: string]: string; };
   createTime: GetTimestamp;
   approximateLastUseTime: GetTimestamp;
 }

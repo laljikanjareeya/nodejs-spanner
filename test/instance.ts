@@ -23,8 +23,8 @@ import * as proxyquire from 'proxyquire';
 import { util } from '@google-cloud/common-grpc';
 import * as pfy from '@google-cloud/promisify';
 import * as inst from '../src/instance';
-import {Spanner} from '../src';
-import {ServiceError} from 'grpc';
+import { Spanner } from '../src';
+import { ServiceError } from 'grpc';
 import * as sinon from 'sinon';
 
 const fakePaginator = {
@@ -442,8 +442,6 @@ describe('Instance', () => {
     it('should return any non-404 like errors', done => {
       const error = { code: 3 };
 
-     sandbox.stub(instance, 'getMetadata').yields(error);
-      
       instance.exists((err, exists) => {
         assert.strictEqual(err, error);
         assert.strictEqual(exists, null);
@@ -464,7 +462,7 @@ describe('Instance', () => {
     it('should return false if not found error if present', done => {
       const error = { code: 5 };
 
-      sandbox.stub(instance, 'getMetadata').callsFake(callback=> callback(error as ServiceError));
+      sandbox.stub(instance, 'getMetadata').callsFake(callback => callback(error as ServiceError));
 
       instance.exists((err, exists) => {
         assert.ifError(err);
@@ -508,7 +506,7 @@ describe('Instance', () => {
       beforeEach(() => {
         OPERATION.listeners = {};
 
-        sandbox.stub(instance, 'getMetadata').callsFake(callback=>callback(error));
+        sandbox.stub(instance, 'getMetadata').callsFake(callback => callback(error));
 
         instance.create = (options, callback) => {
           callback(null, null, OPERATION);
@@ -618,7 +616,7 @@ describe('Instance', () => {
     it('should return self and API response', done => {
       const apiResponse = {};
 
-      sandbox.stub(instance, 'getMetadata').callsFake(callback => callback(null,apiResponse));
+      sandbox.stub(instance, 'getMetadata').callsFake(callback => callback(null, apiResponse));
 
       instance.get((err, instance_, apiResponse_) => {
         assert.ifError(err);

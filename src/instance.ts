@@ -21,13 +21,13 @@ import { paginator } from '@google-cloud/paginator';
 import { promisifyAll } from '@google-cloud/promisify';
 import * as extend from 'extend';
 import snakeCase = require('lodash.snakecase');
-import {Database} from './database';
-import {google as dbInstanceAdminClient} from '../proto/spanner_instance_admin';
-import {google as dbDatabaseAdminClient} from '../proto/spanner_database_admin';
-import {Operation as GaxOperation} from 'google-gax/build/src/longrunning';
-import {SessionPoolOptions, SessionPoolInterface} from './session-pool';
-import {SessionPool, Spanner} from '.';
-import {ServiceError} from 'grpc';
+import { Database } from './database';
+import { google as dbInstanceAdminClient } from '../proto/spanner_instance_admin';
+import { google as dbDatabaseAdminClient } from '../proto/spanner_database_admin';
+import { Operation as GaxOperation } from 'google-gax/build/src/longrunning';
+import { SessionPoolOptions, SessionPoolInterface } from './session-pool';
+import { SessionPool, Spanner } from '.';
+import { ServiceError } from 'grpc';
 
 export type IDatabase = dbDatabaseAdminClient.spanner.admin.database.v1.IDatabase;
 export type IInstance = dbInstanceAdminClient.spanner.admin.instance.v1.IInstance;
@@ -67,13 +67,13 @@ export interface QueryObject {
 }
 
 export interface CreateInstanceCallback {
-  (err: Error|null, instance: Instance|null, operation: GaxOperation|null, apiResponse: LongrunningIOperation): void;
+  (err: Error | null, instance: Instance | null, operation: GaxOperation | null, apiResponse: LongrunningIOperation): void;
 }
 export interface CreateDatabaseCallback {
   (err: Error | null, database?: Database | null, operation?: GaxOperation | null, apiResponse?: LongrunningIOperation): void;
 }
 export interface DeleteInstanceCallback {
-  (err: Error|null, apiResponse: dbInstanceAdminClient.protobuf.IEmpty): void;
+  (err: Error | null, apiResponse: dbInstanceAdminClient.protobuf.IEmpty): void;
 }
 export interface ExistsInstanceCallback {
   (err: Error | null, exists: boolean | null): void;
@@ -82,7 +82,7 @@ export interface GetDatabasesCallback {
   (err: Error | null, databases?: Database[], apiResponse?: LongrunningIOperation): void;
 }
 export interface GetInstanceCallback {
-  (err: Error|null, instance?: Instance, apiResponse?: IInstance): void;
+  (err: Error | null, instance?: Instance, apiResponse?: IInstance): void;
 }
 export interface GetInstanceMetadataCallback {
   (err: ServiceError | null, metadata?: IInstance, apiResponse?: LongrunningIOperation): void;

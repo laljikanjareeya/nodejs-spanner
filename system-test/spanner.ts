@@ -1191,11 +1191,11 @@ describe('Spanner', () => {
       return table
         .create(
           `
-          CREATE TABLE SingersComposite (
+          CREATE TABLE SingersComposite(
             SingerId INT64 NOT NULL,
             Name STRING(1024),
           ) PRIMARY KEY(SingerId, Name)
-        `
+            `
         )
         .then(onPromiseOperationComplete)
         .then(() => {
@@ -2678,13 +2678,13 @@ describe('Spanner', () => {
           return table
             .create(
               `
-              CREATE TABLE LargeReads (
+              CREATE TABLE LargeReads(
                 Key STRING(MAX) NOT NULL,
                 StringValue STRING(MAX),
-                StringArray ARRAY<STRING(MAX)>,
+                StringArray ARRAY < STRING(MAX) >,
                 BytesValue BYTES(MAX),
-                BytesArray ARRAY<BYTES(MAX)>
-              ) PRIMARY KEY (Key)`
+                BytesArray ARRAY < BYTES(MAX) >
+              ) PRIMARY KEY(Key)`
             )
             .then(onPromiseOperationComplete)
             .then(() => {
@@ -2839,7 +2839,7 @@ describe('Spanner', () => {
           });
       });
 
-      // all of these tests require testing with and without an index,
+ // all of these tests require testing with and without an index,
       // to cut back on duplication, the core sections of the tests have been
       // turned into configurations
       [
