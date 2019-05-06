@@ -15,8 +15,8 @@
  */
 
 import * as assert from 'assert';
-import {EventEmitter} from 'events';
-import {Metadata, ServiceError, status} from 'grpc';
+import { EventEmitter } from 'events';
+import { Metadata, ServiceError, status } from 'grpc';
 import * as proxyquire from 'proxyquire';
 import * as sinon from 'sinon';
 import * as through from 'through2';
@@ -24,9 +24,9 @@ import * as through from 'through2';
 const concat = require('concat-stream');
 
 class FakeTransaction extends EventEmitter {
-  async begin(): Promise<void> {}
-  request(config, callback) {}
-  requestStream(config) {}
+  async begin(): Promise<void> { }
+  request(config, callback) { }
+  requestStream(config) { }
 }
 
 describe('TransactionRunner', () => {
@@ -43,7 +43,7 @@ describe('TransactionRunner', () => {
     .stub()
     .withArgs(RETRY_KEY)
     .returns(RETRY_INFO);
-  const LOAD_SYNC = sandbox.stub().returns({lookup: LOOKUP});
+  const LOAD_SYNC = sandbox.stub().returns({ lookup: LOOKUP });
 
   const SESSION = {
     transaction: () => fakeTransaction,
@@ -60,7 +60,7 @@ describe('TransactionRunner', () => {
 
   before(() => {
     const runners = proxyquire('../src/transaction-runner', {
-      protobufjs: {loadSync: LOAD_SYNC},
+      protobufjs: { loadSync: LOAD_SYNC },
     });
 
     Runner = runners.Runner;
@@ -110,13 +110,13 @@ describe('TransactionRunner', () => {
       });
 
       it('should set default `options`', () => {
-        const expectedOptions = {timeout: 3600000};
+        const expectedOptions = { timeout: 3600000 };
 
         assert.deepStrictEqual(runner.options, expectedOptions);
       });
 
       it('should accept user `options`', () => {
-        const options = {timeout: 1000};
+        const options = { timeout: 1000 };
         const r = new ExtendedRunner(SESSION, fakeTransaction, options);
 
         assert.deepStrictEqual(r.options, options);
@@ -137,7 +137,7 @@ describe('TransactionRunner', () => {
           seconds: 5,
         };
 
-        DECODE.withArgs(FAKE_RETRY_INFO).returns({retryDelay: fakeRetryDelay});
+        DECODE.withArgs(FAKE_RETRY_INFO).returns({ retryDelay: fakeRetryDelay });
 
         const expectedDelay = 5000.00001;
         const delay = runner.getNextDelay(FAKE_ERROR);
@@ -148,10 +148,10 @@ describe('TransactionRunner', () => {
       it('should check if `seconds` is a Long', () => {
         const fakeRetryDelay = {
           nanos: 10,
-          seconds: {toNumber: () => 5},
+          seconds: { toNumber: () => 5 },
         };
 
-        DECODE.withArgs(FAKE_RETRY_INFO).returns({retryDelay: fakeRetryDelay});
+        DECODE.withArgs(FAKE_RETRY_INFO).returns({ retryDelay: fakeRetryDelay });
 
         const expectedDelay = 5000.00001;
         const delay = runner.getNextDelay(FAKE_ERROR);
@@ -315,7 +315,7 @@ describe('TransactionRunner', () => {
       });
 
       it('should pass `options` to `Runner`', () => {
-        const options = {timeout: 1};
+        const options = { timeout: 1 };
         const r = new TransactionRunner(
           SESSION,
           fakeTransaction,
@@ -336,7 +336,7 @@ describe('TransactionRunner', () => {
         setImmediate(() => fakeTransaction.emit('end'));
         await runner.run();
 
-        const {args} = runFn.lastCall;
+        const { args } = runFn.lastCall;
 
         assert.deepStrictEqual(args, [null, fakeTransaction]);
       });
@@ -436,7 +436,7 @@ describe('TransactionRunner', () => {
           const fakeStream = through.obj();
           fakeTransaction.requestStream.withArgs(CONFIG).returns(fakeStream);
 
-          const fakeData = [{a: 'b'}, {c: 'd'}, {e: 'f'}];
+          const fakeData = [{ a: 'b' }, { c: 'd' }, { e: 'f' }];
           fakeData.forEach(data => fakeStream.push(data));
           fakeStream.push(null);
 
@@ -481,7 +481,7 @@ describe('TransactionRunner', () => {
           const fakeError = new Error('err') as ServiceError;
           fakeError.code = status.ABORTED;
 
-          const fakeData = [{a: 'b'}, {c: 'd'}, {e: 'f'}];
+          const fakeData = [{ a: 'b' }, { c: 'd' }, { e: 'f' }];
           fakeData.forEach(data => goodStream.push(data));
           goodStream.push(null);
 
@@ -514,7 +514,7 @@ describe('TransactionRunner', () => {
           const fakeError = new Error('err') as ServiceError;
           fakeError.code = status.UNKNOWN;
 
-          const fakeData = [{a: 'b'}, {c: 'd'}, {e: 'f'}];
+          const fakeData = [{ a: 'b' }, { c: 'd' }, { e: 'f' }];
           fakeData.forEach(data => goodStream.push(data));
           goodStream.push(null);
 
@@ -563,7 +563,7 @@ describe('TransactionRunner', () => {
       });
 
       it('should pass `options` to `Runner`', () => {
-        const options = {timeout: 1};
+        const options = { timeout: 1 };
         const r = new AsyncTransactionRunner(
           SESSION,
           fakeTransaction,
@@ -584,7 +584,7 @@ describe('TransactionRunner', () => {
         runFn.resolves();
         await runner.run();
 
-        const {args} = runFn.lastCall;
+        const { args } = runFn.lastCall;
 
         assert.deepStrictEqual(args, [fakeTransaction]);
       });

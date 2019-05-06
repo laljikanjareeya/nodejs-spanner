@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import {promisify} from '@google-cloud/promisify';
-import {GoogleProtoFilesRoot} from 'google-gax';
-import {Metadata, ServiceError, status} from 'grpc';
-import {join} from 'path';
-import {common as p, loadSync} from 'protobufjs';
+import { promisify } from '@google-cloud/promisify';
+import { GoogleProtoFilesRoot } from 'google-gax';
+import { Metadata, ServiceError, status } from 'grpc';
+import { join } from 'path';
+import { common as p, loadSync } from 'protobufjs';
 import * as through from 'through2';
 
-import {Session} from './session';
-import {Transaction} from './transaction';
-import {RowCountsServiceError} from './common'
+import { Session } from './session';
+import { Transaction } from './transaction';
+import { RowCountsServiceError } from './common'
 
 const RETRY_INFO = 'google.rpc.retryinfo-bin';
 
@@ -118,7 +118,7 @@ export abstract class Runner<T> {
     this.session = session;
     this.transaction = transaction;
 
-    const defaults = {timeout: 3600000};
+    const defaults = { timeout: 3600000 };
 
     this.options = Object.assign(defaults, options);
   }
@@ -146,8 +146,8 @@ export abstract class Runner<T> {
 
     if (retryInfo && retryInfo.length) {
       // tslint:disable-next-line no-any
-      const {retryDelay} = (RetryInfo as any).decode(retryInfo[0]);
-      let {seconds} = retryDelay;
+      const { retryDelay } = (RetryInfo as any).decode(retryInfo[0]);
+      let { seconds } = retryDelay;
 
       if (typeof seconds !== 'number') {
         seconds = seconds.toNumber();
