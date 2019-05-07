@@ -16,15 +16,15 @@
 
 'use strict';
 
-import {promisifyAll} from '@google-cloud/promisify';
+import { promisifyAll } from '@google-cloud/promisify';
 import * as is from 'is';
-import {ServiceError} from 'grpc';
+import { ServiceError } from 'grpc';
 import * as through from 'through2';
-
-import {Json} from './codec';
-import {Database} from './database';
-import {DatabaseAdminClient as d, SpannerClient as s} from './v1';
-import {PartialResultStream, Row} from './partial-result-stream';
+import { google as spanner_client } from '../proto/spanner';
+import { Json } from './codec';
+import { Database } from './database';
+import { DatabaseAdminClient as d, SpannerClient as s } from './v1';
+import { PartialResultStream, Row } from './partial-result-stream';
 import {
   Snapshot,
   ReadRequest,
@@ -33,14 +33,13 @@ import {
 } from './transaction';
 
 export type Key = string | string[];
-
-type Schema = string | string[] | {statements: string[]; operationId?: string};
+type Schema = string | string[] | { statements: string[]; operationId?: string };
 
 type CommitPromise = Promise<[s.CommitResponse]>;
 type CreateTablePromise = Promise<[Table, d.Operation, d.GrpcOperation]>;
 type DropTablePromise = Promise<[d.Operation, d.GrpcOperation]>;
 type ReadPromise = Promise<[Array<Row | Json>]>;
-
+type CommitCallback = s.CommitCallback;
 interface CreateTableCallback {
   (err: ServiceError, table?: null, operation?: null, apiResponse?: null): void;
   (
@@ -223,19 +222,19 @@ class Table {
   ): PartialResultStream {
     const proxyStream = through.obj();
 
-    this.database.getSnapshot(options, (err, snapshot) => {
+    this.database.getSnapshot(options, (err: Error | null, snapshot?: Snapshot | null) => {
       if (err) {
         proxyStream.destroy(err);
         return;
       }
 
-      snapshot
+      snapshot!
         .createReadStream(this.name, request)
-        .on('error', err => {
+        .on('error', (err: Error) => {
           proxyStream.destroy(err);
-          snapshot.end();
+          snapshot!.end();
         })
-        .on('end', () => snapshot.end())
+        .on('end', () => snapshot!.end())
         .pipe(proxyStream);
     });
 
@@ -344,8 +343,8 @@ class Table {
    *   });
    */
   deleteRows(keys: Key[]): CommitPromise;
-  deleteRows(keys: Key[], callback: s.CommitCallback): void;
-  deleteRows(keys: Key[], callback?: s.CommitCallback): CommitPromise | void {
+  deleteRows(keys: Key[], callback: CommitCallback): void;
+  deleteRows(keys: Key[], callback?: CommitCallback): CommitPromise | void {
     return this._mutate('deleteRows', keys, callback!);
   }
   /**
@@ -451,10 +450,10 @@ class Table {
    * Full example:
    */
   insert(rows: object | object[]): CommitPromise;
-  insert(rows: object | object[], callback: s.CommitCallback): void;
+  insert(rows: object | object[], callback: CommitCallback): void;
   insert(
     rows: object | object[],
-    callback?: s.CommitCallback
+    callback?: CommitCallback
   ): CommitPromise | void {
     this._mutate('insert', rows, callback!);
   }
@@ -674,10 +673,10 @@ class Table {
    *   });
    */
   replace(rows: object | object[]): CommitPromise;
-  replace(rows: object | object[], callback: s.CommitCallback): void;
+  replace(rows: object | object[], callback: CommitCallback): void;
   replace(
     rows: object | object[],
-    callback?: s.CommitCallback
+    callback?: CommitCallback
   ): CommitPromise | void {
     this._mutate('replace', rows, callback!);
   }
@@ -725,10 +724,10 @@ class Table {
    * Full example:
    */
   update(rows: object | object[]): CommitPromise;
-  update(rows: object | object[], callback: s.CommitCallback): void;
+  update(rows: object | object[], callback: CommitCallback): void;
   update(
     rows: object | object[],
-    callback?: s.CommitCallback
+    callback?: CommitCallback
   ): CommitPromise | void {
     this._mutate('update', rows, callback!);
   }
@@ -772,10 +771,10 @@ class Table {
    *   });
    */
   upsert(rows: object | object[]): CommitPromise;
-  upsert(rows: object | object[], callback: s.CommitCallback): void;
+  upsert(rows: object | object[], callback: CommitCallback): void;
   upsert(
     rows: object | object[],
-    callback?: s.CommitCallback
+    callback?: CommitCallback
   ): CommitPromise | void {
     this._mutate('upsert', rows, callback!);
   }
@@ -795,16 +794,16 @@ class Table {
   private _mutate(
     method: string,
     rows: object | object[],
-    callback: s.CommitCallback
+    callback: CommitCallback
   ): void {
-    this.database.runTransaction((err, transaction) => {
+    this.database.runTransaction((err: ServiceError | null, transaction?: Transaction | null) => {
       if (err) {
         callback(err);
         return;
       }
 
-      transaction[method](this.name, rows);
-      transaction.commit(callback);
+      transaction![method](this.name, rows);
+      transaction!.commit(callback);
     });
   }
 }
@@ -823,4 +822,4 @@ promisifyAll(Table, {
  * @name module:@google-cloud/spanner.Table
  * @see Table
  */
-export {Table};
+export { Table };
