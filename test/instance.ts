@@ -26,10 +26,11 @@ import * as inst from '../src/instance';
 import { Spanner } from '../src';
 import { ServiceError } from 'grpc';
 import * as sinon from 'sinon';
-
+import { google as dbInstanceAdminClient } from '../proto/spanner_instance_admin';
+import { RequestConfig } from '../src/common';
 const fakePaginator = {
   paginator: {
-    streamify(methodName) {
+    streamify(methodName: string) {
       return methodName;
     },
   },
@@ -37,7 +38,7 @@ const fakePaginator = {
 
 let promisified = false;
 const fakePfy = extend({}, pfy, {
-  promisifyAll(klass, options) {
+  promisifyAll(klass: Function, options: pfy.PromisifyAllOptions) {
     if (klass.name !== 'Instance') {
       return;
     }
@@ -143,10 +144,13 @@ describe('Instance', () => {
     it('should inherit from ServiceObject', done => {
       const options = {};
       const spannerInstance = extend({}, SPANNER, {
-        createInstance(name, options_, callback) {
-          assert.strictEqual(name, instance.formattedName_);
+        createInstance(
+          request: dbInstanceAdminClient.spanner.admin.instance.v1.ICreateInstanceRequest,
+          options_: {},
+          callback: dbInstanceAdminClient.spanner.admin.instance.v1.InstanceAdmin.CreateInstanceCallback) {
+          assert.strictEqual(request.instanceId, instance.formattedName_);
           assert.strictEqual(options_, options);
-          callback(); // done()
+          callback(null); // done()
         },
       });
 
@@ -192,7 +196,7 @@ describe('Instance', () => {
     });
 
     it('should make the correct default request', done => {
-      instance.request = config => {
+      instance.request = (config: RequestConfig) => {
         assert.strictEqual(config.client, 'DatabaseAdminClient');
         assert.strictEqual(config.method, 'createDatabase');
         assert.deepStrictEqual(config.reqOpts, {
@@ -207,7 +211,7 @@ describe('Instance', () => {
     });
 
     it('should accept options', done => {
-      instance.request = config => {
+      instance.request = (config: RequestConfig) => {
         assert.deepStrictEqual(OPTIONS, ORIGINAL_OPTIONS);
 
         const expectedReqOpts = extend(
@@ -227,7 +231,7 @@ describe('Instance', () => {
     });
 
     it('should only use the name in the createStatement', done => {
-      instance.request = config => {
+      instance.request = (config: RequestConfig) => {
         const expectedReqOpts = extend(
           {
             parent: instance.formattedName_,
@@ -252,7 +256,7 @@ describe('Instance', () => {
           poolOptions,
         });
 
-        instance.request = (config, callback) => {
+        instance.request = (config: RequestConfig, callback: Function) => {
           assert.strictEqual(config.reqOpts.poolOptions, undefined);
           callback();
         };
@@ -274,7 +278,7 @@ describe('Instance', () => {
           schema: SCHEMA,
         });
 
-        instance.request = config => {
+        instance.request = (config: RequestConfig) => {
           assert.deepStrictEqual(config.reqOpts.extraStatements, [SCHEMA]);
           assert.strictEqual(config.reqOpts.schema, undefined);
           done();
@@ -289,7 +293,7 @@ describe('Instance', () => {
       const API_RESPONSE = {};
 
       beforeEach(() => {
-        instance.request = (config, callback) => {
+        instance.request = (config: RequestConfig, callback: Function) => {
           callback(ERROR, null, API_RESPONSE);
         };
       });
@@ -309,7 +313,7 @@ describe('Instance', () => {
       const API_RESPONSE = {};
 
       beforeEach(() => {
-        instance.request = (config, callback) => {
+        instance.request = (config: RequestConfig, callback: Function) => {
           callback(null, OPERATION, API_RESPONSE);
         };
       });
@@ -408,7 +412,7 @@ describe('Instance', () => {
     });
 
     it('should make the correct request', done => {
-      instance.request = (config, callback) => {
+      instance.request = (config: RequestConfig, callback: Function) => {
         assert.strictEqual(config.client, 'InstanceAdminClient');
         assert.strictEqual(config.method, 'deleteInstance');
         assert.deepStrictEqual(config.reqOpts, {
@@ -423,7 +427,7 @@ describe('Instance', () => {
     it('should remove the Instance from the cache', done => {
       const cache = instance.parent.instances_;
 
-      instance.request = (config, callback) => {
+      instance.request = (config: RequestConfig, callback: Function) => {
         callback(null);
       };
 
@@ -497,9 +501,10 @@ describe('Instance', () => {
         autoCreate: true,
       };
 
-      const OPERATION = {
+      // tslint:disable-next-line: no-any
+      const OPERATION: { [k: string]: any } = {
         listeners: {},
-        on(eventName, callback) {
+        on(eventName: string, callback: Function) {
           OPERATION.listeners[eventName] = callback;
           return OPERATION;
         },
@@ -510,13 +515,13 @@ describe('Instance', () => {
 
         sandbox.stub(instance, 'getMetadata').callsFake(callback => callback(error));
 
-        instance.create = (options, callback) => {
+        instance.create = (options: {}, callback: Function) => {
           callback(null, null, OPERATION);
         };
       });
 
       it('should call create', done => {
-        instance.create = options => {
+        instance.create = (options: {}) => {
           assert.strictEqual(options, OPTIONS);
           done();
         };
@@ -527,7 +532,7 @@ describe('Instance', () => {
       it('should return error if create failed', done => {
         const error = new Error('Error.');
 
-        instance.create = (options, callback) => {
+        instance.create = (options: {}, callback: Function) => {
           callback(error);
         };
 
@@ -640,7 +645,7 @@ describe('Instance', () => {
         parent: instance.formattedName_,
       });
 
-      instance.request = config => {
+      instance.request = (config: RequestConfig) => {
         assert.strictEqual(config.client, 'DatabaseAdminClient');
         assert.strictEqual(config.method, 'listDatabases');
         assert.deepStrictEqual(config.reqOpts, expectedReqOpts);
@@ -657,7 +662,7 @@ describe('Instance', () => {
     });
 
     it('should not require a query', done => {
-      instance.request = config => {
+      instance.request = (config: RequestConfig) => {
         assert.deepStrictEqual(config.reqOpts, {
           parent: instance.formattedName_,
         });
@@ -674,7 +679,7 @@ describe('Instance', () => {
       const REQUEST_RESPONSE_ARGS = [new Error('Error.'), null, {}];
 
       beforeEach(() => {
-        instance.request = (config, callback) => {
+        instance.request = (config: RequestConfig, callback: Function) => {
           callback.apply(null, REQUEST_RESPONSE_ARGS);
         };
       });
@@ -698,7 +703,7 @@ describe('Instance', () => {
       const REQUEST_RESPONSE_ARGS: any = [null, DATABASES, {}];
 
       beforeEach(() => {
-        instance.request = (config, callback) => {
+        instance.request = (config: RequestConfig, callback: Function) => {
           callback.apply(null, REQUEST_RESPONSE_ARGS);
         };
       });
@@ -730,7 +735,7 @@ describe('Instance', () => {
 
       function callback() { }
 
-      instance.request = (config, callback_) => {
+      instance.request = (config: RequestConfig, callback_: Function) => {
         assert.strictEqual(config.client, 'InstanceAdminClient');
         assert.strictEqual(config.method, 'getInstance');
         assert.deepStrictEqual(config.reqOpts, {
@@ -756,7 +761,7 @@ describe('Instance', () => {
 
       function callback() { }
 
-      instance.request = (config, callback_) => {
+      instance.request = (config: RequestConfig, callback_: Function) => {
         assert.strictEqual(config.client, 'InstanceAdminClient');
         assert.strictEqual(config.method, 'updateInstance');
 
