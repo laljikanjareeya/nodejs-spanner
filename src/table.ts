@@ -20,7 +20,6 @@ import { promisifyAll } from '@google-cloud/promisify';
 import * as is from 'is';
 import { ServiceError } from 'grpc';
 import * as through from 'through2';
-import { google as spanner_client } from '../proto/spanner';
 import { Json } from './codec';
 import { Database } from './database';
 import { DatabaseAdminClient as d, SpannerClient as s } from './v1';
@@ -218,7 +217,7 @@ class Table {
    */
   createReadStream(
     request: ReadRequest,
-    options = {} as TimestampBounds
+    options: TimestampBounds = {}
   ): PartialResultStream {
     const proxyStream = through.obj();
 
@@ -286,7 +285,7 @@ class Table {
   delete(): DropTablePromise;
   delete(callback: DropTableCallback): void;
   delete(callback?: DropTableCallback): DropTablePromise | void {
-    if (callback && !is.fn(callback)) {
+    if (callback && typeof callback !== 'function') {
       throw new TypeError(
         'Unexpected argument, please see Table#deleteRows to delete rows.'
       );
@@ -623,7 +622,7 @@ class Table {
   ): ReadPromise | void {
     const rows: Array<Row | Json> = [];
 
-    if (is.fn(options)) {
+    if (typeof options === 'function') {
       callback = options as ReadCallback;
       options = {} as TimestampBounds;
     }
@@ -802,7 +801,8 @@ class Table {
         return;
       }
 
-      transaction![method](this.name, rows);
+      // tslint:disable-next-line: no-any
+      (transaction as any)![method](this.name, rows);
       transaction!.commit(callback);
     });
   }
