@@ -54,7 +54,8 @@ describe('Spanner', () => {
   after(deleteTestInstances);
 
   describe('types', () => {
-    const database = instance.database(generateName('database'));
+    // tslint:disable-next-line: no-any
+    const database = instance.database(generateName('database')) as any;
     const table = database.table('TypeCheck');
 
     function insert(insertData, callback) {
@@ -909,7 +910,7 @@ describe('Spanner', () => {
     });
 
     it('should get a session by name', done => {
-      const shortName = session.formattedName_.split('/').pop();
+      const shortName = session.formattedName_!.split('/').pop();
       const sessionByShortName = database.session(shortName);
 
       sessionByShortName.getMetadata((err, metadataByName) => {
@@ -928,7 +929,8 @@ describe('Spanner', () => {
   });
 
   describe('Tables', () => {
-    const database = instance.database(generateName('database'));
+    // tslint:disable-next-line: no-any
+    const database = instance.database(generateName('database')) as any;
     const table = database.table('Singers');
 
     before(() => {
@@ -3099,7 +3101,8 @@ describe('Spanner', () => {
       });
 
       it('should read over invalid database fails', done => {
-        const database = instance.database(generateName('invalid'));
+        // tslint:disable-next-line: no-any
+        const database = instance.database(generateName('invalid')) as any;
         const table = database.table('ReadTestTable');
 
         const query = {
@@ -3157,7 +3160,8 @@ describe('Spanner', () => {
   });
 
   describe('SessionPool', () => {
-    const database = instance.database(generateName('database'));
+    // tslint:disable-next-line: no-any
+    const database = instance.database(generateName('database')) as any;
     const table = database.table('Singers');
 
     before(async () => {
@@ -3319,7 +3323,8 @@ describe('Spanner', () => {
   });
 
   describe('Transactions', () => {
-    const database = instance.database(generateName('database'));
+    // tslint:disable-next-line: no-any
+    const database = instance.database(generateName('database')) as any;
     const table = database.table('TxnTable');
 
     const schema = `
@@ -3892,7 +3897,7 @@ describe('Spanner', () => {
           let err;
 
           try {
-            await txn.batchUpdate(null);
+            await txn.batchUpdate([]);
           } catch (e) {
             err = e;
           }

@@ -23,7 +23,7 @@ import * as proxyquire from 'proxyquire';
 import {util} from '@google-cloud/common-grpc';
 import * as pfy from '@google-cloud/promisify';
 import * as inst from '../src/instance';
-import {Spanner} from '../src';
+import {Spanner, Database} from '../src';
 import {ServiceError} from 'grpc';
 import * as sinon from 'sinon';
 
@@ -260,6 +260,7 @@ describe('Instance', () => {
         instance.database = (name, poolOptions_) => {
           assert.strictEqual(poolOptions_, poolOptions);
           done();
+          return {} as Database;
         };
 
         instance.createDatabase(PATH, options, assert.ifError);
@@ -319,7 +320,7 @@ describe('Instance', () => {
 
         instance.database = name => {
           assert.strictEqual(name, NAME);
-          return fakeDatabaseInstance;
+          return fakeDatabaseInstance as Database;
         };
 
         instance.createDatabase(NAME, OPTIONS, (err, db, op, resp) => {
@@ -351,9 +352,18 @@ describe('Instance', () => {
       const database = instance.database(NAME, poolOptions);
 
       assert(database instanceof FakeDatabase);
-      assert.strictEqual(database.calledWith_[0], instance);
-      assert.strictEqual(database.calledWith_[1], NAME);
-      assert.strictEqual(database.calledWith_[2], poolOptions);
+      assert.strictEqual(
+        ((database as {}) as FakeDatabase).calledWith_[0],
+        instance
+      );
+      assert.strictEqual(
+        ((database as {}) as FakeDatabase).calledWith_[1],
+        NAME
+      );
+      assert.strictEqual(
+        ((database as {}) as FakeDatabase).calledWith_[2],
+        poolOptions
+      );
       assert.strictEqual(database, cache.get(NAME));
     });
 
@@ -720,7 +730,7 @@ describe('Instance', () => {
 
         instance.database = name => {
           assert.strictEqual(name, DATABASES[0].name);
-          return fakeDatabaseInstance;
+          return fakeDatabaseInstance as Database;
         };
 
         instance.getDatabases(QUERY, (...args) => {

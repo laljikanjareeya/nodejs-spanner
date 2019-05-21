@@ -590,7 +590,6 @@ class Instance extends common.ServiceObject {
         callback(err);
         return;
       }
-      //tslint:disable-next-line no-any
       callback(null, this, metadata);
     });
   }
