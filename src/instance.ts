@@ -46,11 +46,7 @@ export type CreateDatabaseResponse = [
 export type DeleteInstanceResponse = [dbInstanceAdminClient.protobuf.IEmpty];
 export type ExistsInstanceResponse = [boolean];
 export type GetInstanceResponse = [Instance, IInstance];
-export type GetDatabasesResponse = [
-  Database[],
-  dbDatabaseAdminClient.spanner.admin.database.v1.IListDatabasesRequest,
-  dbDatabaseAdminClient.spanner.admin.database.v1.IListDatabasesResponse
-];
+export type GetDatabasesResponse = [Database[], LongrunningIOperation];
 export type LongrunningOperationResponse = [
   GaxOperation,
   LongrunningIOperation
@@ -142,7 +138,6 @@ export interface LongRunningOperationCallback {
  * const instance = spanner.instance('my-instance');
  */
 class Instance extends common.ServiceObject {
-  // "spanner: Spanner" causes flood of errors in test/instance
   constructor(spanner: Spanner, name: string) {
     const formattedName_ = Instance.formatName_(spanner.projectId, name);
     const methods = {
@@ -374,11 +369,10 @@ class Instance extends common.ServiceObject {
    * const instance = spanner.instance('my-instance');
    * const database = instance.database('my-database');
    */
-  // Return annotation of "Database" causes flood of errors in test/instance & system-test/spanner
   database(
     name: string,
     poolOptions?: SessionPoolOptions | SessionPoolInterface
-  ) {
+  ): Database {
     if (!name) {
       throw new Error('A name is required to access a Database object.');
     }
@@ -752,8 +746,7 @@ class Instance extends common.ServiceObject {
    *   const apiResponse = data[1];
    * });
    */
-  //tslint:disable-next-line no-any
-  getMetadata(callback: GetInstanceMetadataCallback): any {
+  getMetadata(callback: GetInstanceMetadataCallback): Metadata {
     const reqOpts = {
       name: this.formattedName_,
     };

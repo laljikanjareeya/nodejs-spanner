@@ -1,5 +1,3 @@
-import {status, Metadata, ServiceError} from 'grpc';
-
 export interface TransactionOptions {
   readOnly?: boolean;
   timeout?: number;
@@ -17,12 +15,4 @@ export interface CreateSessionOptions {
 export interface GetTimestamp {
   nanos: number;
   seconds: number;
-}
-
-export interface RowCountsServiceError {
-  //tslint:disable-next-line no-any
-  rowCounts?: number[] | ((rowCounts: any, arg1: never[]) => any);
-  code?: status;
-  metadata?: Metadata;
-  details?: string;
 }

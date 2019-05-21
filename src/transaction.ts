@@ -34,7 +34,6 @@ import {
 import {Session} from './session';
 import {Key} from './table';
 import {SpannerClient as s} from './v1';
-import {RowCountsServiceError} from './common';
 
 export type Rows = Array<Row | Json>;
 
@@ -84,7 +83,7 @@ export interface ReadRequest extends RequestOptions {
   partitionToken?: Uint8Array | string;
 }
 
-export interface BatchUpdateError extends RowCountsServiceError {
+export interface BatchUpdateError extends ServiceError {
   rowCounts: number[];
 }
 
