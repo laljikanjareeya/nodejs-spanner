@@ -16,14 +16,14 @@
 
 'use strict';
 
-import { promisifyAll } from '@google-cloud/promisify';
+import {promisifyAll} from '@google-cloud/promisify';
 import * as is from 'is';
-import { ServiceError } from 'grpc';
+import {ServiceError} from 'grpc';
 import * as through from 'through2';
-import { Json } from './codec';
-import { Database } from './database';
-import { DatabaseAdminClient as d, SpannerClient as s } from './v1';
-import { PartialResultStream, Row } from './partial-result-stream';
+import {Json} from './codec';
+import {Database} from './database';
+import {DatabaseAdminClient as d, SpannerClient as s} from './v1';
+import {PartialResultStream, Row} from './partial-result-stream';
 import {
   Snapshot,
   ReadRequest,
@@ -32,7 +32,7 @@ import {
 } from './transaction';
 
 export type Key = string | string[];
-type Schema = string | string[] | { statements: string[]; operationId?: string };
+type Schema = string | string[] | {statements: string[]; operationId?: string};
 
 type CommitPromise = Promise<[s.CommitResponse]>;
 type CreateTablePromise = Promise<[Table, d.Operation, d.GrpcOperation]>;
@@ -221,21 +221,24 @@ class Table {
   ): PartialResultStream {
     const proxyStream = through.obj();
 
-    this.database.getSnapshot(options, (err: Error | null, snapshot?: Snapshot | null) => {
-      if (err) {
-        proxyStream.destroy(err);
-        return;
-      }
-
-      snapshot!
-        .createReadStream(this.name, request)
-        .on('error', (err: Error) => {
+    this.database.getSnapshot(
+      options,
+      (err: Error | null, snapshot?: Snapshot | null) => {
+        if (err) {
           proxyStream.destroy(err);
-          snapshot!.end();
-        })
-        .on('end', () => snapshot!.end())
-        .pipe(proxyStream);
-    });
+          return;
+        }
+
+        snapshot!
+          .createReadStream(this.name, request)
+          .on('error', (err: Error) => {
+            proxyStream.destroy(err);
+            snapshot!.end();
+          })
+          .on('end', () => snapshot!.end())
+          .pipe(proxyStream);
+      }
+    );
 
     return proxyStream as PartialResultStream;
   }
@@ -795,16 +798,18 @@ class Table {
     rows: object | object[],
     callback: CommitCallback
   ): void {
-    this.database.runTransaction((err: ServiceError | null, transaction?: Transaction | null) => {
-      if (err) {
-        callback(err);
-        return;
-      }
+    this.database.runTransaction(
+      (err: ServiceError | null, transaction?: Transaction | null) => {
+        if (err) {
+          callback(err);
+          return;
+        }
 
-      // tslint:disable-next-line: no-any
-      (transaction as any)![method](this.name, rows);
-      transaction!.commit(callback);
-    });
+        // tslint:disable-next-line: no-any
+        (transaction as any)![method](this.name, rows);
+        transaction!.commit(callback);
+      }
+    );
   }
 }
 
@@ -822,4 +827,4 @@ promisifyAll(Table, {
  * @name module:@google-cloud/spanner.Table
  * @see Table
  */
-export { Table };
+export {Table};
