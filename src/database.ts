@@ -22,8 +22,8 @@ import {
   MetadataCallback,
   ServiceObjectConfig,
 } from '@google-cloud/common';
-import { ServiceObject } from '@google-cloud/common-grpc';
-import { promisify, promisifyAll } from '@google-cloud/promisify';
+import {ServiceObject} from '@google-cloud/common-grpc';
+import {promisify, promisifyAll} from '@google-cloud/promisify';
 import arrify = require('arrify');
 import * as extend from 'extend';
 import * as is from 'is';
@@ -31,16 +31,16 @@ import * as r from 'request';
 import * as streamEvents from 'stream-events';
 import * as through from 'through2';
 
-import { BatchTransaction } from './batch-transaction';
-import { codec } from './codec';
-import { Instance } from './instance';
+import {BatchTransaction} from './batch-transaction';
+import {codec} from './codec';
+import {Instance} from './instance';
 import {
   partialResultStream,
   PartialResultStream,
 } from './partial-result-stream';
-import { Session } from './session';
-import { SessionPool } from './session-pool';
-import { Table } from './table';
+import {Session} from './session';
+import {SessionPool} from './session-pool';
+import {Table} from './table';
 import {
   PartitionedDml,
   Snapshot,
@@ -54,7 +54,6 @@ import {
   RunTransactionOptions,
   TransactionRunner,
 } from './transaction-runner';
-import { google as spanner_client } from '../proto/spanner';
 
 export interface GetDatabaseOptions {
   autoCreate?: boolean;
@@ -263,7 +262,7 @@ class Database extends ServiceObject {
         callback(err, null, resp);
         return;
       }
-      const transaction = this.batchTransaction({ session }, options);
+      const transaction = this.batchTransaction({session}, options);
       transaction.begin((err, resp) => {
         if (err) {
           callback(err, null, resp);
@@ -342,7 +341,7 @@ class Database extends ServiceObject {
     };
 
     if (gaxOpts.labels) {
-      reqOpts.session = { labels: gaxOpts.labels };
+      reqOpts.session = {labels: gaxOpts.labels};
       delete gaxOpts.labels;
     }
 
@@ -743,7 +742,7 @@ class Database extends ServiceObject {
         reqOpts,
       },
       // tslint:disable-next-line only-arrow-functions
-      function (err, statements) {
+      function(err, statements) {
         if (statements) {
           arguments[1] = statements.statements;
         }
@@ -840,7 +839,7 @@ class Database extends ServiceObject {
       options = {};
     }
     const gaxOpts = options.gaxOptions;
-    const reqOpts = extend({}, options, { database: this.formattedName_ });
+    const reqOpts = extend({}, options, {database: this.formattedName_});
     delete reqOpts.gaxOptions;
     this.request(
       {
@@ -850,7 +849,7 @@ class Database extends ServiceObject {
         gaxOpts,
       },
       // tslint:disable-next-line only-arrow-functions
-      function (err, sessions) {
+      function(err, sessions) {
         if (sessions) {
           arguments[1] = sessions.map(metadata => {
             const session = self.session(metadata.name);
@@ -1021,7 +1020,7 @@ class Database extends ServiceObject {
       }
       config.reqOpts.session = session!.formattedName_;
       // tslint:disable-next-line only-arrow-functions
-      this.request(config, function () {
+      this.request(config, function() {
         pool.release(session!);
         callback.apply(null, arguments);
       });
@@ -1810,4 +1809,4 @@ promisifyAll(Database, {
  * @name module:@google-cloud/spanner.Database
  * @see Database
  */
-export { Database };
+export {Database};

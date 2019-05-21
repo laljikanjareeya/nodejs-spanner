@@ -20,8 +20,8 @@
 
 'use strict';
 
-import { ServiceObject } from '@google-cloud/common-grpc';
-import { promisifyAll } from '@google-cloud/promisify';
+import {ServiceObject} from '@google-cloud/common-grpc';
+import {promisifyAll} from '@google-cloud/promisify';
 import * as extend from 'extend';
 import * as r from 'request';
 import {
@@ -30,10 +30,10 @@ import {
   PartitionedDml,
   TimestampBounds,
 } from './transaction';
-import { Database } from './database';
-import { ServiceObjectConfig } from '@google-cloud/common';
-import { google as spanner_client } from '../proto/spanner';
-import { BasicCallback, BasicResponse } from './common';
+import {Database} from './database';
+import {ServiceObjectConfig} from '@google-cloud/common';
+import {google as spanner_client} from '../proto/spanner';
+import {BasicCallback, BasicResponse} from './common';
 
 export type GetSessionResponse = [Session, r.Response];
 
@@ -50,12 +50,18 @@ export const enum types {
 }
 
 export interface CreateSessionCallback {
-  (err: Error | null, session?: Session | null,
-    apiResponse?: spanner_client.spanner.v1.Session): void;
+  (
+    err: Error | null,
+    session?: Session | null,
+    apiResponse?: spanner_client.spanner.v1.Session
+  ): void;
 }
 
-export type GetSessionMetadataCallback = (err: Error | null, metadata?: spanner_client.spanner.v1.ISession
-  | null, apiResponse?: spanner_client.spanner.v1.Session) => void;
+export type GetSessionMetadataCallback = (
+  err: Error | null,
+  metadata?: spanner_client.spanner.v1.ISession | null,
+  apiResponse?: spanner_client.spanner.v1.Session
+) => void;
 
 /**
  * Create a Session object to interact with a Cloud Spanner session.
@@ -208,27 +214,36 @@ export class Session extends ServiceObject {
        */
       id: name,
       methods,
-      createMethod:
-        (_: {}, optionsOrCallback: spanner_client.spanner.v1.ISession | CreateSessionCallback,
-          callback: CreateSessionCallback) => {
-          const options =
-            typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
-          callback = typeof optionsOrCallback === 'function' ?
-            optionsOrCallback as CreateSessionCallback :
-            callback;
-          return database.createSession(
-            options,
-            (err: Error | null, session?: Session, apiResponse?: spanner_client.spanner.v1.Session) => {
-              if (err) {
-                callback(err, null, apiResponse);
-                return;
-              }
-
-              extend(this, session);
-              callback(null, this, apiResponse);
+      createMethod: (
+        _: {},
+        optionsOrCallback:
+          | spanner_client.spanner.v1.ISession
+          | CreateSessionCallback,
+        callback: CreateSessionCallback
+      ) => {
+        const options =
+          typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+        callback =
+          typeof optionsOrCallback === 'function'
+            ? (optionsOrCallback as CreateSessionCallback)
+            : callback;
+        return database.createSession(
+          options,
+          (
+            err: Error | null,
+            session?: Session,
+            apiResponse?: spanner_client.spanner.v1.Session
+          ) => {
+            if (err) {
+              callback(err, null, apiResponse);
+              return;
             }
-          );
-        },
+
+            extend(this, session);
+            callback(null, this, apiResponse);
+          }
+        );
+      },
     } as {}) as ServiceObjectConfig);
 
     this.request = database.request;
@@ -266,8 +281,12 @@ export class Session extends ServiceObject {
    * });
    */
   delete(): Promise<[r.Response]>;
-  delete(callback: spanner_client.spanner.v1.Spanner.DeleteSessionCallback): void;
-  delete(callback?: spanner_client.spanner.v1.Spanner.DeleteSessionCallback): void | Promise<[r.Response]> {
+  delete(
+    callback: spanner_client.spanner.v1.Spanner.DeleteSessionCallback
+  ): void;
+  delete(
+    callback?: spanner_client.spanner.v1.Spanner.DeleteSessionCallback
+  ): void | Promise<[r.Response]> {
     const reqOpts = {
       name: this.formattedName_,
     };
