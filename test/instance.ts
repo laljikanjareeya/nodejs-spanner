@@ -17,14 +17,14 @@
 'use strict';
 
 import * as assert from 'assert';
-import { ApiError } from '@google-cloud/common';
+import {ApiError} from '@google-cloud/common';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
-import { util } from '@google-cloud/common-grpc';
+import {util} from '@google-cloud/common-grpc';
 import * as pfy from '@google-cloud/promisify';
 import * as inst from '../src/instance';
-import { Spanner } from '../src';
-import { ServiceError } from 'grpc';
+import {Spanner} from '../src';
+import {ServiceError} from 'grpc';
 import * as sinon from 'sinon';
 
 const fakePaginator = {
@@ -66,12 +66,12 @@ describe('Instance', () => {
   let instance: inst.Instance;
   const sandbox = sinon.createSandbox();
 
-  const SPANNER = {
+  const SPANNER = ({
     request: util.noop,
     requestStream: util.noop,
     projectId: 'project-id',
     instances_: new Map(),
-  } as {} as Spanner;
+  } as {}) as Spanner;
 
   const NAME = 'instance-name';
 
@@ -82,7 +82,7 @@ describe('Instance', () => {
       },
       '@google-cloud/promisify': fakePfy,
       '@google-cloud/paginator': fakePaginator,
-      './database.js': { Database: FakeDatabase },
+      './database.js': {Database: FakeDatabase},
     }).Instance;
   });
 
@@ -119,7 +119,7 @@ describe('Instance', () => {
     it('should localize the request function', done => {
       const spannerInstance = extend({}, SPANNER);
 
-      spannerInstance.request = function () {
+      spannerInstance.request = function() {
         assert.strictEqual(this, spannerInstance);
         done();
       };
@@ -131,7 +131,7 @@ describe('Instance', () => {
     it('should localize the requestStream function', done => {
       const spannerInstance = extend({}, SPANNER);
 
-      spannerInstance.requestStream = function () {
+      spannerInstance.requestStream = function() {
         assert.strictEqual(this, spannerInstance);
         done();
       };
@@ -157,7 +157,7 @@ describe('Instance', () => {
 
       assert.strictEqual(calledWith.parent, spannerInstance);
       assert.strictEqual(calledWith.id, NAME);
-      assert.deepStrictEqual(calledWith.methods, { create: true });
+      assert.deepStrictEqual(calledWith.methods, {create: true});
 
       calledWith.createMethod(null, options, done);
     });
@@ -440,7 +440,7 @@ describe('Instance', () => {
 
   describe('exists', () => {
     it('should return any non-404 like errors', done => {
-      const error = { code: 3 };
+      const error = {code: 3};
 
       sandbox.stub(instance, 'getMetadata').yields(error);
 
@@ -462,9 +462,11 @@ describe('Instance', () => {
     });
 
     it('should return false if not found error if present', done => {
-      const error = { code: 5 };
+      const error = {code: 5};
 
-      sandbox.stub(instance, 'getMetadata').callsFake(callback => callback(error as ServiceError));
+      sandbox
+        .stub(instance, 'getMetadata')
+        .callsFake(callback => callback(error as ServiceError));
 
       instance.exists((err, exists) => {
         assert.ifError(err);
@@ -508,7 +510,9 @@ describe('Instance', () => {
       beforeEach(() => {
         OPERATION.listeners = {};
 
-        sandbox.stub(instance, 'getMetadata').callsFake(callback => callback(error));
+        sandbox
+          .stub(instance, 'getMetadata')
+          .callsFake(callback => callback(error));
 
         instance.create = (options, callback) => {
           callback(null, null, OPERATION);
@@ -576,7 +580,9 @@ describe('Instance', () => {
         autoCreate: true,
       };
 
-      sandbox.stub(instance, 'getMetadata').callsFake(callback => callback(error));
+      sandbox
+        .stub(instance, 'getMetadata')
+        .callsFake(callback => callback(error));
 
       instance.create = () => {
         throw new Error('Should not create.');
@@ -592,7 +598,9 @@ describe('Instance', () => {
       const error = new ApiError('Error.') as ServiceError;
       error.code = 5;
 
-      sandbox.stub(instance, 'getMetadata').callsFake(callback => callback(error));
+      sandbox
+        .stub(instance, 'getMetadata')
+        .callsFake(callback => callback(error));
 
       instance.create = () => {
         throw new Error('Should not create.');
@@ -607,7 +615,9 @@ describe('Instance', () => {
     it('should return an error from getMetadata', done => {
       const error = new Error('Error.') as ServiceError;
 
-      sandbox.stub(instance, 'getMetadata').callsFake(callback => callback(error));
+      sandbox
+        .stub(instance, 'getMetadata')
+        .callsFake(callback => callback(error));
 
       instance.get(err => {
         assert.strictEqual(err, error);
@@ -618,7 +628,9 @@ describe('Instance', () => {
     it('should return self and API response', done => {
       const apiResponse = {};
 
-      sandbox.stub(instance, 'getMetadata').callsFake(callback => callback(null, apiResponse));
+      sandbox
+        .stub(instance, 'getMetadata')
+        .callsFake(callback => callback(null, apiResponse));
 
       instance.get((err, instance_, apiResponse_) => {
         assert.ifError(err);
@@ -728,7 +740,7 @@ describe('Instance', () => {
     it('should correctly call and return request', () => {
       const requestReturnValue = {};
 
-      function callback() { }
+      function callback() {}
 
       instance.request = (config, callback_) => {
         assert.strictEqual(config.client, 'InstanceAdminClient');
@@ -754,7 +766,7 @@ describe('Instance', () => {
     it('should make and return the request', () => {
       const requestReturnValue = {};
 
-      function callback() { }
+      function callback() {}
 
       instance.request = (config, callback_) => {
         assert.strictEqual(config.client, 'InstanceAdminClient');

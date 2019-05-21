@@ -17,18 +17,18 @@
 'use strict';
 
 import * as assert from 'assert';
-import { EventEmitter } from 'events';
+import {EventEmitter} from 'events';
 import * as extend from 'extend';
-import { ApiError } from '@google-cloud/common';
+import {ApiError} from '@google-cloud/common';
 import * as proxyquire from 'proxyquire';
 import * as sinon from 'sinon';
-import { Transform } from 'stream';
+import {Transform} from 'stream';
 import * as through from 'through2';
-import { util } from '@google-cloud/common-grpc';
+import {util} from '@google-cloud/common-grpc';
 import * as pfy from '@google-cloud/promisify';
 import * as db from '../src/database';
-import { Instance } from '../src';
-import { TimestampBounds } from '../src/transaction';
+import {Instance} from '../src';
+import {TimestampBounds} from '../src/transaction';
 
 let promisified = false;
 const fakePfy = extend({}, pfy, {
@@ -63,7 +63,7 @@ class FakeGrpcServiceObject extends EventEmitter {
   }
 }
 
-function fakePartialResultStream(this: Function & { calledWith_: IArguments }) {
+function fakePartialResultStream(this: Function & {calledWith_: IArguments}) {
   this.calledWith_ = arguments;
   return this;
 }
@@ -97,10 +97,10 @@ class FakeSessionPool extends EventEmitter {
     super();
     this.calledWith_ = arguments;
   }
-  open() { }
-  getReadSession(callback: ReadSessionCallback) { }
-  getWriteSession(callback: WriteSessionCallback) { }
-  release(session: FakeSession) { }
+  open() {}
+  getReadSession(callback: ReadSessionCallback) {}
+  getWriteSession(callback: WriteSessionCallback) {}
+  release(session: FakeSession) {}
 }
 
 class FakeTable {
@@ -116,12 +116,12 @@ class FakeTransaction extends EventEmitter {
     super();
     this.calledWith_ = arguments;
   }
-  begin(callback: Function) { }
-  end() { }
+  begin(callback: Function) {}
+  end() {}
   runStream(query: string | object): Transform {
     return through.obj();
   }
-  runUpdate(query: string | object, callback: Function) { }
+  runUpdate(query: string | object, callback: Function) {}
 }
 
 let fakeTransactionRunner: FakeTransactionRunner;
@@ -132,7 +132,7 @@ class FakeTransactionRunner {
     this.calledWith_ = arguments;
     fakeTransactionRunner = this;
   }
-  async run(): Promise<void> { }
+  async run(): Promise<void> {}
 }
 
 let fakeAsyncTransactionRunner: FakeAsyncTransactionRunner<{}>;
@@ -151,9 +151,9 @@ class FakeAsyncTransactionRunner<T> {
 // tslint:disable-next-line no-any
 const fakeCodec: any = {
   encode: util.noop,
-  Int() { },
-  Float() { },
-  SpannerDate() { },
+  Int() {},
+  Float() {},
+  SpannerDate() {},
 };
 
 class FakeAbortError {
@@ -199,12 +199,12 @@ describe('Database', () => {
       },
       '@google-cloud/promisify': fakePfy,
       'p-retry': fakeRetry,
-      './batch-transaction': { BatchTransaction: FakeBatchTransaction },
-      './codec': { codec: fakeCodec },
-      './partial-result-stream': { partialResultStream: fakePartialResultStream },
-      './session-pool': { SessionPool: FakeSessionPool },
-      './session': { Session: FakeSession },
-      './table': { Table: FakeTable },
+      './batch-transaction': {BatchTransaction: FakeBatchTransaction},
+      './codec': {codec: fakeCodec},
+      './partial-result-stream': {partialResultStream: fakePartialResultStream},
+      './session-pool': {SessionPool: FakeSessionPool},
+      './session': {Session: FakeSession},
+      './table': {Table: FakeTable},
       './transaction-runner': {
         TransactionRunner: FakeTransactionRunner,
         AsyncTransactionRunner: FakeAsyncTransactionRunner,
@@ -259,7 +259,7 @@ describe('Database', () => {
     });
 
     it('should accept a custom Pool class', () => {
-      function FakePool() { }
+      function FakePool() {}
       FakePool.prototype.on = util.noop;
       FakePool.prototype.open = util.noop;
 
@@ -306,7 +306,7 @@ describe('Database', () => {
 
       assert.strictEqual(calledWith.parent, instanceInstance);
       assert.strictEqual(calledWith.id, NAME);
-      assert.deepStrictEqual(calledWith.methods, { create: true });
+      assert.deepStrictEqual(calledWith.methods, {create: true});
 
       calledWith.createMethod(null, options, done);
     });
@@ -330,9 +330,9 @@ describe('Database', () => {
   });
 
   describe('batchTransaction', () => {
-    const SESSION = { id: 'hijklmnop' };
+    const SESSION = {id: 'hijklmnop'};
     const ID = 'abcdefg';
-    const READ_TIMESTAMP = { seconds: 0, nanos: 0 };
+    const READ_TIMESTAMP = {seconds: 0, nanos: 0};
 
     it('should create a transaction object', () => {
       const identifier = {
@@ -422,7 +422,7 @@ describe('Database', () => {
 
   describe('createBatchTransaction', () => {
     const SESSION = {};
-    const RESPONSE = { a: 'b' };
+    const RESPONSE = {a: 'b'};
 
     beforeEach(() => {
       database.createSession = callback => {
@@ -432,7 +432,7 @@ describe('Database', () => {
 
     it('should return any session creation errors', done => {
       const error = new Error('err');
-      const apiResponse = { c: 'd' };
+      const apiResponse = {c: 'd'};
 
       database.createSession = callback => {
         callback(error, null, apiResponse);
@@ -447,7 +447,7 @@ describe('Database', () => {
     });
 
     it('should create a transaction', done => {
-      const opts = { a: 'b' };
+      const opts = {a: 'b'};
 
       const fakeTransaction = {
         begin(callback) {
@@ -456,7 +456,7 @@ describe('Database', () => {
       };
 
       database.batchTransaction = (identifier, options) => {
-        assert.deepStrictEqual(identifier, { session: SESSION });
+        assert.deepStrictEqual(identifier, {session: SESSION});
         assert.strictEqual(options, opts);
         return fakeTransaction;
       };
@@ -605,7 +605,7 @@ describe('Database', () => {
 
   describe('exists', () => {
     it('should return any non-404 like errors', done => {
-      const error = { code: 3 };
+      const error = {code: 3};
 
       database.getMetadata = callback => {
         callback(error);
@@ -631,7 +631,7 @@ describe('Database', () => {
     });
 
     it('should return false if not found error if present', done => {
-      const error = { code: 5 };
+      const error = {code: 5};
 
       database.getMetadata = callback => {
         callback(error);
@@ -1284,7 +1284,7 @@ describe('Database', () => {
     });
 
     it('should get a read session via `getReadSession`', () => {
-      getReadSessionStub.callsFake(() => { });
+      getReadSessionStub.callsFake(() => {});
       database.runStream(QUERY);
 
       assert.strictEqual(getReadSessionStub.callCount, 1);
@@ -1302,7 +1302,7 @@ describe('Database', () => {
     });
 
     it('should pass through timestamp bounds', () => {
-      const fakeOptions = { strong: false };
+      const fakeOptions = {strong: false};
       database.runStream(QUERY, fakeOptions);
 
       const options = snapshotStub.lastCall.args[0];
@@ -1459,17 +1459,17 @@ describe('Database', () => {
     });
 
     it('should send labels correctly', done => {
-      const labels = { a: 'b' };
-      const options = { a: 'b', labels };
+      const labels = {a: 'b'};
+      const options = {a: 'b', labels};
       const originalOptions = extend(true, {}, options);
 
       database.request = config => {
-        assert.deepStrictEqual(config.reqOpts.session, { labels });
+        assert.deepStrictEqual(config.reqOpts.session, {labels});
         assert.deepStrictEqual(options, originalOptions);
         done();
       };
 
-      database.createSession({ labels }, assert.ifError);
+      database.createSession({labels}, assert.ifError);
     });
 
     describe('error', () => {
@@ -1553,7 +1553,7 @@ describe('Database', () => {
     });
 
     it('should call through to `SessionPool#getReadSession`', () => {
-      getReadSessionStub.callsFake(() => { });
+      getReadSessionStub.callsFake(() => {});
 
       database.getSnapshot(assert.ifError);
 
@@ -1581,7 +1581,7 @@ describe('Database', () => {
     });
 
     it('should begin a snapshot', () => {
-      beginSnapshotStub.callsFake(() => { });
+      beginSnapshotStub.callsFake(() => {});
 
       database.getSnapshot(assert.ifError);
 
@@ -1646,7 +1646,7 @@ describe('Database', () => {
     });
 
     it('should get a read/write transaction', () => {
-      getWriteSessionStub.callsFake(() => { });
+      getWriteSessionStub.callsFake(() => {});
 
       database.getTransaction(assert.ifError);
 
@@ -1707,7 +1707,7 @@ describe('Database', () => {
   describe('getSessions', () => {
     it('should make the correct request', done => {
       const gaxOpts = {};
-      const options = { a: 'a', gaxOptions: gaxOpts };
+      const options = {a: 'a', gaxOptions: gaxOpts};
 
       const expectedReqOpts = extend({}, options, {
         database: database.formattedName_,
@@ -1748,7 +1748,7 @@ describe('Database', () => {
     });
 
     it('should create and return Session objects', done => {
-      const SESSIONS = [{ name: 'abc' }];
+      const SESSIONS = [{name: 'abc'}];
       const SESSION_INSTANCE = {};
       const RESPONSE = {};
 
@@ -1811,7 +1811,7 @@ describe('Database', () => {
     });
 
     it('should get a read only session from the pool', () => {
-      getReadSessionStub.callsFake(() => { });
+      getReadSessionStub.callsFake(() => {});
 
       database.runPartitionedUpdate(QUERY, assert.ifError);
 
@@ -1832,7 +1832,7 @@ describe('Database', () => {
     });
 
     it('should call transaction begin', () => {
-      beginStub.callsFake(() => { });
+      beginStub.callsFake(() => {});
       database.runPartitionedUpdate(QUERY, assert.ifError);
 
       assert.strictEqual(beginStub.callCount, 1);
@@ -1924,7 +1924,7 @@ describe('Database', () => {
     });
 
     it('should optionally accept runner `options`', () => {
-      const fakeOptions = { timeout: 1 };
+      const fakeOptions = {timeout: 1};
 
       database.runTransaction(fakeOptions, assert.ifError);
 
@@ -1992,7 +1992,7 @@ describe('Database', () => {
     });
 
     it('should optionally accept runner `options`', async () => {
-      const fakeOptions = { timeout: 1 };
+      const fakeOptions = {timeout: 1};
 
       await database.runTransactionAsync(fakeOptions, assert.ifError);
 

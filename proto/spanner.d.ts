@@ -219,101 +219,101 @@ export namespace google {
                  * @param error Error, if any
                  * @param [response] Session
                  */
-                type CreateSessionCallback = (error: (Error | null), response?: google.spanner.v1.Session) => void;
+                type CreateSessionCallback = (error: (Error|null), response?: google.spanner.v1.Session) => void;
 
                 /**
                  * Callback as used by {@link google.spanner.v1.Spanner#getSession}.
                  * @param error Error, if any
                  * @param [response] Session
                  */
-                type GetSessionCallback = (error: (Error | null), response?: google.spanner.v1.Session) => void;
+                type GetSessionCallback = (error: (Error|null), response?: google.spanner.v1.Session) => void;
 
                 /**
                  * Callback as used by {@link google.spanner.v1.Spanner#listSessions}.
                  * @param error Error, if any
                  * @param [response] ListSessionsResponse
                  */
-                type ListSessionsCallback = (error: (Error | null), response?: google.spanner.v1.ListSessionsResponse) => void;
+                type ListSessionsCallback = (error: (Error|null), response?: google.spanner.v1.ListSessionsResponse) => void;
 
                 /**
                  * Callback as used by {@link google.spanner.v1.Spanner#deleteSession}.
                  * @param error Error, if any
                  * @param [response] Empty
                  */
-                type DeleteSessionCallback = (error: (Error | null), response?: google.protobuf.Empty) => void;
+                type DeleteSessionCallback = (error: (Error|null), response?: google.protobuf.Empty) => void;
 
                 /**
                  * Callback as used by {@link google.spanner.v1.Spanner#executeSql}.
                  * @param error Error, if any
                  * @param [response] ResultSet
                  */
-                type ExecuteSqlCallback = (error: (Error | null), response?: google.spanner.v1.ResultSet) => void;
+                type ExecuteSqlCallback = (error: (Error|null), response?: google.spanner.v1.ResultSet) => void;
 
                 /**
                  * Callback as used by {@link google.spanner.v1.Spanner#executeStreamingSql}.
                  * @param error Error, if any
                  * @param [response] PartialResultSet
                  */
-                type ExecuteStreamingSqlCallback = (error: (Error | null), response?: google.spanner.v1.PartialResultSet) => void;
+                type ExecuteStreamingSqlCallback = (error: (Error|null), response?: google.spanner.v1.PartialResultSet) => void;
 
                 /**
                  * Callback as used by {@link google.spanner.v1.Spanner#read}.
                  * @param error Error, if any
                  * @param [response] ResultSet
                  */
-                type ReadCallback = (error: (Error | null), response?: google.spanner.v1.ResultSet) => void;
+                type ReadCallback = (error: (Error|null), response?: google.spanner.v1.ResultSet) => void;
 
                 /**
                  * Callback as used by {@link google.spanner.v1.Spanner#streamingRead}.
                  * @param error Error, if any
                  * @param [response] PartialResultSet
                  */
-                type StreamingReadCallback = (error: (Error | null), response?: google.spanner.v1.PartialResultSet) => void;
+                type StreamingReadCallback = (error: (Error|null), response?: google.spanner.v1.PartialResultSet) => void;
 
                 /**
                  * Callback as used by {@link google.spanner.v1.Spanner#beginTransaction}.
                  * @param error Error, if any
                  * @param [response] Transaction
                  */
-                type BeginTransactionCallback = (error: (Error | null), response?: google.spanner.v1.Transaction) => void;
+                type BeginTransactionCallback = (error: (Error|null), response?: google.spanner.v1.Transaction) => void;
 
                 /**
                  * Callback as used by {@link google.spanner.v1.Spanner#commit}.
                  * @param error Error, if any
                  * @param [response] CommitResponse
                  */
-                type CommitCallback = (error: (Error | null), response?: google.spanner.v1.CommitResponse) => void;
+                type CommitCallback = (error: (Error|null), response?: google.spanner.v1.CommitResponse) => void;
 
                 /**
                  * Callback as used by {@link google.spanner.v1.Spanner#rollback}.
                  * @param error Error, if any
                  * @param [response] Empty
                  */
-                type RollbackCallback = (error: (Error | null), response?: google.protobuf.Empty) => void;
+                type RollbackCallback = (error: (Error|null), response?: google.protobuf.Empty) => void;
 
                 /**
                  * Callback as used by {@link google.spanner.v1.Spanner#partitionQuery}.
                  * @param error Error, if any
                  * @param [response] PartitionResponse
                  */
-                type PartitionQueryCallback = (error: (Error | null), response?: google.spanner.v1.PartitionResponse) => void;
+                type PartitionQueryCallback = (error: (Error|null), response?: google.spanner.v1.PartitionResponse) => void;
 
                 /**
                  * Callback as used by {@link google.spanner.v1.Spanner#partitionRead}.
                  * @param error Error, if any
                  * @param [response] PartitionResponse
                  */
-                type PartitionReadCallback = (error: (Error | null), response?: google.spanner.v1.PartitionResponse) => void;
+                type PartitionReadCallback = (error: (Error|null), response?: google.spanner.v1.PartitionResponse) => void;
             }
 
             /** Properties of a CreateSessionRequest. */
             interface ICreateSessionRequest {
 
                 /** CreateSessionRequest database */
-                database?: (string | null);
+                database?: (string|null);
 
                 /** CreateSessionRequest session */
-                session?: (google.spanner.v1.ISession | null);
+                session?: (google.spanner.v1.ISession|null);
             }
 
             /** Represents a CreateSessionRequest. */
@@ -329,7 +329,7 @@ export namespace google {
                 public database: string;
 
                 /** CreateSessionRequest session. */
-                public session?: (google.spanner.v1.ISession | null);
+                public session?: (google.spanner.v1.ISession|null);
 
                 /**
                  * Creates a new CreateSessionRequest instance using the specified properties.
@@ -362,7 +362,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.CreateSessionRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.CreateSessionRequest;
 
                 /**
                  * Decodes a CreateSessionRequest message from the specified reader or buffer, length delimited.
@@ -371,14 +371,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.CreateSessionRequest;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.CreateSessionRequest;
 
                 /**
                  * Verifies a CreateSessionRequest message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a CreateSessionRequest message from a plain object. Also converts values to their respective internal types.
@@ -406,16 +406,16 @@ export namespace google {
             interface ISession {
 
                 /** Session name */
-                name?: (string | null);
+                name?: (string|null);
 
                 /** Session labels */
-                labels?: ({ [k: string]: string } | null);
+                labels?: ({ [k: string]: string }|null);
 
                 /** Session createTime */
-                createTime?: (google.protobuf.ITimestamp | null);
+                createTime?: (google.protobuf.ITimestamp|null);
 
                 /** Session approximateLastUseTime */
-                approximateLastUseTime?: (google.protobuf.ITimestamp | null);
+                approximateLastUseTime?: (google.protobuf.ITimestamp|null);
             }
 
             /** Represents a Session. */
@@ -434,10 +434,10 @@ export namespace google {
                 public labels: { [k: string]: string };
 
                 /** Session createTime. */
-                public createTime?: (google.protobuf.ITimestamp | null);
+                public createTime?: (google.protobuf.ITimestamp|null);
 
                 /** Session approximateLastUseTime. */
-                public approximateLastUseTime?: (google.protobuf.ITimestamp | null);
+                public approximateLastUseTime?: (google.protobuf.ITimestamp|null);
 
                 /**
                  * Creates a new Session instance using the specified properties.
@@ -470,7 +470,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.Session;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.Session;
 
                 /**
                  * Decodes a Session message from the specified reader or buffer, length delimited.
@@ -479,14 +479,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.Session;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.Session;
 
                 /**
                  * Verifies a Session message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a Session message from a plain object. Also converts values to their respective internal types.
@@ -514,7 +514,7 @@ export namespace google {
             interface IGetSessionRequest {
 
                 /** GetSessionRequest name */
-                name?: (string | null);
+                name?: (string|null);
             }
 
             /** Represents a GetSessionRequest. */
@@ -560,7 +560,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.GetSessionRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.GetSessionRequest;
 
                 /**
                  * Decodes a GetSessionRequest message from the specified reader or buffer, length delimited.
@@ -569,14 +569,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.GetSessionRequest;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.GetSessionRequest;
 
                 /**
                  * Verifies a GetSessionRequest message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a GetSessionRequest message from a plain object. Also converts values to their respective internal types.
@@ -604,16 +604,16 @@ export namespace google {
             interface IListSessionsRequest {
 
                 /** ListSessionsRequest database */
-                database?: (string | null);
+                database?: (string|null);
 
                 /** ListSessionsRequest pageSize */
-                pageSize?: (number | null);
+                pageSize?: (number|null);
 
                 /** ListSessionsRequest pageToken */
-                pageToken?: (string | null);
+                pageToken?: (string|null);
 
                 /** ListSessionsRequest filter */
-                filter?: (string | null);
+                filter?: (string|null);
             }
 
             /** Represents a ListSessionsRequest. */
@@ -668,7 +668,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.ListSessionsRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.ListSessionsRequest;
 
                 /**
                  * Decodes a ListSessionsRequest message from the specified reader or buffer, length delimited.
@@ -677,14 +677,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.ListSessionsRequest;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.ListSessionsRequest;
 
                 /**
                  * Verifies a ListSessionsRequest message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a ListSessionsRequest message from a plain object. Also converts values to their respective internal types.
@@ -712,10 +712,10 @@ export namespace google {
             interface IListSessionsResponse {
 
                 /** ListSessionsResponse sessions */
-                sessions?: (google.spanner.v1.ISession[] | null);
+                sessions?: (google.spanner.v1.ISession[]|null);
 
                 /** ListSessionsResponse nextPageToken */
-                nextPageToken?: (string | null);
+                nextPageToken?: (string|null);
             }
 
             /** Represents a ListSessionsResponse. */
@@ -764,7 +764,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.ListSessionsResponse;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.ListSessionsResponse;
 
                 /**
                  * Decodes a ListSessionsResponse message from the specified reader or buffer, length delimited.
@@ -773,14 +773,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.ListSessionsResponse;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.ListSessionsResponse;
 
                 /**
                  * Verifies a ListSessionsResponse message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a ListSessionsResponse message from a plain object. Also converts values to their respective internal types.
@@ -808,7 +808,7 @@ export namespace google {
             interface IDeleteSessionRequest {
 
                 /** DeleteSessionRequest name */
-                name?: (string | null);
+                name?: (string|null);
             }
 
             /** Represents a DeleteSessionRequest. */
@@ -854,7 +854,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.DeleteSessionRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.DeleteSessionRequest;
 
                 /**
                  * Decodes a DeleteSessionRequest message from the specified reader or buffer, length delimited.
@@ -863,14 +863,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.DeleteSessionRequest;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.DeleteSessionRequest;
 
                 /**
                  * Verifies a DeleteSessionRequest message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a DeleteSessionRequest message from a plain object. Also converts values to their respective internal types.
@@ -898,31 +898,31 @@ export namespace google {
             interface IExecuteSqlRequest {
 
                 /** ExecuteSqlRequest session */
-                session?: (string | null);
+                session?: (string|null);
 
                 /** ExecuteSqlRequest transaction */
-                transaction?: (google.spanner.v1.ITransactionSelector | null);
+                transaction?: (google.spanner.v1.ITransactionSelector|null);
 
                 /** ExecuteSqlRequest sql */
-                sql?: (string | null);
+                sql?: (string|null);
 
                 /** ExecuteSqlRequest params */
-                params?: (google.protobuf.IStruct | null);
+                params?: (google.protobuf.IStruct|null);
 
                 /** ExecuteSqlRequest paramTypes */
-                paramTypes?: ({ [k: string]: google.spanner.v1.IType } | null);
+                paramTypes?: ({ [k: string]: google.spanner.v1.IType }|null);
 
                 /** ExecuteSqlRequest resumeToken */
-                resumeToken?: (Uint8Array | null);
+                resumeToken?: (Uint8Array|null);
 
                 /** ExecuteSqlRequest queryMode */
-                queryMode?: (google.spanner.v1.ExecuteSqlRequest.QueryMode | null);
+                queryMode?: (google.spanner.v1.ExecuteSqlRequest.QueryMode|null);
 
                 /** ExecuteSqlRequest partitionToken */
-                partitionToken?: (Uint8Array | null);
+                partitionToken?: (Uint8Array|null);
 
                 /** ExecuteSqlRequest seqno */
-                seqno?: (number | Long | null);
+                seqno?: (number|Long|null);
             }
 
             /** Represents an ExecuteSqlRequest. */
@@ -938,13 +938,13 @@ export namespace google {
                 public session: string;
 
                 /** ExecuteSqlRequest transaction. */
-                public transaction?: (google.spanner.v1.ITransactionSelector | null);
+                public transaction?: (google.spanner.v1.ITransactionSelector|null);
 
                 /** ExecuteSqlRequest sql. */
                 public sql: string;
 
                 /** ExecuteSqlRequest params. */
-                public params?: (google.protobuf.IStruct | null);
+                public params?: (google.protobuf.IStruct|null);
 
                 /** ExecuteSqlRequest paramTypes. */
                 public paramTypes: { [k: string]: google.spanner.v1.IType };
@@ -959,7 +959,7 @@ export namespace google {
                 public partitionToken: Uint8Array;
 
                 /** ExecuteSqlRequest seqno. */
-                public seqno: (number | Long);
+                public seqno: (number|Long);
 
                 /**
                  * Creates a new ExecuteSqlRequest instance using the specified properties.
@@ -992,7 +992,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.ExecuteSqlRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.ExecuteSqlRequest;
 
                 /**
                  * Decodes an ExecuteSqlRequest message from the specified reader or buffer, length delimited.
@@ -1001,14 +1001,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.ExecuteSqlRequest;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.ExecuteSqlRequest;
 
                 /**
                  * Verifies an ExecuteSqlRequest message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates an ExecuteSqlRequest message from a plain object. Also converts values to their respective internal types.
@@ -1046,10 +1046,10 @@ export namespace google {
             interface IPartitionOptions {
 
                 /** PartitionOptions partitionSizeBytes */
-                partitionSizeBytes?: (number | Long | null);
+                partitionSizeBytes?: (number|Long|null);
 
                 /** PartitionOptions maxPartitions */
-                maxPartitions?: (number | Long | null);
+                maxPartitions?: (number|Long|null);
             }
 
             /** Represents a PartitionOptions. */
@@ -1062,10 +1062,10 @@ export namespace google {
                 constructor(properties?: google.spanner.v1.IPartitionOptions);
 
                 /** PartitionOptions partitionSizeBytes. */
-                public partitionSizeBytes: (number | Long);
+                public partitionSizeBytes: (number|Long);
 
                 /** PartitionOptions maxPartitions. */
-                public maxPartitions: (number | Long);
+                public maxPartitions: (number|Long);
 
                 /**
                  * Creates a new PartitionOptions instance using the specified properties.
@@ -1098,7 +1098,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.PartitionOptions;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.PartitionOptions;
 
                 /**
                  * Decodes a PartitionOptions message from the specified reader or buffer, length delimited.
@@ -1107,14 +1107,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.PartitionOptions;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.PartitionOptions;
 
                 /**
                  * Verifies a PartitionOptions message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a PartitionOptions message from a plain object. Also converts values to their respective internal types.
@@ -1142,22 +1142,22 @@ export namespace google {
             interface IPartitionQueryRequest {
 
                 /** PartitionQueryRequest session */
-                session?: (string | null);
+                session?: (string|null);
 
                 /** PartitionQueryRequest transaction */
-                transaction?: (google.spanner.v1.ITransactionSelector | null);
+                transaction?: (google.spanner.v1.ITransactionSelector|null);
 
                 /** PartitionQueryRequest sql */
-                sql?: (string | null);
+                sql?: (string|null);
 
                 /** PartitionQueryRequest params */
-                params?: (google.protobuf.IStruct | null);
+                params?: (google.protobuf.IStruct|null);
 
                 /** PartitionQueryRequest paramTypes */
-                paramTypes?: ({ [k: string]: google.spanner.v1.IType } | null);
+                paramTypes?: ({ [k: string]: google.spanner.v1.IType }|null);
 
                 /** PartitionQueryRequest partitionOptions */
-                partitionOptions?: (google.spanner.v1.IPartitionOptions | null);
+                partitionOptions?: (google.spanner.v1.IPartitionOptions|null);
             }
 
             /** Represents a PartitionQueryRequest. */
@@ -1173,19 +1173,19 @@ export namespace google {
                 public session: string;
 
                 /** PartitionQueryRequest transaction. */
-                public transaction?: (google.spanner.v1.ITransactionSelector | null);
+                public transaction?: (google.spanner.v1.ITransactionSelector|null);
 
                 /** PartitionQueryRequest sql. */
                 public sql: string;
 
                 /** PartitionQueryRequest params. */
-                public params?: (google.protobuf.IStruct | null);
+                public params?: (google.protobuf.IStruct|null);
 
                 /** PartitionQueryRequest paramTypes. */
                 public paramTypes: { [k: string]: google.spanner.v1.IType };
 
                 /** PartitionQueryRequest partitionOptions. */
-                public partitionOptions?: (google.spanner.v1.IPartitionOptions | null);
+                public partitionOptions?: (google.spanner.v1.IPartitionOptions|null);
 
                 /**
                  * Creates a new PartitionQueryRequest instance using the specified properties.
@@ -1218,7 +1218,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.PartitionQueryRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.PartitionQueryRequest;
 
                 /**
                  * Decodes a PartitionQueryRequest message from the specified reader or buffer, length delimited.
@@ -1227,14 +1227,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.PartitionQueryRequest;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.PartitionQueryRequest;
 
                 /**
                  * Verifies a PartitionQueryRequest message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a PartitionQueryRequest message from a plain object. Also converts values to their respective internal types.
@@ -1262,25 +1262,25 @@ export namespace google {
             interface IPartitionReadRequest {
 
                 /** PartitionReadRequest session */
-                session?: (string | null);
+                session?: (string|null);
 
                 /** PartitionReadRequest transaction */
-                transaction?: (google.spanner.v1.ITransactionSelector | null);
+                transaction?: (google.spanner.v1.ITransactionSelector|null);
 
                 /** PartitionReadRequest table */
-                table?: (string | null);
+                table?: (string|null);
 
                 /** PartitionReadRequest index */
-                index?: (string | null);
+                index?: (string|null);
 
                 /** PartitionReadRequest columns */
-                columns?: (string[] | null);
+                columns?: (string[]|null);
 
                 /** PartitionReadRequest keySet */
-                keySet?: (google.spanner.v1.IKeySet | null);
+                keySet?: (google.spanner.v1.IKeySet|null);
 
                 /** PartitionReadRequest partitionOptions */
-                partitionOptions?: (google.spanner.v1.IPartitionOptions | null);
+                partitionOptions?: (google.spanner.v1.IPartitionOptions|null);
             }
 
             /** Represents a PartitionReadRequest. */
@@ -1296,7 +1296,7 @@ export namespace google {
                 public session: string;
 
                 /** PartitionReadRequest transaction. */
-                public transaction?: (google.spanner.v1.ITransactionSelector | null);
+                public transaction?: (google.spanner.v1.ITransactionSelector|null);
 
                 /** PartitionReadRequest table. */
                 public table: string;
@@ -1308,10 +1308,10 @@ export namespace google {
                 public columns: string[];
 
                 /** PartitionReadRequest keySet. */
-                public keySet?: (google.spanner.v1.IKeySet | null);
+                public keySet?: (google.spanner.v1.IKeySet|null);
 
                 /** PartitionReadRequest partitionOptions. */
-                public partitionOptions?: (google.spanner.v1.IPartitionOptions | null);
+                public partitionOptions?: (google.spanner.v1.IPartitionOptions|null);
 
                 /**
                  * Creates a new PartitionReadRequest instance using the specified properties.
@@ -1344,7 +1344,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.PartitionReadRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.PartitionReadRequest;
 
                 /**
                  * Decodes a PartitionReadRequest message from the specified reader or buffer, length delimited.
@@ -1353,14 +1353,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.PartitionReadRequest;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.PartitionReadRequest;
 
                 /**
                  * Verifies a PartitionReadRequest message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a PartitionReadRequest message from a plain object. Also converts values to their respective internal types.
@@ -1388,7 +1388,7 @@ export namespace google {
             interface IPartition {
 
                 /** Partition partitionToken */
-                partitionToken?: (Uint8Array | null);
+                partitionToken?: (Uint8Array|null);
             }
 
             /** Represents a Partition. */
@@ -1434,7 +1434,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.Partition;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.Partition;
 
                 /**
                  * Decodes a Partition message from the specified reader or buffer, length delimited.
@@ -1443,14 +1443,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.Partition;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.Partition;
 
                 /**
                  * Verifies a Partition message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a Partition message from a plain object. Also converts values to their respective internal types.
@@ -1478,10 +1478,10 @@ export namespace google {
             interface IPartitionResponse {
 
                 /** PartitionResponse partitions */
-                partitions?: (google.spanner.v1.IPartition[] | null);
+                partitions?: (google.spanner.v1.IPartition[]|null);
 
                 /** PartitionResponse transaction */
-                transaction?: (google.spanner.v1.ITransaction | null);
+                transaction?: (google.spanner.v1.ITransaction|null);
             }
 
             /** Represents a PartitionResponse. */
@@ -1497,7 +1497,7 @@ export namespace google {
                 public partitions: google.spanner.v1.IPartition[];
 
                 /** PartitionResponse transaction. */
-                public transaction?: (google.spanner.v1.ITransaction | null);
+                public transaction?: (google.spanner.v1.ITransaction|null);
 
                 /**
                  * Creates a new PartitionResponse instance using the specified properties.
@@ -1530,7 +1530,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.PartitionResponse;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.PartitionResponse;
 
                 /**
                  * Decodes a PartitionResponse message from the specified reader or buffer, length delimited.
@@ -1539,14 +1539,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.PartitionResponse;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.PartitionResponse;
 
                 /**
                  * Verifies a PartitionResponse message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a PartitionResponse message from a plain object. Also converts values to their respective internal types.
@@ -1574,31 +1574,31 @@ export namespace google {
             interface IReadRequest {
 
                 /** ReadRequest session */
-                session?: (string | null);
+                session?: (string|null);
 
                 /** ReadRequest transaction */
-                transaction?: (google.spanner.v1.ITransactionSelector | null);
+                transaction?: (google.spanner.v1.ITransactionSelector|null);
 
                 /** ReadRequest table */
-                table?: (string | null);
+                table?: (string|null);
 
                 /** ReadRequest index */
-                index?: (string | null);
+                index?: (string|null);
 
                 /** ReadRequest columns */
-                columns?: (string[] | null);
+                columns?: (string[]|null);
 
                 /** ReadRequest keySet */
-                keySet?: (google.spanner.v1.IKeySet | null);
+                keySet?: (google.spanner.v1.IKeySet|null);
 
                 /** ReadRequest limit */
-                limit?: (number | Long | null);
+                limit?: (number|Long|null);
 
                 /** ReadRequest resumeToken */
-                resumeToken?: (Uint8Array | null);
+                resumeToken?: (Uint8Array|null);
 
                 /** ReadRequest partitionToken */
-                partitionToken?: (Uint8Array | null);
+                partitionToken?: (Uint8Array|null);
             }
 
             /** Represents a ReadRequest. */
@@ -1614,7 +1614,7 @@ export namespace google {
                 public session: string;
 
                 /** ReadRequest transaction. */
-                public transaction?: (google.spanner.v1.ITransactionSelector | null);
+                public transaction?: (google.spanner.v1.ITransactionSelector|null);
 
                 /** ReadRequest table. */
                 public table: string;
@@ -1626,10 +1626,10 @@ export namespace google {
                 public columns: string[];
 
                 /** ReadRequest keySet. */
-                public keySet?: (google.spanner.v1.IKeySet | null);
+                public keySet?: (google.spanner.v1.IKeySet|null);
 
                 /** ReadRequest limit. */
-                public limit: (number | Long);
+                public limit: (number|Long);
 
                 /** ReadRequest resumeToken. */
                 public resumeToken: Uint8Array;
@@ -1668,7 +1668,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.ReadRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.ReadRequest;
 
                 /**
                  * Decodes a ReadRequest message from the specified reader or buffer, length delimited.
@@ -1677,14 +1677,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.ReadRequest;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.ReadRequest;
 
                 /**
                  * Verifies a ReadRequest message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a ReadRequest message from a plain object. Also converts values to their respective internal types.
@@ -1712,10 +1712,10 @@ export namespace google {
             interface IBeginTransactionRequest {
 
                 /** BeginTransactionRequest session */
-                session?: (string | null);
+                session?: (string|null);
 
                 /** BeginTransactionRequest options */
-                options?: (google.spanner.v1.ITransactionOptions | null);
+                options?: (google.spanner.v1.ITransactionOptions|null);
             }
 
             /** Represents a BeginTransactionRequest. */
@@ -1731,7 +1731,7 @@ export namespace google {
                 public session: string;
 
                 /** BeginTransactionRequest options. */
-                public options?: (google.spanner.v1.ITransactionOptions | null);
+                public options?: (google.spanner.v1.ITransactionOptions|null);
 
                 /**
                  * Creates a new BeginTransactionRequest instance using the specified properties.
@@ -1764,7 +1764,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.BeginTransactionRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.BeginTransactionRequest;
 
                 /**
                  * Decodes a BeginTransactionRequest message from the specified reader or buffer, length delimited.
@@ -1773,14 +1773,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.BeginTransactionRequest;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.BeginTransactionRequest;
 
                 /**
                  * Verifies a BeginTransactionRequest message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a BeginTransactionRequest message from a plain object. Also converts values to their respective internal types.
@@ -1808,16 +1808,16 @@ export namespace google {
             interface ICommitRequest {
 
                 /** CommitRequest session */
-                session?: (string | null);
+                session?: (string|null);
 
                 /** CommitRequest transactionId */
-                transactionId?: (Uint8Array | null);
+                transactionId?: (Uint8Array|null);
 
                 /** CommitRequest singleUseTransaction */
-                singleUseTransaction?: (google.spanner.v1.ITransactionOptions | null);
+                singleUseTransaction?: (google.spanner.v1.ITransactionOptions|null);
 
                 /** CommitRequest mutations */
-                mutations?: (google.spanner.v1.IMutation[] | null);
+                mutations?: (google.spanner.v1.IMutation[]|null);
             }
 
             /** Represents a CommitRequest. */
@@ -1836,13 +1836,13 @@ export namespace google {
                 public transactionId: Uint8Array;
 
                 /** CommitRequest singleUseTransaction. */
-                public singleUseTransaction?: (google.spanner.v1.ITransactionOptions | null);
+                public singleUseTransaction?: (google.spanner.v1.ITransactionOptions|null);
 
                 /** CommitRequest mutations. */
                 public mutations: google.spanner.v1.IMutation[];
 
                 /** CommitRequest transaction. */
-                public transaction?: ("transactionId" | "singleUseTransaction");
+                public transaction?: ("transactionId"|"singleUseTransaction");
 
                 /**
                  * Creates a new CommitRequest instance using the specified properties.
@@ -1875,7 +1875,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.CommitRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.CommitRequest;
 
                 /**
                  * Decodes a CommitRequest message from the specified reader or buffer, length delimited.
@@ -1884,14 +1884,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.CommitRequest;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.CommitRequest;
 
                 /**
                  * Verifies a CommitRequest message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a CommitRequest message from a plain object. Also converts values to their respective internal types.
@@ -1919,7 +1919,7 @@ export namespace google {
             interface ICommitResponse {
 
                 /** CommitResponse commitTimestamp */
-                commitTimestamp?: (google.protobuf.ITimestamp | null);
+                commitTimestamp?: (google.protobuf.ITimestamp|null);
             }
 
             /** Represents a CommitResponse. */
@@ -1932,7 +1932,7 @@ export namespace google {
                 constructor(properties?: google.spanner.v1.ICommitResponse);
 
                 /** CommitResponse commitTimestamp. */
-                public commitTimestamp?: (google.protobuf.ITimestamp | null);
+                public commitTimestamp?: (google.protobuf.ITimestamp|null);
 
                 /**
                  * Creates a new CommitResponse instance using the specified properties.
@@ -1965,7 +1965,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.CommitResponse;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.CommitResponse;
 
                 /**
                  * Decodes a CommitResponse message from the specified reader or buffer, length delimited.
@@ -1974,14 +1974,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.CommitResponse;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.CommitResponse;
 
                 /**
                  * Verifies a CommitResponse message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a CommitResponse message from a plain object. Also converts values to their respective internal types.
@@ -2009,10 +2009,10 @@ export namespace google {
             interface IRollbackRequest {
 
                 /** RollbackRequest session */
-                session?: (string | null);
+                session?: (string|null);
 
                 /** RollbackRequest transactionId */
-                transactionId?: (Uint8Array | null);
+                transactionId?: (Uint8Array|null);
             }
 
             /** Represents a RollbackRequest. */
@@ -2061,7 +2061,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.RollbackRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.RollbackRequest;
 
                 /**
                  * Decodes a RollbackRequest message from the specified reader or buffer, length delimited.
@@ -2070,14 +2070,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.RollbackRequest;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.RollbackRequest;
 
                 /**
                  * Verifies a RollbackRequest message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a RollbackRequest message from a plain object. Also converts values to their respective internal types.
@@ -2105,16 +2105,16 @@ export namespace google {
             interface IKeyRange {
 
                 /** KeyRange startClosed */
-                startClosed?: (google.protobuf.IListValue | null);
+                startClosed?: (google.protobuf.IListValue|null);
 
                 /** KeyRange startOpen */
-                startOpen?: (google.protobuf.IListValue | null);
+                startOpen?: (google.protobuf.IListValue|null);
 
                 /** KeyRange endClosed */
-                endClosed?: (google.protobuf.IListValue | null);
+                endClosed?: (google.protobuf.IListValue|null);
 
                 /** KeyRange endOpen */
-                endOpen?: (google.protobuf.IListValue | null);
+                endOpen?: (google.protobuf.IListValue|null);
             }
 
             /** Represents a KeyRange. */
@@ -2127,22 +2127,22 @@ export namespace google {
                 constructor(properties?: google.spanner.v1.IKeyRange);
 
                 /** KeyRange startClosed. */
-                public startClosed?: (google.protobuf.IListValue | null);
+                public startClosed?: (google.protobuf.IListValue|null);
 
                 /** KeyRange startOpen. */
-                public startOpen?: (google.protobuf.IListValue | null);
+                public startOpen?: (google.protobuf.IListValue|null);
 
                 /** KeyRange endClosed. */
-                public endClosed?: (google.protobuf.IListValue | null);
+                public endClosed?: (google.protobuf.IListValue|null);
 
                 /** KeyRange endOpen. */
-                public endOpen?: (google.protobuf.IListValue | null);
+                public endOpen?: (google.protobuf.IListValue|null);
 
                 /** KeyRange startKeyType. */
-                public startKeyType?: ("startClosed" | "startOpen");
+                public startKeyType?: ("startClosed"|"startOpen");
 
                 /** KeyRange endKeyType. */
-                public endKeyType?: ("endClosed" | "endOpen");
+                public endKeyType?: ("endClosed"|"endOpen");
 
                 /**
                  * Creates a new KeyRange instance using the specified properties.
@@ -2175,7 +2175,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.KeyRange;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.KeyRange;
 
                 /**
                  * Decodes a KeyRange message from the specified reader or buffer, length delimited.
@@ -2184,14 +2184,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.KeyRange;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.KeyRange;
 
                 /**
                  * Verifies a KeyRange message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a KeyRange message from a plain object. Also converts values to their respective internal types.
@@ -2219,13 +2219,13 @@ export namespace google {
             interface IKeySet {
 
                 /** KeySet keys */
-                keys?: (google.protobuf.IListValue[] | null);
+                keys?: (google.protobuf.IListValue[]|null);
 
                 /** KeySet ranges */
-                ranges?: (google.spanner.v1.IKeyRange[] | null);
+                ranges?: (google.spanner.v1.IKeyRange[]|null);
 
                 /** KeySet all */
-                all?: (boolean | null);
+                all?: (boolean|null);
             }
 
             /** Represents a KeySet. */
@@ -2277,7 +2277,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.KeySet;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.KeySet;
 
                 /**
                  * Decodes a KeySet message from the specified reader or buffer, length delimited.
@@ -2286,14 +2286,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.KeySet;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.KeySet;
 
                 /**
                  * Verifies a KeySet message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a KeySet message from a plain object. Also converts values to their respective internal types.
@@ -2321,19 +2321,19 @@ export namespace google {
             interface IMutation {
 
                 /** Mutation insert */
-                insert?: (google.spanner.v1.Mutation.IWrite | null);
+                insert?: (google.spanner.v1.Mutation.IWrite|null);
 
                 /** Mutation update */
-                update?: (google.spanner.v1.Mutation.IWrite | null);
+                update?: (google.spanner.v1.Mutation.IWrite|null);
 
                 /** Mutation insertOrUpdate */
-                insertOrUpdate?: (google.spanner.v1.Mutation.IWrite | null);
+                insertOrUpdate?: (google.spanner.v1.Mutation.IWrite|null);
 
                 /** Mutation replace */
-                replace?: (google.spanner.v1.Mutation.IWrite | null);
+                replace?: (google.spanner.v1.Mutation.IWrite|null);
 
                 /** Mutation delete */
-                "delete"?: (google.spanner.v1.Mutation.IDelete | null);
+                "delete"?: (google.spanner.v1.Mutation.IDelete|null);
             }
 
             /** Represents a Mutation. */
@@ -2346,22 +2346,22 @@ export namespace google {
                 constructor(properties?: google.spanner.v1.IMutation);
 
                 /** Mutation insert. */
-                public insert?: (google.spanner.v1.Mutation.IWrite | null);
+                public insert?: (google.spanner.v1.Mutation.IWrite|null);
 
                 /** Mutation update. */
-                public update?: (google.spanner.v1.Mutation.IWrite | null);
+                public update?: (google.spanner.v1.Mutation.IWrite|null);
 
                 /** Mutation insertOrUpdate. */
-                public insertOrUpdate?: (google.spanner.v1.Mutation.IWrite | null);
+                public insertOrUpdate?: (google.spanner.v1.Mutation.IWrite|null);
 
                 /** Mutation replace. */
-                public replace?: (google.spanner.v1.Mutation.IWrite | null);
+                public replace?: (google.spanner.v1.Mutation.IWrite|null);
 
                 /** Mutation delete. */
-                public delete?: (google.spanner.v1.Mutation.IDelete | null);
+                public delete?: (google.spanner.v1.Mutation.IDelete|null);
 
                 /** Mutation operation. */
-                public operation?: ("insert" | "update" | "insertOrUpdate" | "replace" | "delete");
+                public operation?: ("insert"|"update"|"insertOrUpdate"|"replace"|"delete");
 
                 /**
                  * Creates a new Mutation instance using the specified properties.
@@ -2394,7 +2394,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.Mutation;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.Mutation;
 
                 /**
                  * Decodes a Mutation message from the specified reader or buffer, length delimited.
@@ -2403,14 +2403,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.Mutation;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.Mutation;
 
                 /**
                  * Verifies a Mutation message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a Mutation message from a plain object. Also converts values to their respective internal types.
@@ -2440,13 +2440,13 @@ export namespace google {
                 interface IWrite {
 
                     /** Write table */
-                    table?: (string | null);
+                    table?: (string|null);
 
                     /** Write columns */
-                    columns?: (string[] | null);
+                    columns?: (string[]|null);
 
                     /** Write values */
-                    values?: (google.protobuf.IListValue[] | null);
+                    values?: (google.protobuf.IListValue[]|null);
                 }
 
                 /** Represents a Write. */
@@ -2498,7 +2498,7 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.Mutation.Write;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.Mutation.Write;
 
                     /**
                      * Decodes a Write message from the specified reader or buffer, length delimited.
@@ -2507,14 +2507,14 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.Mutation.Write;
+                    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.Mutation.Write;
 
                     /**
                      * Verifies a Write message.
                      * @param message Plain object to verify
                      * @returns `null` if valid, otherwise the reason why it is not
                      */
-                    public static verify(message: { [k: string]: any }): (string | null);
+                    public static verify(message: { [k: string]: any }): (string|null);
 
                     /**
                      * Creates a Write message from a plain object. Also converts values to their respective internal types.
@@ -2542,10 +2542,10 @@ export namespace google {
                 interface IDelete {
 
                     /** Delete table */
-                    table?: (string | null);
+                    table?: (string|null);
 
                     /** Delete keySet */
-                    keySet?: (google.spanner.v1.IKeySet | null);
+                    keySet?: (google.spanner.v1.IKeySet|null);
                 }
 
                 /** Represents a Delete. */
@@ -2561,7 +2561,7 @@ export namespace google {
                     public table: string;
 
                     /** Delete keySet. */
-                    public keySet?: (google.spanner.v1.IKeySet | null);
+                    public keySet?: (google.spanner.v1.IKeySet|null);
 
                     /**
                      * Creates a new Delete instance using the specified properties.
@@ -2594,7 +2594,7 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.Mutation.Delete;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.Mutation.Delete;
 
                     /**
                      * Decodes a Delete message from the specified reader or buffer, length delimited.
@@ -2603,14 +2603,14 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.Mutation.Delete;
+                    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.Mutation.Delete;
 
                     /**
                      * Verifies a Delete message.
                      * @param message Plain object to verify
                      * @returns `null` if valid, otherwise the reason why it is not
                      */
-                    public static verify(message: { [k: string]: any }): (string | null);
+                    public static verify(message: { [k: string]: any }): (string|null);
 
                     /**
                      * Creates a Delete message from a plain object. Also converts values to their respective internal types.
@@ -2639,13 +2639,13 @@ export namespace google {
             interface IResultSet {
 
                 /** ResultSet metadata */
-                metadata?: (google.spanner.v1.IResultSetMetadata | null);
+                metadata?: (google.spanner.v1.IResultSetMetadata|null);
 
                 /** ResultSet rows */
-                rows?: (google.protobuf.IListValue[] | null);
+                rows?: (google.protobuf.IListValue[]|null);
 
                 /** ResultSet stats */
-                stats?: (google.spanner.v1.IResultSetStats | null);
+                stats?: (google.spanner.v1.IResultSetStats|null);
             }
 
             /** Represents a ResultSet. */
@@ -2658,13 +2658,13 @@ export namespace google {
                 constructor(properties?: google.spanner.v1.IResultSet);
 
                 /** ResultSet metadata. */
-                public metadata?: (google.spanner.v1.IResultSetMetadata | null);
+                public metadata?: (google.spanner.v1.IResultSetMetadata|null);
 
                 /** ResultSet rows. */
                 public rows: google.protobuf.IListValue[];
 
                 /** ResultSet stats. */
-                public stats?: (google.spanner.v1.IResultSetStats | null);
+                public stats?: (google.spanner.v1.IResultSetStats|null);
 
                 /**
                  * Creates a new ResultSet instance using the specified properties.
@@ -2697,7 +2697,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.ResultSet;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.ResultSet;
 
                 /**
                  * Decodes a ResultSet message from the specified reader or buffer, length delimited.
@@ -2706,14 +2706,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.ResultSet;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.ResultSet;
 
                 /**
                  * Verifies a ResultSet message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a ResultSet message from a plain object. Also converts values to their respective internal types.
@@ -2741,19 +2741,19 @@ export namespace google {
             interface IPartialResultSet {
 
                 /** PartialResultSet metadata */
-                metadata?: (google.spanner.v1.IResultSetMetadata | null);
+                metadata?: (google.spanner.v1.IResultSetMetadata|null);
 
                 /** PartialResultSet values */
-                values?: (google.protobuf.IValue[] | null);
+                values?: (google.protobuf.IValue[]|null);
 
                 /** PartialResultSet chunkedValue */
-                chunkedValue?: (boolean | null);
+                chunkedValue?: (boolean|null);
 
                 /** PartialResultSet resumeToken */
-                resumeToken?: (Uint8Array | null);
+                resumeToken?: (Uint8Array|null);
 
                 /** PartialResultSet stats */
-                stats?: (google.spanner.v1.IResultSetStats | null);
+                stats?: (google.spanner.v1.IResultSetStats|null);
             }
 
             /** Represents a PartialResultSet. */
@@ -2766,7 +2766,7 @@ export namespace google {
                 constructor(properties?: google.spanner.v1.IPartialResultSet);
 
                 /** PartialResultSet metadata. */
-                public metadata?: (google.spanner.v1.IResultSetMetadata | null);
+                public metadata?: (google.spanner.v1.IResultSetMetadata|null);
 
                 /** PartialResultSet values. */
                 public values: google.protobuf.IValue[];
@@ -2778,7 +2778,7 @@ export namespace google {
                 public resumeToken: Uint8Array;
 
                 /** PartialResultSet stats. */
-                public stats?: (google.spanner.v1.IResultSetStats | null);
+                public stats?: (google.spanner.v1.IResultSetStats|null);
 
                 /**
                  * Creates a new PartialResultSet instance using the specified properties.
@@ -2811,7 +2811,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.PartialResultSet;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.PartialResultSet;
 
                 /**
                  * Decodes a PartialResultSet message from the specified reader or buffer, length delimited.
@@ -2820,14 +2820,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.PartialResultSet;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.PartialResultSet;
 
                 /**
                  * Verifies a PartialResultSet message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a PartialResultSet message from a plain object. Also converts values to their respective internal types.
@@ -2855,10 +2855,10 @@ export namespace google {
             interface IResultSetMetadata {
 
                 /** ResultSetMetadata rowType */
-                rowType?: (google.spanner.v1.IStructType | null);
+                rowType?: (google.spanner.v1.IStructType|null);
 
                 /** ResultSetMetadata transaction */
-                transaction?: (google.spanner.v1.ITransaction | null);
+                transaction?: (google.spanner.v1.ITransaction|null);
             }
 
             /** Represents a ResultSetMetadata. */
@@ -2871,10 +2871,10 @@ export namespace google {
                 constructor(properties?: google.spanner.v1.IResultSetMetadata);
 
                 /** ResultSetMetadata rowType. */
-                public rowType?: (google.spanner.v1.IStructType | null);
+                public rowType?: (google.spanner.v1.IStructType|null);
 
                 /** ResultSetMetadata transaction. */
-                public transaction?: (google.spanner.v1.ITransaction | null);
+                public transaction?: (google.spanner.v1.ITransaction|null);
 
                 /**
                  * Creates a new ResultSetMetadata instance using the specified properties.
@@ -2907,7 +2907,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.ResultSetMetadata;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.ResultSetMetadata;
 
                 /**
                  * Decodes a ResultSetMetadata message from the specified reader or buffer, length delimited.
@@ -2916,14 +2916,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.ResultSetMetadata;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.ResultSetMetadata;
 
                 /**
                  * Verifies a ResultSetMetadata message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a ResultSetMetadata message from a plain object. Also converts values to their respective internal types.
@@ -2951,16 +2951,16 @@ export namespace google {
             interface IResultSetStats {
 
                 /** ResultSetStats queryPlan */
-                queryPlan?: (google.spanner.v1.IQueryPlan | null);
+                queryPlan?: (google.spanner.v1.IQueryPlan|null);
 
                 /** ResultSetStats queryStats */
-                queryStats?: (google.protobuf.IStruct | null);
+                queryStats?: (google.protobuf.IStruct|null);
 
                 /** ResultSetStats rowCountExact */
-                rowCountExact?: (number | Long | null);
+                rowCountExact?: (number|Long|null);
 
                 /** ResultSetStats rowCountLowerBound */
-                rowCountLowerBound?: (number | Long | null);
+                rowCountLowerBound?: (number|Long|null);
             }
 
             /** Represents a ResultSetStats. */
@@ -2973,19 +2973,19 @@ export namespace google {
                 constructor(properties?: google.spanner.v1.IResultSetStats);
 
                 /** ResultSetStats queryPlan. */
-                public queryPlan?: (google.spanner.v1.IQueryPlan | null);
+                public queryPlan?: (google.spanner.v1.IQueryPlan|null);
 
                 /** ResultSetStats queryStats. */
-                public queryStats?: (google.protobuf.IStruct | null);
+                public queryStats?: (google.protobuf.IStruct|null);
 
                 /** ResultSetStats rowCountExact. */
-                public rowCountExact: (number | Long);
+                public rowCountExact: (number|Long);
 
                 /** ResultSetStats rowCountLowerBound. */
-                public rowCountLowerBound: (number | Long);
+                public rowCountLowerBound: (number|Long);
 
                 /** ResultSetStats rowCount. */
-                public rowCount?: ("rowCountExact" | "rowCountLowerBound");
+                public rowCount?: ("rowCountExact"|"rowCountLowerBound");
 
                 /**
                  * Creates a new ResultSetStats instance using the specified properties.
@@ -3018,7 +3018,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.ResultSetStats;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.ResultSetStats;
 
                 /**
                  * Decodes a ResultSetStats message from the specified reader or buffer, length delimited.
@@ -3027,14 +3027,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.ResultSetStats;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.ResultSetStats;
 
                 /**
                  * Verifies a ResultSetStats message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a ResultSetStats message from a plain object. Also converts values to their respective internal types.
@@ -3062,25 +3062,25 @@ export namespace google {
             interface IPlanNode {
 
                 /** PlanNode index */
-                index?: (number | null);
+                index?: (number|null);
 
                 /** PlanNode kind */
-                kind?: (google.spanner.v1.PlanNode.Kind | null);
+                kind?: (google.spanner.v1.PlanNode.Kind|null);
 
                 /** PlanNode displayName */
-                displayName?: (string | null);
+                displayName?: (string|null);
 
                 /** PlanNode childLinks */
-                childLinks?: (google.spanner.v1.PlanNode.IChildLink[] | null);
+                childLinks?: (google.spanner.v1.PlanNode.IChildLink[]|null);
 
                 /** PlanNode shortRepresentation */
-                shortRepresentation?: (google.spanner.v1.PlanNode.IShortRepresentation | null);
+                shortRepresentation?: (google.spanner.v1.PlanNode.IShortRepresentation|null);
 
                 /** PlanNode metadata */
-                metadata?: (google.protobuf.IStruct | null);
+                metadata?: (google.protobuf.IStruct|null);
 
                 /** PlanNode executionStats */
-                executionStats?: (google.protobuf.IStruct | null);
+                executionStats?: (google.protobuf.IStruct|null);
             }
 
             /** Represents a PlanNode. */
@@ -3105,13 +3105,13 @@ export namespace google {
                 public childLinks: google.spanner.v1.PlanNode.IChildLink[];
 
                 /** PlanNode shortRepresentation. */
-                public shortRepresentation?: (google.spanner.v1.PlanNode.IShortRepresentation | null);
+                public shortRepresentation?: (google.spanner.v1.PlanNode.IShortRepresentation|null);
 
                 /** PlanNode metadata. */
-                public metadata?: (google.protobuf.IStruct | null);
+                public metadata?: (google.protobuf.IStruct|null);
 
                 /** PlanNode executionStats. */
-                public executionStats?: (google.protobuf.IStruct | null);
+                public executionStats?: (google.protobuf.IStruct|null);
 
                 /**
                  * Creates a new PlanNode instance using the specified properties.
@@ -3144,7 +3144,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.PlanNode;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.PlanNode;
 
                 /**
                  * Decodes a PlanNode message from the specified reader or buffer, length delimited.
@@ -3153,14 +3153,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.PlanNode;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.PlanNode;
 
                 /**
                  * Verifies a PlanNode message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a PlanNode message from a plain object. Also converts values to their respective internal types.
@@ -3190,13 +3190,13 @@ export namespace google {
                 interface IChildLink {
 
                     /** ChildLink childIndex */
-                    childIndex?: (number | null);
+                    childIndex?: (number|null);
 
                     /** ChildLink type */
-                    type?: (string | null);
+                    type?: (string|null);
 
                     /** ChildLink variable */
-                    variable?: (string | null);
+                    variable?: (string|null);
                 }
 
                 /** Represents a ChildLink. */
@@ -3248,7 +3248,7 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.PlanNode.ChildLink;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.PlanNode.ChildLink;
 
                     /**
                      * Decodes a ChildLink message from the specified reader or buffer, length delimited.
@@ -3257,14 +3257,14 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.PlanNode.ChildLink;
+                    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.PlanNode.ChildLink;
 
                     /**
                      * Verifies a ChildLink message.
                      * @param message Plain object to verify
                      * @returns `null` if valid, otherwise the reason why it is not
                      */
-                    public static verify(message: { [k: string]: any }): (string | null);
+                    public static verify(message: { [k: string]: any }): (string|null);
 
                     /**
                      * Creates a ChildLink message from a plain object. Also converts values to their respective internal types.
@@ -3292,10 +3292,10 @@ export namespace google {
                 interface IShortRepresentation {
 
                     /** ShortRepresentation description */
-                    description?: (string | null);
+                    description?: (string|null);
 
                     /** ShortRepresentation subqueries */
-                    subqueries?: ({ [k: string]: number } | null);
+                    subqueries?: ({ [k: string]: number }|null);
                 }
 
                 /** Represents a ShortRepresentation. */
@@ -3344,7 +3344,7 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.PlanNode.ShortRepresentation;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.PlanNode.ShortRepresentation;
 
                     /**
                      * Decodes a ShortRepresentation message from the specified reader or buffer, length delimited.
@@ -3353,14 +3353,14 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.PlanNode.ShortRepresentation;
+                    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.PlanNode.ShortRepresentation;
 
                     /**
                      * Verifies a ShortRepresentation message.
                      * @param message Plain object to verify
                      * @returns `null` if valid, otherwise the reason why it is not
                      */
-                    public static verify(message: { [k: string]: any }): (string | null);
+                    public static verify(message: { [k: string]: any }): (string|null);
 
                     /**
                      * Creates a ShortRepresentation message from a plain object. Also converts values to their respective internal types.
@@ -3396,7 +3396,7 @@ export namespace google {
             interface IQueryPlan {
 
                 /** QueryPlan planNodes */
-                planNodes?: (google.spanner.v1.IPlanNode[] | null);
+                planNodes?: (google.spanner.v1.IPlanNode[]|null);
             }
 
             /** Represents a QueryPlan. */
@@ -3442,7 +3442,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.QueryPlan;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.QueryPlan;
 
                 /**
                  * Decodes a QueryPlan message from the specified reader or buffer, length delimited.
@@ -3451,14 +3451,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.QueryPlan;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.QueryPlan;
 
                 /**
                  * Verifies a QueryPlan message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a QueryPlan message from a plain object. Also converts values to their respective internal types.
@@ -3486,13 +3486,13 @@ export namespace google {
             interface ITransactionOptions {
 
                 /** TransactionOptions readWrite */
-                readWrite?: (google.spanner.v1.TransactionOptions.IReadWrite | null);
+                readWrite?: (google.spanner.v1.TransactionOptions.IReadWrite|null);
 
                 /** TransactionOptions partitionedDml */
-                partitionedDml?: (google.spanner.v1.TransactionOptions.IPartitionedDml | null);
+                partitionedDml?: (google.spanner.v1.TransactionOptions.IPartitionedDml|null);
 
                 /** TransactionOptions readOnly */
-                readOnly?: (google.spanner.v1.TransactionOptions.IReadOnly | null);
+                readOnly?: (google.spanner.v1.TransactionOptions.IReadOnly|null);
             }
 
             /** Represents a TransactionOptions. */
@@ -3505,16 +3505,16 @@ export namespace google {
                 constructor(properties?: google.spanner.v1.ITransactionOptions);
 
                 /** TransactionOptions readWrite. */
-                public readWrite?: (google.spanner.v1.TransactionOptions.IReadWrite | null);
+                public readWrite?: (google.spanner.v1.TransactionOptions.IReadWrite|null);
 
                 /** TransactionOptions partitionedDml. */
-                public partitionedDml?: (google.spanner.v1.TransactionOptions.IPartitionedDml | null);
+                public partitionedDml?: (google.spanner.v1.TransactionOptions.IPartitionedDml|null);
 
                 /** TransactionOptions readOnly. */
-                public readOnly?: (google.spanner.v1.TransactionOptions.IReadOnly | null);
+                public readOnly?: (google.spanner.v1.TransactionOptions.IReadOnly|null);
 
                 /** TransactionOptions mode. */
-                public mode?: ("readWrite" | "partitionedDml" | "readOnly");
+                public mode?: ("readWrite"|"partitionedDml"|"readOnly");
 
                 /**
                  * Creates a new TransactionOptions instance using the specified properties.
@@ -3547,7 +3547,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.TransactionOptions;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.TransactionOptions;
 
                 /**
                  * Decodes a TransactionOptions message from the specified reader or buffer, length delimited.
@@ -3556,14 +3556,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.TransactionOptions;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.TransactionOptions;
 
                 /**
                  * Verifies a TransactionOptions message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a TransactionOptions message from a plain object. Also converts values to their respective internal types.
@@ -3633,7 +3633,7 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.TransactionOptions.ReadWrite;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.TransactionOptions.ReadWrite;
 
                     /**
                      * Decodes a ReadWrite message from the specified reader or buffer, length delimited.
@@ -3642,14 +3642,14 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.TransactionOptions.ReadWrite;
+                    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.TransactionOptions.ReadWrite;
 
                     /**
                      * Verifies a ReadWrite message.
                      * @param message Plain object to verify
                      * @returns `null` if valid, otherwise the reason why it is not
                      */
-                    public static verify(message: { [k: string]: any }): (string | null);
+                    public static verify(message: { [k: string]: any }): (string|null);
 
                     /**
                      * Creates a ReadWrite message from a plain object. Also converts values to their respective internal types.
@@ -3717,7 +3717,7 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.TransactionOptions.PartitionedDml;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.TransactionOptions.PartitionedDml;
 
                     /**
                      * Decodes a PartitionedDml message from the specified reader or buffer, length delimited.
@@ -3726,14 +3726,14 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.TransactionOptions.PartitionedDml;
+                    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.TransactionOptions.PartitionedDml;
 
                     /**
                      * Verifies a PartitionedDml message.
                      * @param message Plain object to verify
                      * @returns `null` if valid, otherwise the reason why it is not
                      */
-                    public static verify(message: { [k: string]: any }): (string | null);
+                    public static verify(message: { [k: string]: any }): (string|null);
 
                     /**
                      * Creates a PartitionedDml message from a plain object. Also converts values to their respective internal types.
@@ -3761,22 +3761,22 @@ export namespace google {
                 interface IReadOnly {
 
                     /** ReadOnly strong */
-                    strong?: (boolean | null);
+                    strong?: (boolean|null);
 
                     /** ReadOnly minReadTimestamp */
-                    minReadTimestamp?: (google.protobuf.ITimestamp | null);
+                    minReadTimestamp?: (google.protobuf.ITimestamp|null);
 
                     /** ReadOnly maxStaleness */
-                    maxStaleness?: (google.protobuf.IDuration | null);
+                    maxStaleness?: (google.protobuf.IDuration|null);
 
                     /** ReadOnly readTimestamp */
-                    readTimestamp?: (google.protobuf.ITimestamp | null);
+                    readTimestamp?: (google.protobuf.ITimestamp|null);
 
                     /** ReadOnly exactStaleness */
-                    exactStaleness?: (google.protobuf.IDuration | null);
+                    exactStaleness?: (google.protobuf.IDuration|null);
 
                     /** ReadOnly returnReadTimestamp */
-                    returnReadTimestamp?: (boolean | null);
+                    returnReadTimestamp?: (boolean|null);
                 }
 
                 /** Represents a ReadOnly. */
@@ -3792,22 +3792,22 @@ export namespace google {
                     public strong: boolean;
 
                     /** ReadOnly minReadTimestamp. */
-                    public minReadTimestamp?: (google.protobuf.ITimestamp | null);
+                    public minReadTimestamp?: (google.protobuf.ITimestamp|null);
 
                     /** ReadOnly maxStaleness. */
-                    public maxStaleness?: (google.protobuf.IDuration | null);
+                    public maxStaleness?: (google.protobuf.IDuration|null);
 
                     /** ReadOnly readTimestamp. */
-                    public readTimestamp?: (google.protobuf.ITimestamp | null);
+                    public readTimestamp?: (google.protobuf.ITimestamp|null);
 
                     /** ReadOnly exactStaleness. */
-                    public exactStaleness?: (google.protobuf.IDuration | null);
+                    public exactStaleness?: (google.protobuf.IDuration|null);
 
                     /** ReadOnly returnReadTimestamp. */
                     public returnReadTimestamp: boolean;
 
                     /** ReadOnly timestampBound. */
-                    public timestampBound?: ("strong" | "minReadTimestamp" | "maxStaleness" | "readTimestamp" | "exactStaleness");
+                    public timestampBound?: ("strong"|"minReadTimestamp"|"maxStaleness"|"readTimestamp"|"exactStaleness");
 
                     /**
                      * Creates a new ReadOnly instance using the specified properties.
@@ -3840,7 +3840,7 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.TransactionOptions.ReadOnly;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.TransactionOptions.ReadOnly;
 
                     /**
                      * Decodes a ReadOnly message from the specified reader or buffer, length delimited.
@@ -3849,14 +3849,14 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.TransactionOptions.ReadOnly;
+                    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.TransactionOptions.ReadOnly;
 
                     /**
                      * Verifies a ReadOnly message.
                      * @param message Plain object to verify
                      * @returns `null` if valid, otherwise the reason why it is not
                      */
-                    public static verify(message: { [k: string]: any }): (string | null);
+                    public static verify(message: { [k: string]: any }): (string|null);
 
                     /**
                      * Creates a ReadOnly message from a plain object. Also converts values to their respective internal types.
@@ -3885,10 +3885,10 @@ export namespace google {
             interface ITransaction {
 
                 /** Transaction id */
-                id?: (Uint8Array | null);
+                id?: (Uint8Array|null);
 
                 /** Transaction readTimestamp */
-                readTimestamp?: (google.protobuf.ITimestamp | null);
+                readTimestamp?: (google.protobuf.ITimestamp|null);
             }
 
             /** Represents a Transaction. */
@@ -3904,7 +3904,7 @@ export namespace google {
                 public id: Uint8Array;
 
                 /** Transaction readTimestamp. */
-                public readTimestamp?: (google.protobuf.ITimestamp | null);
+                public readTimestamp?: (google.protobuf.ITimestamp|null);
 
                 /**
                  * Creates a new Transaction instance using the specified properties.
@@ -3937,7 +3937,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.Transaction;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.Transaction;
 
                 /**
                  * Decodes a Transaction message from the specified reader or buffer, length delimited.
@@ -3946,14 +3946,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.Transaction;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.Transaction;
 
                 /**
                  * Verifies a Transaction message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a Transaction message from a plain object. Also converts values to their respective internal types.
@@ -3981,13 +3981,13 @@ export namespace google {
             interface ITransactionSelector {
 
                 /** TransactionSelector singleUse */
-                singleUse?: (google.spanner.v1.ITransactionOptions | null);
+                singleUse?: (google.spanner.v1.ITransactionOptions|null);
 
                 /** TransactionSelector id */
-                id?: (Uint8Array | null);
+                id?: (Uint8Array|null);
 
                 /** TransactionSelector begin */
-                begin?: (google.spanner.v1.ITransactionOptions | null);
+                begin?: (google.spanner.v1.ITransactionOptions|null);
             }
 
             /** Represents a TransactionSelector. */
@@ -4000,16 +4000,16 @@ export namespace google {
                 constructor(properties?: google.spanner.v1.ITransactionSelector);
 
                 /** TransactionSelector singleUse. */
-                public singleUse?: (google.spanner.v1.ITransactionOptions | null);
+                public singleUse?: (google.spanner.v1.ITransactionOptions|null);
 
                 /** TransactionSelector id. */
                 public id: Uint8Array;
 
                 /** TransactionSelector begin. */
-                public begin?: (google.spanner.v1.ITransactionOptions | null);
+                public begin?: (google.spanner.v1.ITransactionOptions|null);
 
                 /** TransactionSelector selector. */
-                public selector?: ("singleUse" | "id" | "begin");
+                public selector?: ("singleUse"|"id"|"begin");
 
                 /**
                  * Creates a new TransactionSelector instance using the specified properties.
@@ -4042,7 +4042,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.TransactionSelector;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.TransactionSelector;
 
                 /**
                  * Decodes a TransactionSelector message from the specified reader or buffer, length delimited.
@@ -4051,14 +4051,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.TransactionSelector;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.TransactionSelector;
 
                 /**
                  * Verifies a TransactionSelector message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a TransactionSelector message from a plain object. Also converts values to their respective internal types.
@@ -4086,13 +4086,13 @@ export namespace google {
             interface IType {
 
                 /** Type code */
-                code?: (google.spanner.v1.TypeCode | null);
+                code?: (google.spanner.v1.TypeCode|null);
 
                 /** Type arrayElementType */
-                arrayElementType?: (google.spanner.v1.IType | null);
+                arrayElementType?: (google.spanner.v1.IType|null);
 
                 /** Type structType */
-                structType?: (google.spanner.v1.IStructType | null);
+                structType?: (google.spanner.v1.IStructType|null);
             }
 
             /** Represents a Type. */
@@ -4108,10 +4108,10 @@ export namespace google {
                 public code: google.spanner.v1.TypeCode;
 
                 /** Type arrayElementType. */
-                public arrayElementType?: (google.spanner.v1.IType | null);
+                public arrayElementType?: (google.spanner.v1.IType|null);
 
                 /** Type structType. */
-                public structType?: (google.spanner.v1.IStructType | null);
+                public structType?: (google.spanner.v1.IStructType|null);
 
                 /**
                  * Creates a new Type instance using the specified properties.
@@ -4144,7 +4144,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.Type;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.Type;
 
                 /**
                  * Decodes a Type message from the specified reader or buffer, length delimited.
@@ -4153,14 +4153,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.Type;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.Type;
 
                 /**
                  * Verifies a Type message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a Type message from a plain object. Also converts values to their respective internal types.
@@ -4188,7 +4188,7 @@ export namespace google {
             interface IStructType {
 
                 /** StructType fields */
-                fields?: (google.spanner.v1.StructType.IField[] | null);
+                fields?: (google.spanner.v1.StructType.IField[]|null);
             }
 
             /** Represents a StructType. */
@@ -4234,7 +4234,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.StructType;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.StructType;
 
                 /**
                  * Decodes a StructType message from the specified reader or buffer, length delimited.
@@ -4243,14 +4243,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.StructType;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.StructType;
 
                 /**
                  * Verifies a StructType message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a StructType message from a plain object. Also converts values to their respective internal types.
@@ -4280,10 +4280,10 @@ export namespace google {
                 interface IField {
 
                     /** Field name */
-                    name?: (string | null);
+                    name?: (string|null);
 
                     /** Field type */
-                    type?: (google.spanner.v1.IType | null);
+                    type?: (google.spanner.v1.IType|null);
                 }
 
                 /** Represents a Field. */
@@ -4299,7 +4299,7 @@ export namespace google {
                     public name: string;
 
                     /** Field type. */
-                    public type?: (google.spanner.v1.IType | null);
+                    public type?: (google.spanner.v1.IType|null);
 
                     /**
                      * Creates a new Field instance using the specified properties.
@@ -4332,7 +4332,7 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.spanner.v1.StructType.Field;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.spanner.v1.StructType.Field;
 
                     /**
                      * Decodes a Field message from the specified reader or buffer, length delimited.
@@ -4341,14 +4341,14 @@ export namespace google {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.spanner.v1.StructType.Field;
+                    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.spanner.v1.StructType.Field;
 
                     /**
                      * Verifies a Field message.
                      * @param message Plain object to verify
                      * @returns `null` if valid, otherwise the reason why it is not
                      */
-                    public static verify(message: { [k: string]: any }): (string | null);
+                    public static verify(message: { [k: string]: any }): (string|null);
 
                     /**
                      * Creates a Field message from a plain object. Also converts values to their respective internal types.
@@ -4396,10 +4396,10 @@ export namespace google {
         interface IHttp {
 
             /** Http rules */
-            rules?: (google.api.IHttpRule[] | null);
+            rules?: (google.api.IHttpRule[]|null);
 
             /** Http fullyDecodeReservedExpansion */
-            fullyDecodeReservedExpansion?: (boolean | null);
+            fullyDecodeReservedExpansion?: (boolean|null);
         }
 
         /** Represents a Http. */
@@ -4448,7 +4448,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.api.Http;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.api.Http;
 
             /**
              * Decodes a Http message from the specified reader or buffer, length delimited.
@@ -4457,14 +4457,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.api.Http;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.api.Http;
 
             /**
              * Verifies a Http message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a Http message from a plain object. Also converts values to their respective internal types.
@@ -4492,34 +4492,34 @@ export namespace google {
         interface IHttpRule {
 
             /** HttpRule selector */
-            selector?: (string | null);
+            selector?: (string|null);
 
             /** HttpRule get */
-            get?: (string | null);
+            get?: (string|null);
 
             /** HttpRule put */
-            put?: (string | null);
+            put?: (string|null);
 
             /** HttpRule post */
-            post?: (string | null);
+            post?: (string|null);
 
             /** HttpRule delete */
-            "delete"?: (string | null);
+            "delete"?: (string|null);
 
             /** HttpRule patch */
-            patch?: (string | null);
+            patch?: (string|null);
 
             /** HttpRule custom */
-            custom?: (google.api.ICustomHttpPattern | null);
+            custom?: (google.api.ICustomHttpPattern|null);
 
             /** HttpRule body */
-            body?: (string | null);
+            body?: (string|null);
 
             /** HttpRule responseBody */
-            responseBody?: (string | null);
+            responseBody?: (string|null);
 
             /** HttpRule additionalBindings */
-            additionalBindings?: (google.api.IHttpRule[] | null);
+            additionalBindings?: (google.api.IHttpRule[]|null);
         }
 
         /** Represents a HttpRule. */
@@ -4550,7 +4550,7 @@ export namespace google {
             public patch: string;
 
             /** HttpRule custom. */
-            public custom?: (google.api.ICustomHttpPattern | null);
+            public custom?: (google.api.ICustomHttpPattern|null);
 
             /** HttpRule body. */
             public body: string;
@@ -4562,7 +4562,7 @@ export namespace google {
             public additionalBindings: google.api.IHttpRule[];
 
             /** HttpRule pattern. */
-            public pattern?: ("get" | "put" | "post" | "delete" | "patch" | "custom");
+            public pattern?: ("get"|"put"|"post"|"delete"|"patch"|"custom");
 
             /**
              * Creates a new HttpRule instance using the specified properties.
@@ -4595,7 +4595,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.api.HttpRule;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.api.HttpRule;
 
             /**
              * Decodes a HttpRule message from the specified reader or buffer, length delimited.
@@ -4604,14 +4604,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.api.HttpRule;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.api.HttpRule;
 
             /**
              * Verifies a HttpRule message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a HttpRule message from a plain object. Also converts values to their respective internal types.
@@ -4639,10 +4639,10 @@ export namespace google {
         interface ICustomHttpPattern {
 
             /** CustomHttpPattern kind */
-            kind?: (string | null);
+            kind?: (string|null);
 
             /** CustomHttpPattern path */
-            path?: (string | null);
+            path?: (string|null);
         }
 
         /** Represents a CustomHttpPattern. */
@@ -4691,7 +4691,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.api.CustomHttpPattern;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.api.CustomHttpPattern;
 
             /**
              * Decodes a CustomHttpPattern message from the specified reader or buffer, length delimited.
@@ -4700,14 +4700,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.api.CustomHttpPattern;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.api.CustomHttpPattern;
 
             /**
              * Verifies a CustomHttpPattern message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a CustomHttpPattern message from a plain object. Also converts values to their respective internal types.
@@ -4739,7 +4739,7 @@ export namespace google {
         interface IFileDescriptorSet {
 
             /** FileDescriptorSet file */
-            file?: (google.protobuf.IFileDescriptorProto[] | null);
+            file?: (google.protobuf.IFileDescriptorProto[]|null);
         }
 
         /** Represents a FileDescriptorSet. */
@@ -4785,7 +4785,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.FileDescriptorSet;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.FileDescriptorSet;
 
             /**
              * Decodes a FileDescriptorSet message from the specified reader or buffer, length delimited.
@@ -4794,14 +4794,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.FileDescriptorSet;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.FileDescriptorSet;
 
             /**
              * Verifies a FileDescriptorSet message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a FileDescriptorSet message from a plain object. Also converts values to their respective internal types.
@@ -4829,40 +4829,40 @@ export namespace google {
         interface IFileDescriptorProto {
 
             /** FileDescriptorProto name */
-            name?: (string | null);
+            name?: (string|null);
 
             /** FileDescriptorProto package */
-            "package"?: (string | null);
+            "package"?: (string|null);
 
             /** FileDescriptorProto dependency */
-            dependency?: (string[] | null);
+            dependency?: (string[]|null);
 
             /** FileDescriptorProto publicDependency */
-            publicDependency?: (number[] | null);
+            publicDependency?: (number[]|null);
 
             /** FileDescriptorProto weakDependency */
-            weakDependency?: (number[] | null);
+            weakDependency?: (number[]|null);
 
             /** FileDescriptorProto messageType */
-            messageType?: (google.protobuf.IDescriptorProto[] | null);
+            messageType?: (google.protobuf.IDescriptorProto[]|null);
 
             /** FileDescriptorProto enumType */
-            enumType?: (google.protobuf.IEnumDescriptorProto[] | null);
+            enumType?: (google.protobuf.IEnumDescriptorProto[]|null);
 
             /** FileDescriptorProto service */
-            service?: (google.protobuf.IServiceDescriptorProto[] | null);
+            service?: (google.protobuf.IServiceDescriptorProto[]|null);
 
             /** FileDescriptorProto extension */
-            extension?: (google.protobuf.IFieldDescriptorProto[] | null);
+            extension?: (google.protobuf.IFieldDescriptorProto[]|null);
 
             /** FileDescriptorProto options */
-            options?: (google.protobuf.IFileOptions | null);
+            options?: (google.protobuf.IFileOptions|null);
 
             /** FileDescriptorProto sourceCodeInfo */
-            sourceCodeInfo?: (google.protobuf.ISourceCodeInfo | null);
+            sourceCodeInfo?: (google.protobuf.ISourceCodeInfo|null);
 
             /** FileDescriptorProto syntax */
-            syntax?: (string | null);
+            syntax?: (string|null);
         }
 
         /** Represents a FileDescriptorProto. */
@@ -4902,10 +4902,10 @@ export namespace google {
             public extension: google.protobuf.IFieldDescriptorProto[];
 
             /** FileDescriptorProto options. */
-            public options?: (google.protobuf.IFileOptions | null);
+            public options?: (google.protobuf.IFileOptions|null);
 
             /** FileDescriptorProto sourceCodeInfo. */
-            public sourceCodeInfo?: (google.protobuf.ISourceCodeInfo | null);
+            public sourceCodeInfo?: (google.protobuf.ISourceCodeInfo|null);
 
             /** FileDescriptorProto syntax. */
             public syntax: string;
@@ -4941,7 +4941,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.FileDescriptorProto;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.FileDescriptorProto;
 
             /**
              * Decodes a FileDescriptorProto message from the specified reader or buffer, length delimited.
@@ -4950,14 +4950,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.FileDescriptorProto;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.FileDescriptorProto;
 
             /**
              * Verifies a FileDescriptorProto message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a FileDescriptorProto message from a plain object. Also converts values to their respective internal types.
@@ -4985,34 +4985,34 @@ export namespace google {
         interface IDescriptorProto {
 
             /** DescriptorProto name */
-            name?: (string | null);
+            name?: (string|null);
 
             /** DescriptorProto field */
-            field?: (google.protobuf.IFieldDescriptorProto[] | null);
+            field?: (google.protobuf.IFieldDescriptorProto[]|null);
 
             /** DescriptorProto extension */
-            extension?: (google.protobuf.IFieldDescriptorProto[] | null);
+            extension?: (google.protobuf.IFieldDescriptorProto[]|null);
 
             /** DescriptorProto nestedType */
-            nestedType?: (google.protobuf.IDescriptorProto[] | null);
+            nestedType?: (google.protobuf.IDescriptorProto[]|null);
 
             /** DescriptorProto enumType */
-            enumType?: (google.protobuf.IEnumDescriptorProto[] | null);
+            enumType?: (google.protobuf.IEnumDescriptorProto[]|null);
 
             /** DescriptorProto extensionRange */
-            extensionRange?: (google.protobuf.DescriptorProto.IExtensionRange[] | null);
+            extensionRange?: (google.protobuf.DescriptorProto.IExtensionRange[]|null);
 
             /** DescriptorProto oneofDecl */
-            oneofDecl?: (google.protobuf.IOneofDescriptorProto[] | null);
+            oneofDecl?: (google.protobuf.IOneofDescriptorProto[]|null);
 
             /** DescriptorProto options */
-            options?: (google.protobuf.IMessageOptions | null);
+            options?: (google.protobuf.IMessageOptions|null);
 
             /** DescriptorProto reservedRange */
-            reservedRange?: (google.protobuf.DescriptorProto.IReservedRange[] | null);
+            reservedRange?: (google.protobuf.DescriptorProto.IReservedRange[]|null);
 
             /** DescriptorProto reservedName */
-            reservedName?: (string[] | null);
+            reservedName?: (string[]|null);
         }
 
         /** Represents a DescriptorProto. */
@@ -5046,7 +5046,7 @@ export namespace google {
             public oneofDecl: google.protobuf.IOneofDescriptorProto[];
 
             /** DescriptorProto options. */
-            public options?: (google.protobuf.IMessageOptions | null);
+            public options?: (google.protobuf.IMessageOptions|null);
 
             /** DescriptorProto reservedRange. */
             public reservedRange: google.protobuf.DescriptorProto.IReservedRange[];
@@ -5085,7 +5085,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.DescriptorProto;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.DescriptorProto;
 
             /**
              * Decodes a DescriptorProto message from the specified reader or buffer, length delimited.
@@ -5094,14 +5094,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.DescriptorProto;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.DescriptorProto;
 
             /**
              * Verifies a DescriptorProto message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a DescriptorProto message from a plain object. Also converts values to their respective internal types.
@@ -5131,13 +5131,13 @@ export namespace google {
             interface IExtensionRange {
 
                 /** ExtensionRange start */
-                start?: (number | null);
+                start?: (number|null);
 
                 /** ExtensionRange end */
-                end?: (number | null);
+                end?: (number|null);
 
                 /** ExtensionRange options */
-                options?: (google.protobuf.IExtensionRangeOptions | null);
+                options?: (google.protobuf.IExtensionRangeOptions|null);
             }
 
             /** Represents an ExtensionRange. */
@@ -5156,7 +5156,7 @@ export namespace google {
                 public end: number;
 
                 /** ExtensionRange options. */
-                public options?: (google.protobuf.IExtensionRangeOptions | null);
+                public options?: (google.protobuf.IExtensionRangeOptions|null);
 
                 /**
                  * Creates a new ExtensionRange instance using the specified properties.
@@ -5189,7 +5189,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.DescriptorProto.ExtensionRange;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.DescriptorProto.ExtensionRange;
 
                 /**
                  * Decodes an ExtensionRange message from the specified reader or buffer, length delimited.
@@ -5198,14 +5198,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.DescriptorProto.ExtensionRange;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.DescriptorProto.ExtensionRange;
 
                 /**
                  * Verifies an ExtensionRange message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates an ExtensionRange message from a plain object. Also converts values to their respective internal types.
@@ -5233,10 +5233,10 @@ export namespace google {
             interface IReservedRange {
 
                 /** ReservedRange start */
-                start?: (number | null);
+                start?: (number|null);
 
                 /** ReservedRange end */
-                end?: (number | null);
+                end?: (number|null);
             }
 
             /** Represents a ReservedRange. */
@@ -5285,7 +5285,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.DescriptorProto.ReservedRange;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.DescriptorProto.ReservedRange;
 
                 /**
                  * Decodes a ReservedRange message from the specified reader or buffer, length delimited.
@@ -5294,14 +5294,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.DescriptorProto.ReservedRange;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.DescriptorProto.ReservedRange;
 
                 /**
                  * Verifies a ReservedRange message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a ReservedRange message from a plain object. Also converts values to their respective internal types.
@@ -5330,7 +5330,7 @@ export namespace google {
         interface IExtensionRangeOptions {
 
             /** ExtensionRangeOptions uninterpretedOption */
-            uninterpretedOption?: (google.protobuf.IUninterpretedOption[] | null);
+            uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
         }
 
         /** Represents an ExtensionRangeOptions. */
@@ -5376,7 +5376,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.ExtensionRangeOptions;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.ExtensionRangeOptions;
 
             /**
              * Decodes an ExtensionRangeOptions message from the specified reader or buffer, length delimited.
@@ -5385,14 +5385,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.ExtensionRangeOptions;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.ExtensionRangeOptions;
 
             /**
              * Verifies an ExtensionRangeOptions message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates an ExtensionRangeOptions message from a plain object. Also converts values to their respective internal types.
@@ -5420,34 +5420,34 @@ export namespace google {
         interface IFieldDescriptorProto {
 
             /** FieldDescriptorProto name */
-            name?: (string | null);
+            name?: (string|null);
 
             /** FieldDescriptorProto number */
-            number?: (number | null);
+            number?: (number|null);
 
             /** FieldDescriptorProto label */
-            label?: (google.protobuf.FieldDescriptorProto.Label | null);
+            label?: (google.protobuf.FieldDescriptorProto.Label|null);
 
             /** FieldDescriptorProto type */
-            type?: (google.protobuf.FieldDescriptorProto.Type | null);
+            type?: (google.protobuf.FieldDescriptorProto.Type|null);
 
             /** FieldDescriptorProto typeName */
-            typeName?: (string | null);
+            typeName?: (string|null);
 
             /** FieldDescriptorProto extendee */
-            extendee?: (string | null);
+            extendee?: (string|null);
 
             /** FieldDescriptorProto defaultValue */
-            defaultValue?: (string | null);
+            defaultValue?: (string|null);
 
             /** FieldDescriptorProto oneofIndex */
-            oneofIndex?: (number | null);
+            oneofIndex?: (number|null);
 
             /** FieldDescriptorProto jsonName */
-            jsonName?: (string | null);
+            jsonName?: (string|null);
 
             /** FieldDescriptorProto options */
-            options?: (google.protobuf.IFieldOptions | null);
+            options?: (google.protobuf.IFieldOptions|null);
         }
 
         /** Represents a FieldDescriptorProto. */
@@ -5487,7 +5487,7 @@ export namespace google {
             public jsonName: string;
 
             /** FieldDescriptorProto options. */
-            public options?: (google.protobuf.IFieldOptions | null);
+            public options?: (google.protobuf.IFieldOptions|null);
 
             /**
              * Creates a new FieldDescriptorProto instance using the specified properties.
@@ -5520,7 +5520,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.FieldDescriptorProto;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.FieldDescriptorProto;
 
             /**
              * Decodes a FieldDescriptorProto message from the specified reader or buffer, length delimited.
@@ -5529,14 +5529,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.FieldDescriptorProto;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.FieldDescriptorProto;
 
             /**
              * Verifies a FieldDescriptorProto message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a FieldDescriptorProto message from a plain object. Also converts values to their respective internal types.
@@ -5596,10 +5596,10 @@ export namespace google {
         interface IOneofDescriptorProto {
 
             /** OneofDescriptorProto name */
-            name?: (string | null);
+            name?: (string|null);
 
             /** OneofDescriptorProto options */
-            options?: (google.protobuf.IOneofOptions | null);
+            options?: (google.protobuf.IOneofOptions|null);
         }
 
         /** Represents an OneofDescriptorProto. */
@@ -5615,7 +5615,7 @@ export namespace google {
             public name: string;
 
             /** OneofDescriptorProto options. */
-            public options?: (google.protobuf.IOneofOptions | null);
+            public options?: (google.protobuf.IOneofOptions|null);
 
             /**
              * Creates a new OneofDescriptorProto instance using the specified properties.
@@ -5648,7 +5648,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.OneofDescriptorProto;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.OneofDescriptorProto;
 
             /**
              * Decodes an OneofDescriptorProto message from the specified reader or buffer, length delimited.
@@ -5657,14 +5657,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.OneofDescriptorProto;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.OneofDescriptorProto;
 
             /**
              * Verifies an OneofDescriptorProto message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates an OneofDescriptorProto message from a plain object. Also converts values to their respective internal types.
@@ -5692,19 +5692,19 @@ export namespace google {
         interface IEnumDescriptorProto {
 
             /** EnumDescriptorProto name */
-            name?: (string | null);
+            name?: (string|null);
 
             /** EnumDescriptorProto value */
-            value?: (google.protobuf.IEnumValueDescriptorProto[] | null);
+            value?: (google.protobuf.IEnumValueDescriptorProto[]|null);
 
             /** EnumDescriptorProto options */
-            options?: (google.protobuf.IEnumOptions | null);
+            options?: (google.protobuf.IEnumOptions|null);
 
             /** EnumDescriptorProto reservedRange */
-            reservedRange?: (google.protobuf.EnumDescriptorProto.IEnumReservedRange[] | null);
+            reservedRange?: (google.protobuf.EnumDescriptorProto.IEnumReservedRange[]|null);
 
             /** EnumDescriptorProto reservedName */
-            reservedName?: (string[] | null);
+            reservedName?: (string[]|null);
         }
 
         /** Represents an EnumDescriptorProto. */
@@ -5723,7 +5723,7 @@ export namespace google {
             public value: google.protobuf.IEnumValueDescriptorProto[];
 
             /** EnumDescriptorProto options. */
-            public options?: (google.protobuf.IEnumOptions | null);
+            public options?: (google.protobuf.IEnumOptions|null);
 
             /** EnumDescriptorProto reservedRange. */
             public reservedRange: google.protobuf.EnumDescriptorProto.IEnumReservedRange[];
@@ -5762,7 +5762,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.EnumDescriptorProto;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.EnumDescriptorProto;
 
             /**
              * Decodes an EnumDescriptorProto message from the specified reader or buffer, length delimited.
@@ -5771,14 +5771,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.EnumDescriptorProto;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.EnumDescriptorProto;
 
             /**
              * Verifies an EnumDescriptorProto message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates an EnumDescriptorProto message from a plain object. Also converts values to their respective internal types.
@@ -5808,10 +5808,10 @@ export namespace google {
             interface IEnumReservedRange {
 
                 /** EnumReservedRange start */
-                start?: (number | null);
+                start?: (number|null);
 
                 /** EnumReservedRange end */
-                end?: (number | null);
+                end?: (number|null);
             }
 
             /** Represents an EnumReservedRange. */
@@ -5860,7 +5860,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.EnumDescriptorProto.EnumReservedRange;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.EnumDescriptorProto.EnumReservedRange;
 
                 /**
                  * Decodes an EnumReservedRange message from the specified reader or buffer, length delimited.
@@ -5869,14 +5869,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.EnumDescriptorProto.EnumReservedRange;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.EnumDescriptorProto.EnumReservedRange;
 
                 /**
                  * Verifies an EnumReservedRange message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates an EnumReservedRange message from a plain object. Also converts values to their respective internal types.
@@ -5905,13 +5905,13 @@ export namespace google {
         interface IEnumValueDescriptorProto {
 
             /** EnumValueDescriptorProto name */
-            name?: (string | null);
+            name?: (string|null);
 
             /** EnumValueDescriptorProto number */
-            number?: (number | null);
+            number?: (number|null);
 
             /** EnumValueDescriptorProto options */
-            options?: (google.protobuf.IEnumValueOptions | null);
+            options?: (google.protobuf.IEnumValueOptions|null);
         }
 
         /** Represents an EnumValueDescriptorProto. */
@@ -5930,7 +5930,7 @@ export namespace google {
             public number: number;
 
             /** EnumValueDescriptorProto options. */
-            public options?: (google.protobuf.IEnumValueOptions | null);
+            public options?: (google.protobuf.IEnumValueOptions|null);
 
             /**
              * Creates a new EnumValueDescriptorProto instance using the specified properties.
@@ -5963,7 +5963,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.EnumValueDescriptorProto;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.EnumValueDescriptorProto;
 
             /**
              * Decodes an EnumValueDescriptorProto message from the specified reader or buffer, length delimited.
@@ -5972,14 +5972,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.EnumValueDescriptorProto;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.EnumValueDescriptorProto;
 
             /**
              * Verifies an EnumValueDescriptorProto message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates an EnumValueDescriptorProto message from a plain object. Also converts values to their respective internal types.
@@ -6007,13 +6007,13 @@ export namespace google {
         interface IServiceDescriptorProto {
 
             /** ServiceDescriptorProto name */
-            name?: (string | null);
+            name?: (string|null);
 
             /** ServiceDescriptorProto method */
-            method?: (google.protobuf.IMethodDescriptorProto[] | null);
+            method?: (google.protobuf.IMethodDescriptorProto[]|null);
 
             /** ServiceDescriptorProto options */
-            options?: (google.protobuf.IServiceOptions | null);
+            options?: (google.protobuf.IServiceOptions|null);
         }
 
         /** Represents a ServiceDescriptorProto. */
@@ -6032,7 +6032,7 @@ export namespace google {
             public method: google.protobuf.IMethodDescriptorProto[];
 
             /** ServiceDescriptorProto options. */
-            public options?: (google.protobuf.IServiceOptions | null);
+            public options?: (google.protobuf.IServiceOptions|null);
 
             /**
              * Creates a new ServiceDescriptorProto instance using the specified properties.
@@ -6065,7 +6065,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.ServiceDescriptorProto;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.ServiceDescriptorProto;
 
             /**
              * Decodes a ServiceDescriptorProto message from the specified reader or buffer, length delimited.
@@ -6074,14 +6074,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.ServiceDescriptorProto;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.ServiceDescriptorProto;
 
             /**
              * Verifies a ServiceDescriptorProto message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a ServiceDescriptorProto message from a plain object. Also converts values to their respective internal types.
@@ -6109,22 +6109,22 @@ export namespace google {
         interface IMethodDescriptorProto {
 
             /** MethodDescriptorProto name */
-            name?: (string | null);
+            name?: (string|null);
 
             /** MethodDescriptorProto inputType */
-            inputType?: (string | null);
+            inputType?: (string|null);
 
             /** MethodDescriptorProto outputType */
-            outputType?: (string | null);
+            outputType?: (string|null);
 
             /** MethodDescriptorProto options */
-            options?: (google.protobuf.IMethodOptions | null);
+            options?: (google.protobuf.IMethodOptions|null);
 
             /** MethodDescriptorProto clientStreaming */
-            clientStreaming?: (boolean | null);
+            clientStreaming?: (boolean|null);
 
             /** MethodDescriptorProto serverStreaming */
-            serverStreaming?: (boolean | null);
+            serverStreaming?: (boolean|null);
         }
 
         /** Represents a MethodDescriptorProto. */
@@ -6146,7 +6146,7 @@ export namespace google {
             public outputType: string;
 
             /** MethodDescriptorProto options. */
-            public options?: (google.protobuf.IMethodOptions | null);
+            public options?: (google.protobuf.IMethodOptions|null);
 
             /** MethodDescriptorProto clientStreaming. */
             public clientStreaming: boolean;
@@ -6185,7 +6185,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.MethodDescriptorProto;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.MethodDescriptorProto;
 
             /**
              * Decodes a MethodDescriptorProto message from the specified reader or buffer, length delimited.
@@ -6194,14 +6194,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.MethodDescriptorProto;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.MethodDescriptorProto;
 
             /**
              * Verifies a MethodDescriptorProto message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a MethodDescriptorProto message from a plain object. Also converts values to their respective internal types.
@@ -6229,67 +6229,67 @@ export namespace google {
         interface IFileOptions {
 
             /** FileOptions javaPackage */
-            javaPackage?: (string | null);
+            javaPackage?: (string|null);
 
             /** FileOptions javaOuterClassname */
-            javaOuterClassname?: (string | null);
+            javaOuterClassname?: (string|null);
 
             /** FileOptions javaMultipleFiles */
-            javaMultipleFiles?: (boolean | null);
+            javaMultipleFiles?: (boolean|null);
 
             /** FileOptions javaGenerateEqualsAndHash */
-            javaGenerateEqualsAndHash?: (boolean | null);
+            javaGenerateEqualsAndHash?: (boolean|null);
 
             /** FileOptions javaStringCheckUtf8 */
-            javaStringCheckUtf8?: (boolean | null);
+            javaStringCheckUtf8?: (boolean|null);
 
             /** FileOptions optimizeFor */
-            optimizeFor?: (google.protobuf.FileOptions.OptimizeMode | null);
+            optimizeFor?: (google.protobuf.FileOptions.OptimizeMode|null);
 
             /** FileOptions goPackage */
-            goPackage?: (string | null);
+            goPackage?: (string|null);
 
             /** FileOptions ccGenericServices */
-            ccGenericServices?: (boolean | null);
+            ccGenericServices?: (boolean|null);
 
             /** FileOptions javaGenericServices */
-            javaGenericServices?: (boolean | null);
+            javaGenericServices?: (boolean|null);
 
             /** FileOptions pyGenericServices */
-            pyGenericServices?: (boolean | null);
+            pyGenericServices?: (boolean|null);
 
             /** FileOptions phpGenericServices */
-            phpGenericServices?: (boolean | null);
+            phpGenericServices?: (boolean|null);
 
             /** FileOptions deprecated */
-            deprecated?: (boolean | null);
+            deprecated?: (boolean|null);
 
             /** FileOptions ccEnableArenas */
-            ccEnableArenas?: (boolean | null);
+            ccEnableArenas?: (boolean|null);
 
             /** FileOptions objcClassPrefix */
-            objcClassPrefix?: (string | null);
+            objcClassPrefix?: (string|null);
 
             /** FileOptions csharpNamespace */
-            csharpNamespace?: (string | null);
+            csharpNamespace?: (string|null);
 
             /** FileOptions swiftPrefix */
-            swiftPrefix?: (string | null);
+            swiftPrefix?: (string|null);
 
             /** FileOptions phpClassPrefix */
-            phpClassPrefix?: (string | null);
+            phpClassPrefix?: (string|null);
 
             /** FileOptions phpNamespace */
-            phpNamespace?: (string | null);
+            phpNamespace?: (string|null);
 
             /** FileOptions phpMetadataNamespace */
-            phpMetadataNamespace?: (string | null);
+            phpMetadataNamespace?: (string|null);
 
             /** FileOptions rubyPackage */
-            rubyPackage?: (string | null);
+            rubyPackage?: (string|null);
 
             /** FileOptions uninterpretedOption */
-            uninterpretedOption?: (google.protobuf.IUninterpretedOption[] | null);
+            uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
         }
 
         /** Represents a FileOptions. */
@@ -6395,7 +6395,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.FileOptions;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.FileOptions;
 
             /**
              * Decodes a FileOptions message from the specified reader or buffer, length delimited.
@@ -6404,14 +6404,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.FileOptions;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.FileOptions;
 
             /**
              * Verifies a FileOptions message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a FileOptions message from a plain object. Also converts values to their respective internal types.
@@ -6449,19 +6449,19 @@ export namespace google {
         interface IMessageOptions {
 
             /** MessageOptions messageSetWireFormat */
-            messageSetWireFormat?: (boolean | null);
+            messageSetWireFormat?: (boolean|null);
 
             /** MessageOptions noStandardDescriptorAccessor */
-            noStandardDescriptorAccessor?: (boolean | null);
+            noStandardDescriptorAccessor?: (boolean|null);
 
             /** MessageOptions deprecated */
-            deprecated?: (boolean | null);
+            deprecated?: (boolean|null);
 
             /** MessageOptions mapEntry */
-            mapEntry?: (boolean | null);
+            mapEntry?: (boolean|null);
 
             /** MessageOptions uninterpretedOption */
-            uninterpretedOption?: (google.protobuf.IUninterpretedOption[] | null);
+            uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
         }
 
         /** Represents a MessageOptions. */
@@ -6519,7 +6519,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.MessageOptions;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.MessageOptions;
 
             /**
              * Decodes a MessageOptions message from the specified reader or buffer, length delimited.
@@ -6528,14 +6528,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.MessageOptions;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.MessageOptions;
 
             /**
              * Verifies a MessageOptions message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a MessageOptions message from a plain object. Also converts values to their respective internal types.
@@ -6563,25 +6563,25 @@ export namespace google {
         interface IFieldOptions {
 
             /** FieldOptions ctype */
-            ctype?: (google.protobuf.FieldOptions.CType | null);
+            ctype?: (google.protobuf.FieldOptions.CType|null);
 
             /** FieldOptions packed */
-            packed?: (boolean | null);
+            packed?: (boolean|null);
 
             /** FieldOptions jstype */
-            jstype?: (google.protobuf.FieldOptions.JSType | null);
+            jstype?: (google.protobuf.FieldOptions.JSType|null);
 
             /** FieldOptions lazy */
-            lazy?: (boolean | null);
+            lazy?: (boolean|null);
 
             /** FieldOptions deprecated */
-            deprecated?: (boolean | null);
+            deprecated?: (boolean|null);
 
             /** FieldOptions weak */
-            weak?: (boolean | null);
+            weak?: (boolean|null);
 
             /** FieldOptions uninterpretedOption */
-            uninterpretedOption?: (google.protobuf.IUninterpretedOption[] | null);
+            uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
         }
 
         /** Represents a FieldOptions. */
@@ -6645,7 +6645,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.FieldOptions;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.FieldOptions;
 
             /**
              * Decodes a FieldOptions message from the specified reader or buffer, length delimited.
@@ -6654,14 +6654,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.FieldOptions;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.FieldOptions;
 
             /**
              * Verifies a FieldOptions message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a FieldOptions message from a plain object. Also converts values to their respective internal types.
@@ -6706,7 +6706,7 @@ export namespace google {
         interface IOneofOptions {
 
             /** OneofOptions uninterpretedOption */
-            uninterpretedOption?: (google.protobuf.IUninterpretedOption[] | null);
+            uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
         }
 
         /** Represents an OneofOptions. */
@@ -6752,7 +6752,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.OneofOptions;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.OneofOptions;
 
             /**
              * Decodes an OneofOptions message from the specified reader or buffer, length delimited.
@@ -6761,14 +6761,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.OneofOptions;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.OneofOptions;
 
             /**
              * Verifies an OneofOptions message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates an OneofOptions message from a plain object. Also converts values to their respective internal types.
@@ -6796,13 +6796,13 @@ export namespace google {
         interface IEnumOptions {
 
             /** EnumOptions allowAlias */
-            allowAlias?: (boolean | null);
+            allowAlias?: (boolean|null);
 
             /** EnumOptions deprecated */
-            deprecated?: (boolean | null);
+            deprecated?: (boolean|null);
 
             /** EnumOptions uninterpretedOption */
-            uninterpretedOption?: (google.protobuf.IUninterpretedOption[] | null);
+            uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
         }
 
         /** Represents an EnumOptions. */
@@ -6854,7 +6854,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.EnumOptions;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.EnumOptions;
 
             /**
              * Decodes an EnumOptions message from the specified reader or buffer, length delimited.
@@ -6863,14 +6863,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.EnumOptions;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.EnumOptions;
 
             /**
              * Verifies an EnumOptions message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates an EnumOptions message from a plain object. Also converts values to their respective internal types.
@@ -6898,10 +6898,10 @@ export namespace google {
         interface IEnumValueOptions {
 
             /** EnumValueOptions deprecated */
-            deprecated?: (boolean | null);
+            deprecated?: (boolean|null);
 
             /** EnumValueOptions uninterpretedOption */
-            uninterpretedOption?: (google.protobuf.IUninterpretedOption[] | null);
+            uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
         }
 
         /** Represents an EnumValueOptions. */
@@ -6950,7 +6950,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.EnumValueOptions;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.EnumValueOptions;
 
             /**
              * Decodes an EnumValueOptions message from the specified reader or buffer, length delimited.
@@ -6959,14 +6959,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.EnumValueOptions;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.EnumValueOptions;
 
             /**
              * Verifies an EnumValueOptions message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates an EnumValueOptions message from a plain object. Also converts values to their respective internal types.
@@ -6994,10 +6994,10 @@ export namespace google {
         interface IServiceOptions {
 
             /** ServiceOptions deprecated */
-            deprecated?: (boolean | null);
+            deprecated?: (boolean|null);
 
             /** ServiceOptions uninterpretedOption */
-            uninterpretedOption?: (google.protobuf.IUninterpretedOption[] | null);
+            uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
         }
 
         /** Represents a ServiceOptions. */
@@ -7046,7 +7046,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.ServiceOptions;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.ServiceOptions;
 
             /**
              * Decodes a ServiceOptions message from the specified reader or buffer, length delimited.
@@ -7055,14 +7055,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.ServiceOptions;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.ServiceOptions;
 
             /**
              * Verifies a ServiceOptions message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a ServiceOptions message from a plain object. Also converts values to their respective internal types.
@@ -7090,16 +7090,16 @@ export namespace google {
         interface IMethodOptions {
 
             /** MethodOptions deprecated */
-            deprecated?: (boolean | null);
+            deprecated?: (boolean|null);
 
             /** MethodOptions idempotencyLevel */
-            idempotencyLevel?: (google.protobuf.MethodOptions.IdempotencyLevel | null);
+            idempotencyLevel?: (google.protobuf.MethodOptions.IdempotencyLevel|null);
 
             /** MethodOptions uninterpretedOption */
-            uninterpretedOption?: (google.protobuf.IUninterpretedOption[] | null);
+            uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
 
             /** MethodOptions .google.api.http */
-            ".google.api.http"?: (google.api.IHttpRule | null);
+            ".google.api.http"?: (google.api.IHttpRule|null);
         }
 
         /** Represents a MethodOptions. */
@@ -7151,7 +7151,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.MethodOptions;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.MethodOptions;
 
             /**
              * Decodes a MethodOptions message from the specified reader or buffer, length delimited.
@@ -7160,14 +7160,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.MethodOptions;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.MethodOptions;
 
             /**
              * Verifies a MethodOptions message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a MethodOptions message from a plain object. Also converts values to their respective internal types.
@@ -7205,25 +7205,25 @@ export namespace google {
         interface IUninterpretedOption {
 
             /** UninterpretedOption name */
-            name?: (google.protobuf.UninterpretedOption.INamePart[] | null);
+            name?: (google.protobuf.UninterpretedOption.INamePart[]|null);
 
             /** UninterpretedOption identifierValue */
-            identifierValue?: (string | null);
+            identifierValue?: (string|null);
 
             /** UninterpretedOption positiveIntValue */
-            positiveIntValue?: (number | Long | null);
+            positiveIntValue?: (number|Long|null);
 
             /** UninterpretedOption negativeIntValue */
-            negativeIntValue?: (number | Long | null);
+            negativeIntValue?: (number|Long|null);
 
             /** UninterpretedOption doubleValue */
-            doubleValue?: (number | null);
+            doubleValue?: (number|null);
 
             /** UninterpretedOption stringValue */
-            stringValue?: (Uint8Array | null);
+            stringValue?: (Uint8Array|null);
 
             /** UninterpretedOption aggregateValue */
-            aggregateValue?: (string | null);
+            aggregateValue?: (string|null);
         }
 
         /** Represents an UninterpretedOption. */
@@ -7242,10 +7242,10 @@ export namespace google {
             public identifierValue: string;
 
             /** UninterpretedOption positiveIntValue. */
-            public positiveIntValue: (number | Long);
+            public positiveIntValue: (number|Long);
 
             /** UninterpretedOption negativeIntValue. */
-            public negativeIntValue: (number | Long);
+            public negativeIntValue: (number|Long);
 
             /** UninterpretedOption doubleValue. */
             public doubleValue: number;
@@ -7287,7 +7287,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.UninterpretedOption;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.UninterpretedOption;
 
             /**
              * Decodes an UninterpretedOption message from the specified reader or buffer, length delimited.
@@ -7296,14 +7296,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.UninterpretedOption;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.UninterpretedOption;
 
             /**
              * Verifies an UninterpretedOption message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates an UninterpretedOption message from a plain object. Also converts values to their respective internal types.
@@ -7385,7 +7385,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.UninterpretedOption.NamePart;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.UninterpretedOption.NamePart;
 
                 /**
                  * Decodes a NamePart message from the specified reader or buffer, length delimited.
@@ -7394,14 +7394,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.UninterpretedOption.NamePart;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.UninterpretedOption.NamePart;
 
                 /**
                  * Verifies a NamePart message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a NamePart message from a plain object. Also converts values to their respective internal types.
@@ -7430,7 +7430,7 @@ export namespace google {
         interface ISourceCodeInfo {
 
             /** SourceCodeInfo location */
-            location?: (google.protobuf.SourceCodeInfo.ILocation[] | null);
+            location?: (google.protobuf.SourceCodeInfo.ILocation[]|null);
         }
 
         /** Represents a SourceCodeInfo. */
@@ -7476,7 +7476,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.SourceCodeInfo;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.SourceCodeInfo;
 
             /**
              * Decodes a SourceCodeInfo message from the specified reader or buffer, length delimited.
@@ -7485,14 +7485,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.SourceCodeInfo;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.SourceCodeInfo;
 
             /**
              * Verifies a SourceCodeInfo message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a SourceCodeInfo message from a plain object. Also converts values to their respective internal types.
@@ -7522,19 +7522,19 @@ export namespace google {
             interface ILocation {
 
                 /** Location path */
-                path?: (number[] | null);
+                path?: (number[]|null);
 
                 /** Location span */
-                span?: (number[] | null);
+                span?: (number[]|null);
 
                 /** Location leadingComments */
-                leadingComments?: (string | null);
+                leadingComments?: (string|null);
 
                 /** Location trailingComments */
-                trailingComments?: (string | null);
+                trailingComments?: (string|null);
 
                 /** Location leadingDetachedComments */
-                leadingDetachedComments?: (string[] | null);
+                leadingDetachedComments?: (string[]|null);
             }
 
             /** Represents a Location. */
@@ -7592,7 +7592,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.SourceCodeInfo.Location;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.SourceCodeInfo.Location;
 
                 /**
                  * Decodes a Location message from the specified reader or buffer, length delimited.
@@ -7601,14 +7601,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.SourceCodeInfo.Location;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.SourceCodeInfo.Location;
 
                 /**
                  * Verifies a Location message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates a Location message from a plain object. Also converts values to their respective internal types.
@@ -7637,7 +7637,7 @@ export namespace google {
         interface IGeneratedCodeInfo {
 
             /** GeneratedCodeInfo annotation */
-            annotation?: (google.protobuf.GeneratedCodeInfo.IAnnotation[] | null);
+            annotation?: (google.protobuf.GeneratedCodeInfo.IAnnotation[]|null);
         }
 
         /** Represents a GeneratedCodeInfo. */
@@ -7683,7 +7683,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.GeneratedCodeInfo;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.GeneratedCodeInfo;
 
             /**
              * Decodes a GeneratedCodeInfo message from the specified reader or buffer, length delimited.
@@ -7692,14 +7692,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.GeneratedCodeInfo;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.GeneratedCodeInfo;
 
             /**
              * Verifies a GeneratedCodeInfo message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a GeneratedCodeInfo message from a plain object. Also converts values to their respective internal types.
@@ -7729,16 +7729,16 @@ export namespace google {
             interface IAnnotation {
 
                 /** Annotation path */
-                path?: (number[] | null);
+                path?: (number[]|null);
 
                 /** Annotation sourceFile */
-                sourceFile?: (string | null);
+                sourceFile?: (string|null);
 
                 /** Annotation begin */
-                begin?: (number | null);
+                begin?: (number|null);
 
                 /** Annotation end */
-                end?: (number | null);
+                end?: (number|null);
             }
 
             /** Represents an Annotation. */
@@ -7793,7 +7793,7 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.GeneratedCodeInfo.Annotation;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.GeneratedCodeInfo.Annotation;
 
                 /**
                  * Decodes an Annotation message from the specified reader or buffer, length delimited.
@@ -7802,14 +7802,14 @@ export namespace google {
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.GeneratedCodeInfo.Annotation;
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.GeneratedCodeInfo.Annotation;
 
                 /**
                  * Verifies an Annotation message.
                  * @param message Plain object to verify
                  * @returns `null` if valid, otherwise the reason why it is not
                  */
-                public static verify(message: { [k: string]: any }): (string | null);
+                public static verify(message: { [k: string]: any }): (string|null);
 
                 /**
                  * Creates an Annotation message from a plain object. Also converts values to their respective internal types.
@@ -7878,7 +7878,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.Empty;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.Empty;
 
             /**
              * Decodes an Empty message from the specified reader or buffer, length delimited.
@@ -7887,14 +7887,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.Empty;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.Empty;
 
             /**
              * Verifies an Empty message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates an Empty message from a plain object. Also converts values to their respective internal types.
@@ -7922,7 +7922,7 @@ export namespace google {
         interface IStruct {
 
             /** Struct fields */
-            fields?: ({ [k: string]: google.protobuf.IValue } | null);
+            fields?: ({ [k: string]: google.protobuf.IValue }|null);
         }
 
         /** Represents a Struct. */
@@ -7968,7 +7968,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.Struct;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.Struct;
 
             /**
              * Decodes a Struct message from the specified reader or buffer, length delimited.
@@ -7977,14 +7977,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.Struct;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.Struct;
 
             /**
              * Verifies a Struct message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a Struct message from a plain object. Also converts values to their respective internal types.
@@ -8012,22 +8012,22 @@ export namespace google {
         interface IValue {
 
             /** Value nullValue */
-            nullValue?: (google.protobuf.NullValue | null);
+            nullValue?: (google.protobuf.NullValue|null);
 
             /** Value numberValue */
-            numberValue?: (number | null);
+            numberValue?: (number|null);
 
             /** Value stringValue */
-            stringValue?: (string | null);
+            stringValue?: (string|null);
 
             /** Value boolValue */
-            boolValue?: (boolean | null);
+            boolValue?: (boolean|null);
 
             /** Value structValue */
-            structValue?: (google.protobuf.IStruct | null);
+            structValue?: (google.protobuf.IStruct|null);
 
             /** Value listValue */
-            listValue?: (google.protobuf.IListValue | null);
+            listValue?: (google.protobuf.IListValue|null);
         }
 
         /** Represents a Value. */
@@ -8052,13 +8052,13 @@ export namespace google {
             public boolValue: boolean;
 
             /** Value structValue. */
-            public structValue?: (google.protobuf.IStruct | null);
+            public structValue?: (google.protobuf.IStruct|null);
 
             /** Value listValue. */
-            public listValue?: (google.protobuf.IListValue | null);
+            public listValue?: (google.protobuf.IListValue|null);
 
             /** Value kind. */
-            public kind?: ("nullValue" | "numberValue" | "stringValue" | "boolValue" | "structValue" | "listValue");
+            public kind?: ("nullValue"|"numberValue"|"stringValue"|"boolValue"|"structValue"|"listValue");
 
             /**
              * Creates a new Value instance using the specified properties.
@@ -8091,7 +8091,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.Value;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.Value;
 
             /**
              * Decodes a Value message from the specified reader or buffer, length delimited.
@@ -8100,14 +8100,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.Value;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.Value;
 
             /**
              * Verifies a Value message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a Value message from a plain object. Also converts values to their respective internal types.
@@ -8140,7 +8140,7 @@ export namespace google {
         interface IListValue {
 
             /** ListValue values */
-            values?: (google.protobuf.IValue[] | null);
+            values?: (google.protobuf.IValue[]|null);
         }
 
         /** Represents a ListValue. */
@@ -8186,7 +8186,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.ListValue;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.ListValue;
 
             /**
              * Decodes a ListValue message from the specified reader or buffer, length delimited.
@@ -8195,14 +8195,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.ListValue;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.ListValue;
 
             /**
              * Verifies a ListValue message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a ListValue message from a plain object. Also converts values to their respective internal types.
@@ -8230,10 +8230,10 @@ export namespace google {
         interface ITimestamp {
 
             /** Timestamp seconds */
-            seconds?: (number | Long | null);
+            seconds?: (number|Long|null);
 
             /** Timestamp nanos */
-            nanos?: (number | null);
+            nanos?: (number|null);
         }
 
         /** Represents a Timestamp. */
@@ -8246,7 +8246,7 @@ export namespace google {
             constructor(properties?: google.protobuf.ITimestamp);
 
             /** Timestamp seconds. */
-            public seconds: (number | Long);
+            public seconds: (number|Long);
 
             /** Timestamp nanos. */
             public nanos: number;
@@ -8282,7 +8282,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.Timestamp;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.Timestamp;
 
             /**
              * Decodes a Timestamp message from the specified reader or buffer, length delimited.
@@ -8291,14 +8291,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.Timestamp;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.Timestamp;
 
             /**
              * Verifies a Timestamp message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a Timestamp message from a plain object. Also converts values to their respective internal types.
@@ -8326,10 +8326,10 @@ export namespace google {
         interface IDuration {
 
             /** Duration seconds */
-            seconds?: (number | Long | null);
+            seconds?: (number|Long|null);
 
             /** Duration nanos */
-            nanos?: (number | null);
+            nanos?: (number|null);
         }
 
         /** Represents a Duration. */
@@ -8342,7 +8342,7 @@ export namespace google {
             constructor(properties?: google.protobuf.IDuration);
 
             /** Duration seconds. */
-            public seconds: (number | Long);
+            public seconds: (number|Long);
 
             /** Duration nanos. */
             public nanos: number;
@@ -8378,7 +8378,7 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decode(reader: ($protobuf.Reader | Uint8Array), length?: number): google.protobuf.Duration;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.Duration;
 
             /**
              * Decodes a Duration message from the specified reader or buffer, length delimited.
@@ -8387,14 +8387,14 @@ export namespace google {
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            public static decodeDelimited(reader: ($protobuf.Reader | Uint8Array)): google.protobuf.Duration;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.Duration;
 
             /**
              * Verifies a Duration message.
              * @param message Plain object to verify
              * @returns `null` if valid, otherwise the reason why it is not
              */
-            public static verify(message: { [k: string]: any }): (string | null);
+            public static verify(message: { [k: string]: any }): (string|null);
 
             /**
              * Creates a Duration message from a plain object. Also converts values to their respective internal types.

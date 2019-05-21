@@ -21,7 +21,7 @@ import * as crypto from 'crypto';
 import * as extend from 'extend';
 import * as is from 'is';
 import * as uuid from 'uuid';
-import { Spanner } from '../src';
+import {Spanner} from '../src';
 
 const PREFIX = 'gcloud-tests-';
 const RUN_ID = uuid
@@ -29,7 +29,7 @@ const RUN_ID = uuid
   .split('-')
   .shift(); // get a short uuid
 const LABEL = `gcloud-tests-${RUN_ID}`;
-const spanner = new Spanner({ projectId: process.env.GCLOUD_PROJECT });
+const spanner = new Spanner({projectId: process.env.GCLOUD_PROJECT});
 
 const CURRENT_TIME = Math.round(Date.now() / 1000).toString();
 
@@ -252,7 +252,7 @@ describe('Spanner', () => {
 
     describe('booleans', () => {
       it('should write boolean values', done => {
-        insert({ BoolValue: true }, (err, row) => {
+        insert({BoolValue: true}, (err, row) => {
           assert.ifError(err);
           assert.strictEqual(row.toJSON().BoolValue, true);
           done();
@@ -260,7 +260,7 @@ describe('Spanner', () => {
       });
 
       it('should write null boolean values', done => {
-        insert({ BoolValue: null }, (err, row) => {
+        insert({BoolValue: null}, (err, row) => {
           assert.ifError(err);
           assert.strictEqual(row.toJSON().BoolValue, null);
           done();
@@ -268,7 +268,7 @@ describe('Spanner', () => {
       });
 
       it('should write empty boolean array values', done => {
-        insert({ BoolArray: [] }, (err, row) => {
+        insert({BoolArray: []}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().BoolArray, []);
           done();
@@ -276,7 +276,7 @@ describe('Spanner', () => {
       });
 
       it('should write null boolean array values', done => {
-        insert({ BoolArray: [null] }, (err, row) => {
+        insert({BoolArray: [null]}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().BoolArray, [null]);
           done();
@@ -284,7 +284,7 @@ describe('Spanner', () => {
       });
 
       it('should write boolean array values', done => {
-        insert({ BoolArray: [true, false] }, (err, row) => {
+        insert({BoolArray: [true, false]}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().BoolArray, [true, false]);
           done();
@@ -294,7 +294,7 @@ describe('Spanner', () => {
 
     describe('int64s', () => {
       it('should write int64 values', done => {
-        insert({ IntValue: Spanner.int(1234) }, (err, row) => {
+        insert({IntValue: Spanner.int(1234)}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().IntValue, 1234);
           done();
@@ -302,7 +302,7 @@ describe('Spanner', () => {
       });
 
       it('should write null int64 values', done => {
-        insert({ IntValue: null }, (err, row) => {
+        insert({IntValue: null}, (err, row) => {
           assert.ifError(err);
           assert.strictEqual(row.toJSON().IntValue, null);
           done();
@@ -312,7 +312,7 @@ describe('Spanner', () => {
       it('should throw for of bounds integers', done => {
         const value = '9223372036854775807';
 
-        insert({ IntValue: value }, (err, row) => {
+        insert({IntValue: value}, (err, row) => {
           assert.ifError(err);
 
           assert.throws(() => {
@@ -326,17 +326,17 @@ describe('Spanner', () => {
       it('should optionally wrap out of bounds integers', done => {
         const value = '9223372036854775807';
 
-        insert({ IntValue: value }, (err, row) => {
+        insert({IntValue: value}, (err, row) => {
           assert.ifError(err);
           const expected = Spanner.int(value);
-          const actual = row.toJSON({ wrapNumbers: true }).IntValue;
+          const actual = row.toJSON({wrapNumbers: true}).IntValue;
           assert.deepStrictEqual(actual, expected);
           done();
         });
       });
 
       it('should write empty in64 array values', done => {
-        insert({ IntArray: [] }, (err, row) => {
+        insert({IntArray: []}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().IntArray, []);
           done();
@@ -344,7 +344,7 @@ describe('Spanner', () => {
       });
 
       it('should write null int64 array values', done => {
-        insert({ IntArray: [null] }, (err, row) => {
+        insert({IntArray: [null]}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().IntArray, [null]);
           done();
@@ -354,7 +354,7 @@ describe('Spanner', () => {
       it('should write int64 array values', done => {
         const values = [1, 2, 3];
 
-        insert({ IntArray: values }, (err, row) => {
+        insert({IntArray: values}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().IntArray, values);
           done();
@@ -364,7 +364,7 @@ describe('Spanner', () => {
 
     describe('float64s', () => {
       it('should write float64 values', done => {
-        insert({ FloatValue: 8.2 }, (err, row) => {
+        insert({FloatValue: 8.2}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().FloatValue, 8.2);
           done();
@@ -372,7 +372,7 @@ describe('Spanner', () => {
       });
 
       it('should write null float64 values', done => {
-        insert({ FloatValue: null }, (err, row) => {
+        insert({FloatValue: null}, (err, row) => {
           assert.ifError(err);
           assert.strictEqual(row.toJSON().FloatValue, null);
           done();
@@ -380,7 +380,7 @@ describe('Spanner', () => {
       });
 
       it('should accept a Float object with an Int-like value', done => {
-        insert({ FloatValue: Spanner.float(8) }, (err, row) => {
+        insert({FloatValue: Spanner.float(8)}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().FloatValue, 8);
           done();
@@ -388,7 +388,7 @@ describe('Spanner', () => {
       });
 
       it('should handle Infinity', done => {
-        insert({ FloatValue: Infinity }, (err, row) => {
+        insert({FloatValue: Infinity}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().FloatValue, Infinity);
           done();
@@ -396,7 +396,7 @@ describe('Spanner', () => {
       });
 
       it('should handle -Infinity', done => {
-        insert({ FloatValue: -Infinity }, (err, row) => {
+        insert({FloatValue: -Infinity}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().FloatValue, -Infinity);
           done();
@@ -404,7 +404,7 @@ describe('Spanner', () => {
       });
 
       it('should handle NaN', done => {
-        insert({ FloatValue: NaN }, (err, row) => {
+        insert({FloatValue: NaN}, (err, row) => {
           assert.ifError(err);
           assert(isNaN(row.toJSON().FloatValue));
           done();
@@ -412,7 +412,7 @@ describe('Spanner', () => {
       });
 
       it('should write empty float64 array values', done => {
-        insert({ FloatArray: [] }, (err, row) => {
+        insert({FloatArray: []}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().FloatArray, []);
           done();
@@ -420,7 +420,7 @@ describe('Spanner', () => {
       });
 
       it('should write null float64 array values', done => {
-        insert({ FloatArray: [null] }, (err, row) => {
+        insert({FloatArray: [null]}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().FloatArray, [null]);
           done();
@@ -430,7 +430,7 @@ describe('Spanner', () => {
       it('should write float64 array values', done => {
         const values = [1.2, 2.3, 3.4];
 
-        insert({ FloatArray: values }, (err, row) => {
+        insert({FloatArray: values}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().FloatArray, values);
           done();
@@ -440,7 +440,7 @@ describe('Spanner', () => {
 
     describe('strings', () => {
       it('should write string values', done => {
-        insert({ StringValue: 'abc' }, (err, row) => {
+        insert({StringValue: 'abc'}, (err, row) => {
           assert.ifError(err);
           assert.strictEqual(row.toJSON().StringValue, 'abc');
           done();
@@ -448,7 +448,7 @@ describe('Spanner', () => {
       });
 
       it('should write null string values', done => {
-        insert({ StringValue: null }, (err, row) => {
+        insert({StringValue: null}, (err, row) => {
           assert.ifError(err);
           assert.strictEqual(row.toJSON().StringValue, null);
           done();
@@ -456,7 +456,7 @@ describe('Spanner', () => {
       });
 
       it('should write empty string array values', done => {
-        insert({ StringArray: [] }, (err, row) => {
+        insert({StringArray: []}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().StringArray, []);
           done();
@@ -464,7 +464,7 @@ describe('Spanner', () => {
       });
 
       it('should write null string array values', done => {
-        insert({ StringArray: [null] }, (err, row) => {
+        insert({StringArray: [null]}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().StringArray, [null]);
           done();
@@ -472,7 +472,7 @@ describe('Spanner', () => {
       });
 
       it('should write string array values', done => {
-        insert({ StringArray: ['abc', 'def'] }, (err, row) => {
+        insert({StringArray: ['abc', 'def']}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().StringArray, ['abc', 'def']);
           done();
@@ -482,7 +482,7 @@ describe('Spanner', () => {
 
     describe('bytes', () => {
       it('should write bytes values', done => {
-        insert({ BytesValue: Buffer.from('abc') }, (err, row) => {
+        insert({BytesValue: Buffer.from('abc')}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().BytesValue, Buffer.from('abc'));
           done();
@@ -490,7 +490,7 @@ describe('Spanner', () => {
       });
 
       it('should write null bytes values', done => {
-        insert({ BytesValue: null }, (err, row) => {
+        insert({BytesValue: null}, (err, row) => {
           assert.ifError(err);
           assert.strictEqual(row.toJSON().BytesValue, null);
           done();
@@ -498,7 +498,7 @@ describe('Spanner', () => {
       });
 
       it('should write empty bytes array values', done => {
-        insert({ BytesArray: [] }, (err, row) => {
+        insert({BytesArray: []}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().BytesArray, []);
           done();
@@ -506,7 +506,7 @@ describe('Spanner', () => {
       });
 
       it('should write null bytes array values', done => {
-        insert({ BytesArray: [null] }, (err, row) => {
+        insert({BytesArray: [null]}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().BytesArray, [null]);
           done();
@@ -516,7 +516,7 @@ describe('Spanner', () => {
       it('should write bytes array values', done => {
         const values = [Buffer.from('a'), Buffer.from('b')];
 
-        insert({ BytesArray: values }, (err, row) => {
+        insert({BytesArray: values}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().BytesArray, values);
           done();
@@ -528,7 +528,7 @@ describe('Spanner', () => {
       it('should write timestamp values', done => {
         const date = Spanner.timestamp();
 
-        insert({ TimestampValue: date }, (err, row) => {
+        insert({TimestampValue: date}, (err, row) => {
           assert.ifError(err);
           const time = row.toJSON().TimestampValue.getTime();
           assert.strictEqual(time, date.getTime());
@@ -537,7 +537,7 @@ describe('Spanner', () => {
       });
 
       it('should write null timestamp values', done => {
-        insert({ TimestampValue: null }, (err, row) => {
+        insert({TimestampValue: null}, (err, row) => {
           assert.ifError(err);
           assert.strictEqual(row.toJSON().TimestampValue, null);
           done();
@@ -545,7 +545,7 @@ describe('Spanner', () => {
       });
 
       it('should write empty timestamp array values', done => {
-        insert({ TimestampArray: [] }, (err, row) => {
+        insert({TimestampArray: []}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().TimestampArray, []);
           done();
@@ -553,7 +553,7 @@ describe('Spanner', () => {
       });
 
       it('should write null timestamp array values', done => {
-        insert({ TimestampArray: [null] }, (err, row) => {
+        insert({TimestampArray: [null]}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().TimestampArray, [null]);
           done();
@@ -563,7 +563,7 @@ describe('Spanner', () => {
       it('should write timestamp array values', done => {
         const values = [Spanner.timestamp(), Spanner.timestamp('3-3-1933')];
 
-        insert({ TimestampArray: values }, (err, row) => {
+        insert({TimestampArray: values}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().TimestampArray, values);
           done();
@@ -575,7 +575,7 @@ describe('Spanner', () => {
       it('should write date values', done => {
         const date = Spanner.date();
 
-        insert({ DateValue: date }, (err, row) => {
+        insert({DateValue: date}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(Spanner.date(row.toJSON().DateValue), date);
           done();
@@ -583,7 +583,7 @@ describe('Spanner', () => {
       });
 
       it('should write null date values', done => {
-        insert({ DateValue: null }, (err, row) => {
+        insert({DateValue: null}, (err, row) => {
           assert.ifError(err);
           assert.strictEqual(row.toJSON().DateValue, null);
           done();
@@ -591,7 +591,7 @@ describe('Spanner', () => {
       });
 
       it('should write empty date array values', done => {
-        insert({ DateArray: [] }, (err, row) => {
+        insert({DateArray: []}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().DateArray, []);
           done();
@@ -599,7 +599,7 @@ describe('Spanner', () => {
       });
 
       it('should write null date array values', done => {
-        insert({ DateArray: [null] }, (err, row) => {
+        insert({DateArray: [null]}, (err, row) => {
           assert.ifError(err);
           assert.deepStrictEqual(row.toJSON().DateArray, [null]);
           done();
@@ -609,9 +609,9 @@ describe('Spanner', () => {
       it('should write date array values', done => {
         const values = [Spanner.date(), Spanner.date('3-3-1933')];
 
-        insert({ DateArray: values }, (err, row) => {
+        insert({DateArray: values}, (err, row) => {
           assert.ifError(err);
-          const { DateArray } = row.toJSON();
+          const {DateArray} = row.toJSON();
           assert.deepStrictEqual(DateArray, values);
           done();
         });
@@ -620,9 +620,9 @@ describe('Spanner', () => {
 
     describe('commit timestamp', () => {
       it('should accept the commit timestamp placeholder', done => {
-        const data = { CommitTimestamp: Spanner.COMMIT_TIMESTAMP };
+        const data = {CommitTimestamp: Spanner.COMMIT_TIMESTAMP};
 
-        insert(data, (err, row, { commitTimestamp }) => {
+        insert(data, (err, row, {commitTimestamp}) => {
           assert.ifError(err);
 
           const timestampFromCommit = Spanner.timestamp(commitTimestamp);
@@ -635,7 +635,7 @@ describe('Spanner', () => {
     });
 
     it('should throw an error for incorrect value types', done => {
-      table.insert({ BoolValue: 'abc' }, err => {
+      table.insert({BoolValue: 'abc'}, err => {
         assert(err);
         done();
       });
@@ -710,11 +710,11 @@ describe('Spanner', () => {
 
           instance.getMetadata((err, metadata) => {
             assert.ifError(err);
-            assert.strictEqual(
-              metadata!.displayName, newData.displayName);
+            assert.strictEqual(metadata!.displayName, newData.displayName);
             done();
           });
-        }));
+        })
+      );
     });
 
     it('should return true for instances that exist', done => {
@@ -787,7 +787,7 @@ describe('Spanner', () => {
     it('should auto create a database', done => {
       const database = instance.database(generateName('database'));
 
-      database.get({ autoCreate: true }, err => {
+      database.get({autoCreate: true}, err => {
         assert.ifError(err);
         database.getMetadata(done);
       });
@@ -1084,7 +1084,7 @@ describe('Spanner', () => {
               keys: [id],
               columns: ['SingerId', 'Int'],
               json: true,
-              jsonOptions: { wrapNumbers: true },
+              jsonOptions: {wrapNumbers: true},
             })
             .on('error', done)
             .on('data', row => {
@@ -1388,7 +1388,7 @@ describe('Spanner', () => {
         database.run(
           {
             sql: 'SELECT * FROM Singers WHERE SingerId=@id',
-            params: { id: ID },
+            params: {id: ID},
           },
           options,
           (err, rows) => {
@@ -1408,7 +1408,7 @@ describe('Spanner', () => {
           .run(
             {
               sql: 'SELECT * FROM Singers WHERE SingerId=@id',
-              params: { id: ID },
+              params: {id: ID},
             },
             options
           )
@@ -1430,7 +1430,7 @@ describe('Spanner', () => {
           .runStream(
             {
               sql: 'SELECT * FROM Singers WHERE SingerId=@id',
-              params: { id: ID },
+              params: {id: ID},
             },
             options
           )
@@ -1471,13 +1471,13 @@ describe('Spanner', () => {
           assert.strictEqual(values[0][0].value, 'a');
           assert.deepStrictEqual(
             JSON.stringify(values[0][1].value),
-            JSON.stringify({ value: '1' })
+            JSON.stringify({value: '1'})
           );
 
           assert.strictEqual(values[1][0].value, 'b');
           assert.deepStrictEqual(
             JSON.stringify(values[1][1].value),
-            JSON.stringify({ value: '2' })
+            JSON.stringify({value: '2'})
           );
 
           done();
@@ -1640,7 +1640,7 @@ describe('Spanner', () => {
               assert.ifError(err);
 
               const expected = values.map(val => {
-                return is.number(val) ? { value: String(val) } : val;
+                return is.number(val) ? {value: String(val)} : val;
               });
 
               assert.strictEqual(
@@ -1744,7 +1744,7 @@ describe('Spanner', () => {
               assert.ifError(err);
 
               const expected = values.map(val => {
-                return is.number(val) ? { value: val } : val;
+                return is.number(val) ? {value: val} : val;
               });
 
               assert.strictEqual(
@@ -1858,7 +1858,7 @@ describe('Spanner', () => {
               assert.ifError(err);
 
               const expected = values.map(val => {
-                return is.number(val) ? { value: val + '' } : val;
+                return is.number(val) ? {value: val + ''} : val;
               });
 
               assert.strictEqual(
@@ -2486,7 +2486,7 @@ describe('Spanner', () => {
             const query = {
               sql: 'SELECT @structParam=STRUCT<INT64>(5)',
               params: {
-                structParam: Spanner.struct([{ value: Spanner.int(5) }]),
+                structParam: Spanner.struct([{value: Spanner.int(5)}]),
               },
             };
 
@@ -2839,7 +2839,7 @@ describe('Spanner', () => {
           });
       });
 
- // all of these tests require testing with and without an index,
+      // all of these tests require testing with and without an index,
       // to cut back on duplication, the core sections of the tests have been
       // turned into configurations
       [
@@ -3338,9 +3338,9 @@ describe('Spanner', () => {
       await onPromiseOperationComplete(await table.create(schema));
 
       for (let i = 0; i < 5; i++) {
-        const entry = { Key: `k${i}`, StringValue: `v${i}` };
+        const entry = {Key: `k${i}`, StringValue: `v${i}`};
 
-        const [{ commitTimestamp }] = await table.insert(entry);
+        const [{commitTimestamp}] = await table.insert(entry);
         const record = Object.assign(entry, {
           commitTimestamp,
           localTimestamp: Date.now(),
@@ -3668,7 +3668,7 @@ describe('Spanner', () => {
             .runUpdate({
               sql:
                 'INSERT INTO TxnTable (Key, StringValue) VALUES (@key, @str)',
-              params: { key, str },
+              params: {key, str},
             })
             .then(data => {
               const rowCount = data[0];
@@ -3677,7 +3677,7 @@ describe('Spanner', () => {
               return transaction.runUpdate({
                 sql:
                   'UPDATE TxnTable t SET t.NumberValue = @num WHERE t.KEY = @key',
-                params: { key, num },
+                params: {key, num},
               });
             })
             .then(data => {
@@ -3686,7 +3686,7 @@ describe('Spanner', () => {
 
               return transaction.run({
                 sql: 'SELECT * FROM TxnTable WHERE Key = @key',
-                params: { key },
+                params: {key},
               });
             })
             .then(data => {
@@ -3716,12 +3716,12 @@ describe('Spanner', () => {
             .runUpdate({
               sql:
                 'UPDATE TxnTable t SET t.StringValue = @str WHERE t.Key = @key',
-              params: { key, str },
+              params: {key, str},
             })
             .then(() => {
               return transaction.run({
                 sql: 'SELECT * FROM TxnTable WHERE Key = @key',
-                params: { key },
+                params: {key},
               });
             })
             .then(data => {
@@ -3745,13 +3745,13 @@ describe('Spanner', () => {
             .runUpdate({
               sql:
                 'UPDATE TxnTable t SET t.StringValue = @str WHERE t.Key = @key',
-              params: { key, str },
+              params: {key, str},
             })
             .then(() => transaction.rollback())
             .then(() => {
               return database.run({
                 sql: 'SELECT * FROM TxnTable WHERE Key = @key',
-                params: { key },
+                params: {key},
               });
             })
             .then(data => {
@@ -3789,7 +3789,7 @@ describe('Spanner', () => {
             .then(() => {
               return database.run({
                 sql: 'SELECT * FROM TxnTable WHERE StringValue = @str',
-                params: { str },
+                params: {str},
               });
             })
             .then(data => {
@@ -3827,7 +3827,7 @@ describe('Spanner', () => {
         const count = 10000;
 
         const tableData = new Array(count).fill(0).map((_, i) => {
-          return { Key: `longpdml${i}`, StringValue: 'a' };
+          return {Key: `longpdml${i}`, StringValue: 'a'};
         });
 
         const str = new Array(1000).fill('b').join('\n');
@@ -3840,7 +3840,7 @@ describe('Spanner', () => {
           .then(() => {
             return database.runPartitionedUpdate({
               sql: `UPDATE TxnTable t SET t.StringValue = @str WHERE t.StringValue = 'a'`,
-              params: { str },
+              params: {str},
             });
           })
           .then(([rowCount]) => {
@@ -3848,7 +3848,7 @@ describe('Spanner', () => {
 
             return database.run({
               sql: `SELECT Key FROM TxnTable WHERE StringValue = @str`,
-              params: { str },
+              params: {str},
             });
           })
           .then(([rows]) => {
@@ -3864,12 +3864,12 @@ describe('Spanner', () => {
 
       const insert = {
         sql: 'INSERT INTO TxnTable (Key, StringValue) VALUES (@key, @str)',
-        params: { key, str },
+        params: {key, str},
       };
 
       const update = {
         sql: 'UPDATE TxnTable t SET t.NumberValue = @num WHERE t.KEY = @key',
-        params: { key, num },
+        params: {key, num},
       };
 
       // this should fail since we're not binding params
@@ -4372,7 +4372,7 @@ function onPromiseOperationComplete(data) {
 
 function execAfterOperationComplete(callback) {
   // tslint:disable-next-line only-arrow-functions
-  return function (err) {
+  return function(err) {
     // arguments = [..., op, apiResponse]
     const operation = arguments[arguments.length - 2];
     const apiResponse = arguments[arguments.length - 1];

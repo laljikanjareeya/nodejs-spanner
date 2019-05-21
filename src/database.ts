@@ -33,17 +33,11 @@ import * as through from 'through2';
 
 import {BatchTransaction} from './batch-transaction';
 import {Instance} from './instance';
-import {
-  PartialResultStream,
-} from './partial-result-stream';
+import {PartialResultStream} from './partial-result-stream';
 import {Session} from './session';
 import {SessionPool} from './session-pool';
 import {Table} from './table';
-import {
-  Snapshot,
-  TimestampBounds,
-  Transaction,
-} from './transaction';
+import {Snapshot, TimestampBounds, Transaction} from './transaction';
 import {
   AsyncRunTransactionCallback,
   AsyncTransactionRunner,

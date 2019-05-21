@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-import { DateStruct, PreciseDate } from '@google-cloud/precise-date';
-import { promisifyAll } from '@google-cloud/promisify';
+import {DateStruct, PreciseDate} from '@google-cloud/precise-date';
+import {promisifyAll} from '@google-cloud/promisify';
 import arrify = require('arrify');
-import { EventEmitter } from 'events';
-import { CallOptions } from 'google-gax';
-import { ServiceError } from 'grpc';
+import {EventEmitter} from 'events';
+import {CallOptions} from 'google-gax';
+import {ServiceError} from 'grpc';
 import * as is from 'is';
-import { common as p } from 'protobufjs';
-import { Readable } from 'stream';
+import {common as p} from 'protobufjs';
+import {Readable} from 'stream';
 
-import { codec, Json, JSONOptions, Type, Value } from './codec';
+import {codec, Json, JSONOptions, Type, Value} from './codec';
 import {
   PartialResultStream,
   partialResultStream,
   ResumeToken,
   Row,
 } from './partial-result-stream';
-import { Session } from './session';
-import { Key } from './table';
-import { SpannerClient as s } from './v1';
-import { RowCountsServiceError } from './common';
+import {Session} from './session';
+import {Key} from './table';
+import {SpannerClient as s} from './v1';
+import {RowCountsServiceError} from './common';
 
 export type Rows = Array<Row | Json>;
 
@@ -55,8 +55,8 @@ export interface RequestOptions {
 
 export interface Statement {
   sql: string;
-  params?: { [param: string]: Value };
-  types?: { [param: string]: string };
+  params?: {[param: string]: Value};
+  types?: {[param: string]: string};
 }
 
 export interface ExecuteSqlRequest extends Statement, RequestOptions {
@@ -228,7 +228,7 @@ export class Snapshot extends EventEmitter {
     this.requestStream = session.requestStream.bind(session);
 
     const readOnly = Snapshot.encodeTimestampBounds(options || {});
-    this._options = { readOnly };
+    this._options = {readOnly};
   }
 
   begin(): BeginPromise;
@@ -274,7 +274,7 @@ export class Snapshot extends EventEmitter {
   begin(callback?: s.BeginTransactionCallback): void | BeginPromise {
     const session = this.session.formattedName_!;
     const options = this._options;
-    const reqOpts: s.BeginTransactionRequest = { session, options };
+    const reqOpts: s.BeginTransactionRequest = {session, options};
 
     this.request(
       {
@@ -288,7 +288,7 @@ export class Snapshot extends EventEmitter {
           return;
         }
 
-        const { id, readTimestamp } = resp;
+        const {id, readTimestamp} = resp;
 
         this.id = id;
         this.metadata = resp;
@@ -447,7 +447,7 @@ export class Snapshot extends EventEmitter {
     table: string,
     request = {} as ReadRequest
   ): PartialResultStream {
-    const { gaxOptions, json, jsonOptions } = request;
+    const {gaxOptions, json, jsonOptions} = request;
     const keySet = Snapshot.encodeKeySet(request);
     const transaction: s.TransactionSelector = {};
 
@@ -476,12 +476,12 @@ export class Snapshot extends EventEmitter {
       return this.requestStream({
         client: 'SpannerClient',
         method: 'streamingRead',
-        reqOpts: Object.assign({}, reqOpts, { resumeToken }),
+        reqOpts: Object.assign({}, reqOpts, {resumeToken}),
         gaxOpts: gaxOptions,
       });
     };
 
-    return partialResultStream(makeRequest, { json, jsonOptions });
+    return partialResultStream(makeRequest, {json, jsonOptions});
   }
 
   /**
@@ -833,13 +833,13 @@ export class Snapshot extends EventEmitter {
    */
   runStream(query: string | ExecuteSqlRequest): PartialResultStream {
     if (is.string(query)) {
-      query = { sql: query } as ExecuteSqlRequest;
+      query = {sql: query} as ExecuteSqlRequest;
     }
 
     query = Object.assign({}, query) as ExecuteSqlRequest;
 
-    const { gaxOptions, json, jsonOptions } = query;
-    const { params, paramTypes } = Snapshot.encodeParams(query);
+    const {gaxOptions, json, jsonOptions} = query;
+    const {params, paramTypes} = Snapshot.encodeParams(query);
     const transaction: s.TransactionSelector = {};
 
     if (this.id) {
@@ -864,12 +864,12 @@ export class Snapshot extends EventEmitter {
       return this.requestStream({
         client: 'SpannerClient',
         method: 'executeStreamingSql',
-        reqOpts: Object.assign({}, reqOpts, { resumeToken }),
+        reqOpts: Object.assign({}, reqOpts, {resumeToken}),
         gaxOpts: gaxOptions,
       });
     };
 
-    return partialResultStream(makeRequest, { json, jsonOptions });
+    return partialResultStream(makeRequest, {json, jsonOptions});
   }
 
   /**
@@ -918,7 +918,7 @@ export class Snapshot extends EventEmitter {
    */
   static encodeTimestampBounds(options: TimestampBounds): s.ReadOnly {
     const readOnly: s.ReadOnly = {};
-    const { returnReadTimestamp = true } = options;
+    const {returnReadTimestamp = true} = options;
 
     if (options.minReadTimestamp instanceof PreciseDate) {
       readOnly.minReadTimestamp = (options.minReadTimestamp as PreciseDate).toStruct();
@@ -960,10 +960,10 @@ export class Snapshot extends EventEmitter {
    * @returns {object}
    */
   static encodeParams(request: ExecuteSqlRequest) {
-    const typeMap: { [field: string]: string | Type } = request.types || {};
+    const typeMap: {[field: string]: string | Type} = request.types || {};
 
     const params: p.IStruct = {};
-    const paramTypes: { [field: string]: s.Type } = {};
+    const paramTypes: {[field: string]: s.Type} = {};
 
     if (request.params) {
       const fields = {};
@@ -987,7 +987,7 @@ export class Snapshot extends EventEmitter {
       });
     }
 
-    return { params, paramTypes };
+    return {params, paramTypes};
   }
 }
 
@@ -1044,11 +1044,11 @@ export class Dml extends Snapshot {
     callback?: RunUpdateCallback
   ): void | RunUpdatePromise {
     if (is.string(query)) {
-      query = { sql: query } as ExecuteSqlRequest;
+      query = {sql: query} as ExecuteSqlRequest;
     }
 
     const seqno = this._seqno++;
-    const reqOpts = Object.assign({ seqno }, query);
+    const reqOpts = Object.assign({seqno}, query);
 
     this.run(
       reqOpts,
@@ -1160,7 +1160,7 @@ export class Transaction extends Dml {
     super(session);
 
     this._queuedMutations = [];
-    this._options = { readWrite: options };
+    this._options = {readWrite: options};
   }
 
   batchUpdate(queries: Array<string | Statement>): BatchUpdatePromise;
@@ -1238,16 +1238,16 @@ export class Transaction extends Dml {
 
     const statements: s.Statement[] = queries.map(query => {
       if (typeof query === 'string') {
-        return { sql: query };
+        return {sql: query};
       }
-      const { sql } = query;
-      const { params, paramTypes } = Snapshot.encodeParams(query);
-      return { sql, params, paramTypes };
+      const {sql} = query;
+      const {params, paramTypes} = Snapshot.encodeParams(query);
+      return {sql, params, paramTypes};
     });
 
     const reqOpts: s.ExecuteBatchDmlRequest = {
       session: this.session.formattedName_!,
-      transaction: { id: this.id },
+      transaction: {id: this.id},
       seqno: this._seqno++,
       statements,
     };
@@ -1263,13 +1263,13 @@ export class Transaction extends Dml {
 
         if (err) {
           const rowCounts: number[] = [];
-          batchUpdateError = Object.assign(err, { rowCounts });
+          batchUpdateError = Object.assign(err, {rowCounts});
           callback!(batchUpdateError, rowCounts, resp);
           return;
         }
 
-        const { resultSets, status } = resp;
-        const rowCounts: number[] = resultSets.map(({ stats }) => {
+        const {resultSets, status} = resp;
+        const rowCounts: number[] = resultSets.map(({stats}) => {
           return (stats && Number(stats[stats.rowCount])) || 0;
         });
 
@@ -1338,7 +1338,7 @@ export class Transaction extends Dml {
   commit(callback?: s.CommitCallback): void | CommitPromise {
     const mutations = this._queuedMutations;
     const session = this.session.formattedName_!;
-    const reqOpts: s.CommitRequest = { mutations, session };
+    const reqOpts: s.CommitRequest = {mutations, session};
 
     if (this.id) {
       reqOpts.transactionId = this.id;
@@ -1411,8 +1411,8 @@ export class Transaction extends Dml {
    * ];
    */
   deleteRows(table: string, keys: Key[]): void {
-    const keySet: s.KeySet = { keys: arrify(keys).map(codec.convertToListValue) };
-    const mutation: s.Mutation = { delete: { table, keySet } };
+    const keySet: s.KeySet = {keys: arrify(keys).map(codec.convertToListValue)};
+    const mutation: s.Mutation = {delete: {table, keySet}};
 
     this._queuedMutations.push(mutation);
   }
@@ -1545,13 +1545,15 @@ export class Transaction extends Dml {
    */
   rollback(callback?: s.RollbackCallback): void | Promise<void> {
     if (!this.id) {
-      callback!(new Error('Transaction ID is unknown, nothing to rollback.') as ServiceError);
+      callback!(new Error(
+        'Transaction ID is unknown, nothing to rollback.'
+      ) as ServiceError);
       return;
     }
 
     const session = this.session.formattedName_!;
     const transactionId = this.id;
-    const reqOpts: s.RollbackRequest = { session, transactionId };
+    const reqOpts: s.RollbackRequest = {session, transactionId};
 
     this.request(
       {
@@ -1675,7 +1677,7 @@ export class Transaction extends Dml {
     });
 
     const mutation: s.Mutation = {
-      [method]: { table, columns, values },
+      [method]: {table, columns, values},
     };
 
     this._queuedMutations.push(mutation);
@@ -1723,7 +1725,7 @@ promisifyAll(Transaction, {
 export class PartitionedDml extends Dml {
   constructor(session: Session, options = {} as s.PartitionedDml) {
     super(session);
-    this._options = { partitionedDml: options };
+    this._options = {partitionedDml: options};
   }
 
   runUpdate(query: string | ExecuteSqlRequest): RunUpdatePromise;
