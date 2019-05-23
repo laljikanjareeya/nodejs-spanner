@@ -49,19 +49,16 @@ export const enum types {
   ReadWrite = 'readwrite',
 }
 
-export interface CreateSessionCallback {
-  (
-    err: Error | null,
-    session?: Session | null,
-    apiResponse?: spanner_client.spanner.v1.Session
-  ): void;
-}
-
 export type GetSessionMetadataCallback = (
   err: Error | null,
   metadata?: spanner_client.spanner.v1.ISession | null,
-  apiResponse?: spanner_client.spanner.v1.Session
+  apiResponse?: r.Response
 ) => void;
+
+type GetSessionMetadataResponse = [
+  spanner_client.spanner.v1.ISession | null,
+  r.Response
+];
 
 /**
  * Create a Session object to interact with a Cloud Spanner session.
@@ -231,8 +228,8 @@ export class Session extends ServiceObject {
           options,
           (
             err: Error | null,
-            session?: Session,
-            apiResponse?: spanner_client.spanner.v1.Session
+            session?: spanner_client.spanner.v1.ISession,
+            apiResponse?: r.Response
           ) => {
             if (err) {
               callback(err, null, apiResponse);
@@ -280,13 +277,9 @@ export class Session extends ServiceObject {
    *   const apiResponse = data[0];
    * });
    */
-  delete(): Promise<[r.Response]>;
-  delete(
-    callback: spanner_client.spanner.v1.Spanner.DeleteSessionCallback
-  ): void;
-  delete(
-    callback?: spanner_client.spanner.v1.Spanner.DeleteSessionCallback
-  ): void | Promise<[r.Response]> {
+  delete(): Promise<BasicResponse>;
+  delete(callback: BasicCallback): void;
+  delete(callback?: BasicCallback): void | Promise<BasicResponse> {
     const reqOpts = {
       name: this.formattedName_,
     };
@@ -300,7 +293,7 @@ export class Session extends ServiceObject {
     );
   }
 
-  getMetadata(): Promise<[spanner_client.spanner.v1.Session, r.Response]>;
+  getMetadata(): Promise<GetSessionMetadataResponse>;
   getMetadata(callback: GetSessionMetadataCallback): void;
   /**
    * @typedef {array} GetSessionMetadataResponse
@@ -338,7 +331,7 @@ export class Session extends ServiceObject {
 
   getMetadata(
     callback?: GetSessionMetadataCallback
-  ): void | Promise<[spanner_client.spanner.v1.Session, r.Response]> {
+  ): void | Promise<GetSessionMetadataResponse> {
     const reqOpts = {
       name: this.formattedName_,
     };
@@ -389,7 +382,7 @@ export class Session extends ServiceObject {
    * @example
    * const transaction = session.partitionedDml();
    */
-  partitionedDml(): PartitionedDml {
+  partitionedDml() {
     return new PartitionedDml(this);
   }
   /**
@@ -401,7 +394,7 @@ export class Session extends ServiceObject {
    * @example
    * const snapshot = session.snapshot({strong: false});
    */
-  snapshot(options?: TimestampBounds): Snapshot {
+  snapshot(options?: TimestampBounds) {
     return new Snapshot(this, options);
   }
   /**
@@ -412,7 +405,7 @@ export class Session extends ServiceObject {
    * @example
    * const transaction = session.transaction();
    */
-  transaction(): Transaction {
+  transaction() {
     return new Transaction(this);
   }
   /**
@@ -429,7 +422,7 @@ export class Session extends ServiceObject {
    * // 'projects/grape-spaceship-123/instances/my-instance/' +
    * // 'databases/my-database/sessions/my-session'
    */
-  static formatName_(databaseName: string, name: string): string {
+  static formatName_(databaseName: string, name: string) {
     if (name.indexOf('/') > -1) {
       return name;
     }

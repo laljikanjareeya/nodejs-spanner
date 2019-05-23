@@ -1,21 +1,11 @@
-import {google as spanner_client} from '../proto/spanner';
 import * as r from 'request';
+import {google as database_admin_client} from '../proto/spanner_database_admin';
 
-export type BasicCallback = (
-  err: Error | null,
-  res?: spanner_client.protobuf.Empty
-) => void;
+export type BasicCallback = (err: Error | null, res?: r.Response) => void;
 export type BasicResponse = [r.Response];
-
-export interface GaxOptions {
-  [key: string]: spanner_client.protobuf.Value;
-}
-
-export type Schema = string | SchemaObject;
-export interface SchemaObject {
-  statements: string[];
-  operationId?: string;
-}
+export type Schema =
+  | string
+  | database_admin_client.spanner.admin.database.v1.IUpdateDatabaseDdlRequest;
 
 // tslint:disable-next-line no-any
 export type Any = any;
