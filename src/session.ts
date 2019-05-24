@@ -54,7 +54,6 @@ export type GetSessionMetadataCallback = (
   metadata?: spanner_client.spanner.v1.ISession | null,
   apiResponse?: r.Response
 ) => void;
-
 type GetSessionMetadataResponse = [
   spanner_client.spanner.v1.ISession | null,
   r.Response
@@ -292,9 +291,6 @@ export class Session extends ServiceObject {
       callback!
     );
   }
-
-  getMetadata(): Promise<GetSessionMetadataResponse>;
-  getMetadata(callback: GetSessionMetadataCallback): void;
   /**
    * @typedef {array} GetSessionMetadataResponse
    * @property {object} 0 The session's metadata.
@@ -328,7 +324,8 @@ export class Session extends ServiceObject {
    *   const apiResponse = data[1];
    * });
    */
-
+  getMetadata(): Promise<GetSessionMetadataResponse>;
+  getMetadata(callback: GetSessionMetadataCallback): void;
   getMetadata(
     callback?: GetSessionMetadataCallback
   ): void | Promise<GetSessionMetadataResponse> {
@@ -344,9 +341,6 @@ export class Session extends ServiceObject {
       callback!
     );
   }
-
-  keepAlive(): Promise<BasicResponse>;
-  keepAlive(callback: BasicCallback): void;
   /**
    * Ping the session with `SELECT 1` to prevent it from expiring.
    *
@@ -360,6 +354,8 @@ export class Session extends ServiceObject {
    *   }
    * });
    */
+  keepAlive(): Promise<BasicResponse>;
+  keepAlive(callback: BasicCallback): void;
   keepAlive(callback?: BasicCallback): void | Promise<BasicResponse> {
     const reqOpts = {
       session: this.formattedName_,
