@@ -115,10 +115,10 @@ declare namespace SpannerClient {
   }
 
   interface Session {
-    name: string,
-    labels: Array<[string, string]>,
-    createTime?: protobuf.ITimestamp,
-    approximateLastUseTime?: protobuf.ITimestamp,
+    name: string;
+    labels: Array<[string, string]>;
+    createTime?: protobuf.ITimestamp;
+    approximateLastUseTime?: protobuf.ITimestamp;
   }
 
   interface CreateSessionCallback {
@@ -363,7 +363,7 @@ declare namespace SpannerClient {
 
   interface ShortRepresentation {
     description: string;
-    subqueries: Array<[string, number]>
+    subqueries: Array<[string, number]>;
   }
 
   interface PlanNode {

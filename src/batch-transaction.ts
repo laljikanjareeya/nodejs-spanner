@@ -17,9 +17,62 @@
 import {PreciseDate} from '@google-cloud/precise-date';
 import {promisifyAll} from '@google-cloud/promisify';
 import * as extend from 'extend';
-import * as is from 'is';
-import {codec} from './codec';
-import {Snapshot} from './transaction';
+import * as r from 'request';
+import {CallOptions} from 'google-gax/build/src/gax';
+import {Readable} from 'stream';
+
+import {
+  Snapshot,
+  ReadRequest,
+  ExecuteSqlRequest,
+  RunCallback,
+  ReadCallback as TransactionRequestReadCallback,
+  Rows,
+} from './transaction';
+import {google as spanner_client} from '../proto/spanner';
+import {BasicCallback} from './common';
+
+export interface CreatePartitionsCallback {
+  (
+    err: Error | null,
+    partitions?: spanner_client.spanner.v1.IPartition[] | null,
+    resp?: PartitionResponse
+  ): void;
+}
+export interface PartitionResponse {
+  partitions: spanner_client.spanner.v1.IPartition[];
+  transaction: spanner_client.spanner.v1.Transaction;
+}
+export interface PartitionRequestOptions
+  extends spanner_client.spanner.v1.IPartitionReadRequest {
+  limit?: number;
+  resumeToken?: Uint8Array | string;
+  partitionToken?: Uint8Array | string;
+  gaxOptions?: CallOptions;
+  types?: {[param: string]: string};
+  keys?: spanner_client.protobuf.IListValue[] | null;
+  ranges?: spanner_client.spanner.v1.IKeyRange[] | null;
+}
+export interface QueryPartition extends ExecuteSqlRequest {
+  table?: string;
+}
+export interface ReadPartition extends ReadRequest {
+  table: string;
+}
+export interface TransactionIdentifier {
+  transaction: string;
+  session: string;
+  timestamp?: spanner_client.protobuf.ITimestamp;
+}
+export interface PartitionsConfig {
+  client?: string;
+  method?: string;
+  reqOpts?: {
+    partitionOptions?: spanner_client.spanner.v1.IPartitionOptions | null;
+    [k: string]: unknown;
+  };
+  gaxOpts?: CallOptions | {[k: string]: string};
+}
 
 /**
  * Use a BatchTransaction object to create partitions and read/query against
@@ -69,8 +122,10 @@ class BatchTransaction extends Snapshot {
    *   return transaction.close();
    * });
    */
-  close(callback) {
-    this.session.delete(callback);
+  close(): Promise<[r.Response]>;
+  close(callback: BasicCallback): void;
+  close(callback?: BasicCallback): void | Promise<[r.Response]> {
+    this.session.delete(callback!);
   }
   /**
    * @see [`ExecuteSqlRequest`](https://cloud.google.com/spanner/docs/reference/rpc/google.spanner.v1#google.spanner.v1.ExecuteSqlRequest)
@@ -107,14 +162,21 @@ class BatchTransaction extends Snapshot {
    * @example <caption>include:samples/batch.js</caption>
    * region_tag:spanner_batch_client
    */
-  createQueryPartitions(query, callback) {
-    if (is.string(query)) {
+  createQueryPartitions(
+    query: string | ExecuteSqlRequest,
+    callback: CreatePartitionsCallback
+  ): void | Promise<[spanner_client.spanner.v1.IPartition[], r.Response]> {
+    if (typeof query === 'string') {
       query = {
         sql: query,
       };
     }
 
-    const reqOpts = Object.assign({}, query, Snapshot.encodeParams(query));
+    const reqOpts: PartitionRequestOptions = Object.assign(
+      {},
+      query,
+      Snapshot.encodeParams(query)
+    );
 
     delete reqOpts.gaxOptions;
     delete reqOpts.types;
@@ -139,22 +201,27 @@ class BatchTransaction extends Snapshot {
    * @param {object} config The request config.
    * @param {function} callback Callback function.
    */
-  createPartitions_(config, callback) {
+  createPartitions_(
+    config: PartitionsConfig,
+    callback: CreatePartitionsCallback
+  ) {
     const query = extend({}, config.reqOpts, {
       session: this.session.formattedName_,
       transaction: {id: this.id},
     });
     config.reqOpts = extend({}, query);
     delete query.partitionOptions;
-    this.session.request(config, (err, resp) => {
+    this.session.request(config, (err: Error, resp: PartitionResponse) => {
       if (err) {
         callback(err, null, resp);
         return;
       }
 
-      const partitions = resp.partitions.map(partition => {
-        return extend({}, query, partition);
-      });
+      const partitions: spanner_client.spanner.v1.IPartition[] = resp.partitions.map(
+        partition => {
+          return extend({}, query, partition);
+        }
+      );
 
       if (resp.transaction) {
         const {id, readTimestamp} = resp.transaction;
@@ -163,7 +230,7 @@ class BatchTransaction extends Snapshot {
 
         if (readTimestamp) {
           this.readTimestampProto = readTimestamp;
-          this.readTimestamp = new PreciseDate(readTimestamp);
+          this.readTimestamp = new PreciseDate(readTimestamp as number);
         }
       }
 
@@ -198,8 +265,11 @@ class BatchTransaction extends Snapshot {
    * @param {CreateReadPartitionsCallback} [callback] Callback function.
    * @returns {Promise<CreateReadPartitionsResponse>}
    */
-  createReadPartitions(options, callback) {
-    const reqOpts = Object.assign({}, options, {
+  createReadPartitions(
+    options: ReadPartition,
+    callback: CreatePartitionsCallback
+  ): void | Promise<[spanner_client.spanner.v1.IPartition[], r.Response]> {
+    const reqOpts: PartitionRequestOptions = Object.assign({}, options, {
       keySet: Snapshot.encodeKeySet(options),
     });
 
@@ -223,7 +293,7 @@ class BatchTransaction extends Snapshot {
    * @see {@link Transaction#read} when using {@link ReadPartition}.
    * @see {@link Transaction#run} when using {@link QueryParition}.
    *
-   * @param {ReadPartition|QueryParition} partition The partition object.
+   * @param {ReadPartition|QueryPartition} partition The partition object.
    * @param {object} [partition.gaxOptions] Request configuration options,
    *     outlined here:
    * https://googleapis.github.io/gax-nodejs/CallSettings.html.
@@ -234,12 +304,31 @@ class BatchTransaction extends Snapshot {
    * @example <caption>include:samples/batch.js</caption>
    * region_tag:spanner_batch_execute_partitions
    */
-  execute(partition, callback) {
-    if (is.string(partition.table)) {
-      this.read(partition.table, partition, callback);
+  execute(
+    partition: ReadPartition
+  ): Promise<[Rows, spanner_client.spanner.v1.ResultSetStats]>;
+  execute(
+    partition: ReadPartition,
+    callback: TransactionRequestReadCallback
+  ): void;
+  execute(partition: QueryPartition): Promise<[Rows]>;
+  execute(partition: QueryPartition, callback: RunCallback): void;
+  execute(
+    partition: ReadPartition | QueryPartition,
+    callback?: TransactionRequestReadCallback | RunCallback
+  ):
+    | void
+    | Promise<[Rows, spanner_client.spanner.v1.ResultSetStats]>
+    | Promise<[Rows]> {
+    if (typeof partition.table === 'string') {
+      this.read(
+        partition.table,
+        partition,
+        callback as TransactionRequestReadCallback
+      );
       return;
     }
-    this.run(partition, callback);
+    this.run(partition as ExecuteSqlRequest, callback as RunCallback);
   }
   /**
    * Executes partition in streaming mode.
@@ -286,11 +375,11 @@ class BatchTransaction extends Snapshot {
    *   });
    * });
    */
-  executeStream(partition) {
-    if (is.string(partition.table)) {
+  executeStream(partition: ReadPartition | QueryPartition): Readable {
+    if (typeof partition.table === 'string') {
       return this.createReadStream(partition.table, partition);
     }
-    return this.runStream(partition);
+    return this.runStream(partition as ExecuteSqlRequest);
   }
   /**
    * @typedef {object} TransactionIdentifier
@@ -315,7 +404,7 @@ class BatchTransaction extends Snapshot {
    *   const identifier = transaction.identifier();
    * });
    */
-  identifier() {
+  identifier(): TransactionIdentifier {
     return {
       transaction: (this.id! as Buffer).toString('base64'),
       session: this.session.id,

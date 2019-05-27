@@ -1,3 +1,5 @@
+import * as r from 'request';
+
 export interface TransactionOptions {
   readOnly?: boolean;
   timeout?: number;
@@ -16,3 +18,5 @@ export interface GetTimestamp {
   nanos: number;
   seconds: number;
 }
+
+export type BasicCallback = (err: Error | null, resp?: r.Response) => void;

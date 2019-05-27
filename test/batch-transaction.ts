@@ -230,7 +230,7 @@ describe('BatchTransaction', () => {
       batchTransaction.createPartitions_(CONFIG, (err, parts) => {
         assert.ifError(err);
 
-        parts.forEach((partition, i) => {
+        parts!.forEach((partition, i) => {
           const expectedPartition = extend({}, expectedQuery, PARTITIONS[i]);
           assert.deepStrictEqual(partition, expectedPartition);
         });
