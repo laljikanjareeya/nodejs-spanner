@@ -21,9 +21,10 @@ import * as checkpointStream from 'checkpoint-stream';
 import * as eventsIntercept from 'events-intercept';
 import * as is from 'is';
 import mergeStream = require('merge-stream');
-import {common as p} from 'protobufjs';
 import {Readable, Transform} from 'stream';
 import * as streamEvents from 'stream-events';
+
+import {google as spanner_client} from '../proto/spanner';
 
 import {codec, JSONOptions, Json, Field, Value} from './codec';
 import {SpannerClient as s} from './v1';
@@ -85,7 +86,7 @@ interface RowCallback {
  * @param {object} stats The result stats.
  */
 interface StatsCallback {
-  (stats: s.ResultSetStats): void;
+  (stats: spanner_client.spanner.v1.ResultSetStats): void;
 }
 
 /**
@@ -93,7 +94,7 @@ interface StatsCallback {
  * @param {object} response The full API response.
  */
 interface ResponseCallback {
-  (response: s.PartialResultSet): void;
+  (response: spanner_client.spanner.v1.PartialResultSet): void;
 }
 
 interface ResultEvents {
@@ -102,8 +103,14 @@ interface ResultEvents {
   addListener(event: 'response', listener: ResponseCallback): this;
 
   emit(event: 'data', data: Row | Json): boolean;
-  emit(event: 'stats', data: s.ResultSetStats): boolean;
-  emit(event: 'response', data: s.PartialResultSet): boolean;
+  emit(
+    event: 'stats',
+    data: spanner_client.spanner.v1.IResultSetStats
+  ): boolean;
+  emit(
+    event: 'response',
+    data: spanner_client.spanner.v1.PartialResultSet
+  ): boolean;
 
   on(event: 'data', listener: RowCallback): this;
   on(event: 'stats', listener: StatsCallback): this;
@@ -135,8 +142,8 @@ export class PartialResultStream extends Transform implements ResultEvents {
   private _destroyed: boolean;
   private _fields!: s.Field[];
   private _options: RowOptions;
-  private _pendingValue?: p.IValue;
-  private _values: p.IValue[];
+  private _pendingValue?: spanner_client.protobuf.IValue;
+  private _values: spanner_client.protobuf.IValue[];
   constructor(options = {}) {
     super({objectMode: true});
 
@@ -172,7 +179,11 @@ export class PartialResultStream extends Transform implements ResultEvents {
    * @param {string} encoding Chunk encoding (Not used in object streams).
    * @param {function} next Function to be called upon completion.
    */
-  _transform(chunk: s.PartialResultSet, enc: string, next: Function): void {
+  _transform(
+    chunk: spanner_client.spanner.v1.PartialResultSet,
+    enc: string,
+    next: Function
+  ): void {
     this.emit('response', chunk);
 
     if (chunk.stats) {
@@ -180,7 +191,7 @@ export class PartialResultStream extends Transform implements ResultEvents {
     }
 
     if (!this._fields && chunk.metadata) {
-      this._fields = chunk.metadata.rowType!.fields;
+      this._fields = chunk.metadata.rowType!.fields as Field[];
     }
 
     if (!is.empty(chunk.values)) {
@@ -196,7 +207,7 @@ export class PartialResultStream extends Transform implements ResultEvents {
    *
    * @param {object} chunk The partial result set.
    */
-  private _addChunk(chunk: s.PartialResultSet): void {
+  private _addChunk(chunk: spanner_client.spanner.v1.PartialResultSet): void {
     const values: Value[] = chunk.values.map(Service.decodeValue_);
 
     // If we have a chunk to merge, merge the values now.
@@ -219,7 +230,7 @@ export class PartialResultStream extends Transform implements ResultEvents {
       this._pendingValue = values.pop();
     }
 
-    values.forEach(value => this._addValue(value));
+    values.forEach((value: Value) => this._addValue(value));
   }
   /**
    * Manages complete values, pushing a completed row into the stream once all
@@ -258,7 +269,7 @@ export class PartialResultStream extends Transform implements ResultEvents {
    * @returns {Row}
    */
   private _createRow(values: Value[]): Row {
-    const fields = values.map((value, index) => {
+    const fields = values.map((value: Value, index: number) => {
       const {name, type} = this._fields[index];
       return {name, value: codec.decode(value, type!)};
     });
@@ -282,13 +293,12 @@ export class PartialResultStream extends Transform implements ResultEvents {
    * @param {*} tail The tail of the combined value.
    * @returns {Array.<*>}
    */
-  // tslint:disable-next-line no-any
   static merge(type: s.Type, head: Value, tail: Value): Value[] {
     if (type.code === s.TypeCode.ARRAY || type.code === s.TypeCode.STRUCT) {
       return [PartialResultStream.mergeLists(type, head, tail)];
     }
 
-    if (is.string(head) && is.string(tail)) {
+    if (typeof head === 'string' && typeof tail === 'string') {
       return [head + tail];
     }
 
@@ -352,7 +362,9 @@ export function partialResultStream(
   const userStream = streamEvents(new PartialResultStream(options));
   const batchAndSplitOnTokenStream = checkpointStream.obj({
     maxQueued: 10,
-    isCheckpointFn: (row: s.PartialResultSet): boolean => {
+    isCheckpointFn: (
+      row: spanner_client.spanner.v1.PartialResultSet
+    ): boolean => {
       return is.defined(row.resumeToken);
     },
   });
@@ -390,7 +402,7 @@ export function partialResultStream(
       // it had queued. We can now destroy the user's stream, as our retry
       // attempts are over.
       .on('error', (err: Error) => userStream.destroy(err))
-      .on('checkpoint', (row: s.PartialResultSet) => {
+      .on('checkpoint', (row: spanner_client.spanner.v1.PartialResultSet) => {
         lastResumeToken = row.resumeToken;
       })
       .pipe(userStream)
