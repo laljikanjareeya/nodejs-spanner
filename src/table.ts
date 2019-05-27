@@ -17,7 +17,6 @@
 'use strict';
 
 import {promisifyAll} from '@google-cloud/promisify';
-import * as is from 'is';
 import {ServiceError} from 'grpc';
 import * as through from 'through2';
 import {Json} from './codec';
@@ -30,33 +29,38 @@ import {
   Transaction,
   TimestampBounds,
 } from './transaction';
+import {Schema, BasicCallback, BasicResponse} from './common';
+import {Operation as GaxOperation} from 'google-gax/build/src/longRunningCalls/longrunning';
+import {google as database_admin_client} from '../proto/spanner_database_admin';
 
 export type Key = string | string[];
-type Schema = string | string[] | {statements: string[]; operationId?: string};
-
-type CommitPromise = Promise<[s.CommitResponse]>;
-type CreateTablePromise = Promise<[Table, d.Operation, d.GrpcOperation]>;
-type DropTablePromise = Promise<[d.Operation, d.GrpcOperation]>;
+type CreateTablePromise = Promise<
+  [Table, GaxOperation, database_admin_client.longrunning.IOperation]
+>;
+type DropTablePromise = Promise<
+  [GaxOperation, database_admin_client.longrunning.IOperation]
+>;
 type ReadPromise = Promise<[Array<Row | Json>]>;
 type CommitCallback = s.CommitCallback;
 interface CreateTableCallback {
-  (err: ServiceError, table?: null, operation?: null, apiResponse?: null): void;
   (
-    err: null,
-    table: Table,
-    operation: d.Operation,
-    apiResponse: d.GrpcOperation
+    err: ServiceError | null,
+    table?: Table | null,
+    operation?: GaxOperation | null,
+    apiResponse?: database_admin_client.longrunning.IOperation | null
   ): void;
 }
 
 interface DropTableCallback {
-  (err: ServiceError, operation?: null, apiResponse?: null): void;
-  (err: null, operation: d.Operation, apiResponse: d.GrpcOperation): void;
+  (
+    err: ServiceError | null,
+    operation?: GaxOperation | null,
+    apiResponse?: database_admin_client.longrunning.IOperation | null
+  ): void;
 }
 
 interface ReadCallback {
-  (err: ServiceError, rows?: null): void;
-  (err: null, rows: Array<Row | Json>): void;
+  (err: ServiceError | null, rows?: Array<Row | Json> | null): void;
 }
 
 /**
@@ -344,9 +348,12 @@ class Table {
    *     const apiResponse = data[0];
    *   });
    */
-  deleteRows(keys: Key[]): CommitPromise;
-  deleteRows(keys: Key[], callback: CommitCallback): void;
-  deleteRows(keys: Key[], callback?: CommitCallback): CommitPromise | void {
+  deleteRows(keys: Key[]): Promise<BasicResponse>;
+  deleteRows(keys: Key[], callback: BasicCallback): void;
+  deleteRows(
+    keys: Key[],
+    callback?: BasicCallback
+  ): Promise<BasicResponse> | void {
     return this._mutate('deleteRows', keys, callback!);
   }
   /**
@@ -451,12 +458,12 @@ class Table {
    * region_tag:spanner_insert_data
    * Full example:
    */
-  insert(rows: object | object[]): CommitPromise;
-  insert(rows: object | object[], callback: CommitCallback): void;
+  insert(rows: object | object[]): Promise<BasicResponse>;
+  insert(rows: object | object[], callback: BasicCallback): void;
   insert(
     rows: object | object[],
-    callback?: CommitCallback
-  ): CommitPromise | void {
+    callback?: BasicCallback
+  ): Promise<BasicResponse> | void {
     this._mutate('insert', rows, callback!);
   }
   /**
@@ -674,12 +681,12 @@ class Table {
    *     const apiResponse = data[0];
    *   });
    */
-  replace(rows: object | object[]): CommitPromise;
-  replace(rows: object | object[], callback: CommitCallback): void;
+  replace(rows: object | object[]): Promise<BasicResponse>;
+  replace(rows: object | object[], callback: BasicCallback): void;
   replace(
     rows: object | object[],
-    callback?: CommitCallback
-  ): CommitPromise | void {
+    callback?: BasicCallback
+  ): Promise<BasicResponse> | void {
     this._mutate('replace', rows, callback!);
   }
   /**
@@ -725,12 +732,12 @@ class Table {
    * region_tag:spanner_update_data
    * Full example:
    */
-  update(rows: object | object[]): CommitPromise;
-  update(rows: object | object[], callback: CommitCallback): void;
+  update(rows: object | object[]): Promise<BasicResponse>;
+  update(rows: object | object[], callback: BasicCallback): void;
   update(
     rows: object | object[],
-    callback?: CommitCallback
-  ): CommitPromise | void {
+    callback?: BasicCallback
+  ): Promise<BasicResponse> | void {
     this._mutate('update', rows, callback!);
   }
   /**
@@ -772,12 +779,12 @@ class Table {
    *     const apiResponse = data[0];
    *   });
    */
-  upsert(rows: object | object[]): CommitPromise;
-  upsert(rows: object | object[], callback: CommitCallback): void;
+  upsert(rows: object | object[]): Promise<BasicResponse>;
+  upsert(rows: object | object[], callback: BasicCallback): void;
   upsert(
     rows: object | object[],
-    callback?: CommitCallback
-  ): CommitPromise | void {
+    callback?: BasicCallback
+  ): Promise<BasicResponse> | void {
     this._mutate('upsert', rows, callback!);
   }
   /**
@@ -796,7 +803,7 @@ class Table {
   private _mutate(
     method: string,
     rows: object | object[],
-    callback: CommitCallback
+    callback: BasicCallback
   ): void {
     this.database.runTransaction(
       (err: ServiceError | null, transaction?: Transaction | null) => {
@@ -807,7 +814,7 @@ class Table {
 
         // tslint:disable-next-line: no-any
         (transaction as any)![method](this.name, rows);
-        transaction!.commit(callback);
+        transaction!.commit(callback as CommitCallback);
       }
     );
   }
