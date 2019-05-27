@@ -16,9 +16,9 @@
 
 import {promisify} from '@google-cloud/promisify';
 import {GoogleProtoFilesRoot} from 'google-gax';
-import {Metadata, ServiceError, status} from 'grpc';
+import {ServiceError, status} from 'grpc';
 import {join} from 'path';
-import {common as p, loadSync} from 'protobufjs';
+import {loadSync} from 'protobufjs';
 import * as through from 'through2';
 
 import {Session} from './session';
@@ -144,7 +144,7 @@ export abstract class Runner<T> {
     const retryInfo = err.metadata && err.metadata.get(RETRY_INFO);
 
     if (retryInfo && retryInfo.length) {
-      // tslint:disable-next-line no-any
+      // tslint:disable-next-line: no-any
       const {retryDelay} = (RetryInfo as any).decode(retryInfo[0]);
       let {seconds} = retryDelay;
 

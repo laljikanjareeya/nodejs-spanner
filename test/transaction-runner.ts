@@ -20,13 +20,15 @@ import {Metadata, ServiceError, status} from 'grpc';
 import * as proxyquire from 'proxyquire';
 import * as sinon from 'sinon';
 import * as through from 'through2';
+import {Transaction} from '../src';
+import {Runner, DeadlineError} from '../src/transaction-runner';
 
 const concat = require('concat-stream');
 
 class FakeTransaction extends EventEmitter {
   async begin(): Promise<void> {}
-  request(config, callback) {}
-  requestStream(config) {}
+  request(config: object, callback: Function) {}
+  requestStream(config: object) {}
 }
 
 describe('TransactionRunner', () => {
@@ -49,14 +51,15 @@ describe('TransactionRunner', () => {
     transaction: () => fakeTransaction,
   };
 
-  // tslint:disable-next-line no-any variable-name
-  let Runner;
-  // tslint:disable-next-line no-any variable-name
-  let TransactionRunner;
-  // tslint:disable-next-line no-any variable-name
-  let AsyncTransactionRunner;
+  // tslint:disable-next-line: no-any variable-name
+  let Runner: any;
+  // tslint:disable-next-line: no-any variable-name
+  let TransactionRunner: any;
+  // tslint:disable-next-line: no-any variable-name
+  let AsyncTransactionRunner: any;
 
-  let fakeTransaction;
+  // tslint:disable-next-line: no-any
+  let fakeTransaction: any;
 
   before(() => {
     const runners = proxyquire('../src/transaction-runner', {
@@ -78,17 +81,18 @@ describe('TransactionRunner', () => {
   afterEach(() => sandbox.restore());
 
   describe('Runner', () => {
-    // tslint:disable-next-line no-any variable-name
-    let ExtendedRunner;
+    // tslint:disable-next-line: no-any variable-name
+    let ExtendedRunner: any;
 
-    let runFn;
-    let runner;
+    let runFn: sinon.SinonStub;
+    // tslint:disable-next-line: no-any
+    let runner: Runner<any>;
 
     beforeEach(() => {
       runFn = sandbox.stub();
 
       ExtendedRunner = class ExtendedRunner extends Runner {
-        protected async _run(transaction): Promise<void> {
+        protected async _run(transaction: Transaction): Promise<void> {
           return runFn(transaction);
         }
       };
@@ -286,7 +290,7 @@ describe('TransactionRunner', () => {
         sandbox.stub(runner, 'getNextDelay').returns(2);
         runner.options.timeout = 1;
 
-        runner.run().catch(err => {
+        runner.run().catch((err: DeadlineError) => {
           assert.strictEqual(err.code, status.DEADLINE_EXCEEDED);
           assert.deepStrictEqual(err.errors, [fakeError]);
           done();
@@ -296,8 +300,9 @@ describe('TransactionRunner', () => {
   });
 
   describe('TransactionRunner', () => {
-    let runFn;
-    let runner;
+    let runFn: sinon.SinonStub;
+    // tslint:disable-next-line: no-any
+    let runner: Runner<any>;
 
     beforeEach(() => {
       runFn = sandbox.stub();
@@ -344,12 +349,12 @@ describe('TransactionRunner', () => {
       describe('transaction requests', () => {
         const CONFIG = {};
 
-        let callbackStub;
+        let callbackStub: sinon.SinonSpy;
 
         beforeEach(() => {
           callbackStub = sandbox.spy();
 
-          runFn.callsFake((err, transaction) => {
+          runFn.callsFake((err: Error, transaction: Transaction) => {
             assert.ifError(err);
             transaction.request(CONFIG, callbackStub);
           });
@@ -358,10 +363,12 @@ describe('TransactionRunner', () => {
         it('should return the request response', async () => {
           const fakeResponse = {};
 
-          fakeTransaction.request.withArgs(CONFIG).callsFake((_, callback) => {
-            callback(null, fakeResponse);
-            setImmediate(() => fakeTransaction.emit('end'));
-          });
+          fakeTransaction.request
+            .withArgs(CONFIG)
+            .callsFake((_: {}, callback: Function) => {
+              callback(null, fakeResponse);
+              setImmediate(() => fakeTransaction.emit('end'));
+            });
 
           await runner.run();
 
@@ -376,10 +383,12 @@ describe('TransactionRunner', () => {
           const fakeError: ServiceError = new Error('err');
           fakeError.code = status.DEADLINE_EXCEEDED;
 
-          fakeTransaction.request.withArgs(CONFIG).callsFake((_, callback) => {
-            callback(fakeError);
-            setImmediate(() => fakeTransaction.emit('end'));
-          });
+          fakeTransaction.request
+            .withArgs(CONFIG)
+            .callsFake((_: {}, callback: Function) => {
+              callback(fakeError);
+              setImmediate(() => fakeTransaction.emit('end'));
+            });
 
           await runner.run();
 
@@ -396,12 +405,14 @@ describe('TransactionRunner', () => {
 
           fakeTransaction.request
             .onCall(0)
-            .callsFake((_, callback) => callback(fakeError));
+            .callsFake((_: {}, callback: Function) => callback(fakeError));
 
-          fakeTransaction.request.onCall(1).callsFake((_, callback) => {
-            callback(null);
-            setImmediate(() => fakeTransaction.emit('end'));
-          });
+          fakeTransaction.request
+            .onCall(1)
+            .callsFake((_: {}, callback: Function) => {
+              callback(null);
+              setImmediate(() => fakeTransaction.emit('end'));
+            });
 
           await runner.run();
 
@@ -415,12 +426,14 @@ describe('TransactionRunner', () => {
 
           fakeTransaction.request
             .onCall(0)
-            .callsFake((_, callback) => callback(fakeError));
+            .callsFake((_: {}, callback: Function) => callback(fakeError));
 
-          fakeTransaction.request.onCall(1).callsFake((_, callback) => {
-            callback(null);
-            setImmediate(() => fakeTransaction.emit('end'));
-          });
+          fakeTransaction.request
+            .onCall(1)
+            .callsFake((_: {}, callback: Function) => {
+              callback(null);
+              setImmediate(() => fakeTransaction.emit('end'));
+            });
 
           await runner.run();
 
@@ -436,15 +449,15 @@ describe('TransactionRunner', () => {
           const fakeStream = through.obj();
           fakeTransaction.requestStream.withArgs(CONFIG).returns(fakeStream);
 
-          const fakeData = [{a: 'b'}, {c: 'd'}, {e: 'f'}];
+          const fakeData: Array<{}> = [{a: 'b'}, {c: 'd'}, {e: 'f'}];
           fakeData.forEach(data => fakeStream.push(data));
           fakeStream.push(null);
 
-          runFn.callsFake((err, transaction) => {
+          runFn.callsFake((err: Error, transaction: Transaction) => {
             assert.ifError(err);
 
             transaction.requestStream(CONFIG).pipe(
-              concat(data => {
+              concat((data: object) => {
                 assert.deepStrictEqual(data, fakeData);
                 done();
               })
@@ -461,10 +474,10 @@ describe('TransactionRunner', () => {
           const fakeError: ServiceError = new Error('err');
           fakeError.code = status.DEADLINE_EXCEEDED;
 
-          runFn.callsFake((err, transaction) => {
+          runFn.callsFake((err: Error, transaction: Transaction) => {
             assert.ifError(err);
 
-            transaction.requestStream(CONFIG).on('error', err => {
+            transaction.requestStream(CONFIG).on('error', (err: Error) => {
               assert.strictEqual(err, fakeError);
               done();
             });
@@ -481,21 +494,21 @@ describe('TransactionRunner', () => {
           const fakeError: ServiceError = new Error('err');
           fakeError.code = status.ABORTED;
 
-          const fakeData = [{a: 'b'}, {c: 'd'}, {e: 'f'}];
+          const fakeData: Array<{}> = [{a: 'b'}, {c: 'd'}, {e: 'f'}];
           fakeData.forEach(data => goodStream.push(data));
           goodStream.push(null);
 
           fakeTransaction.requestStream.onCall(0).returns(badStream);
           fakeTransaction.requestStream.onCall(1).returns(goodStream);
 
-          runFn.callsFake((err, transaction) => {
+          runFn.callsFake((err: Error, transaction: Transaction) => {
             assert.ifError(err);
 
             transaction
               .requestStream(CONFIG)
               .on('error', done)
               .pipe(
-                concat(data => {
+                concat((data: object) => {
                   assert.deepStrictEqual(data, fakeData);
                   assert.strictEqual(runFn.callCount, 2);
                   done();
@@ -514,21 +527,21 @@ describe('TransactionRunner', () => {
           const fakeError: ServiceError = new Error('err');
           fakeError.code = status.UNKNOWN;
 
-          const fakeData = [{a: 'b'}, {c: 'd'}, {e: 'f'}];
+          const fakeData: Array<{}> = [{a: 'b'}, {c: 'd'}, {e: 'f'}];
           fakeData.forEach(data => goodStream.push(data));
           goodStream.push(null);
 
           fakeTransaction.requestStream.onCall(0).returns(badStream);
           fakeTransaction.requestStream.onCall(1).returns(goodStream);
 
-          runFn.callsFake((err, transaction) => {
+          runFn.callsFake((err: Error, transaction: Transaction) => {
             assert.ifError(err);
 
             transaction
               .requestStream(CONFIG)
               .on('error', done)
               .pipe(
-                concat(data => {
+                concat((data: object) => {
                   assert.deepStrictEqual(data, fakeData);
                   assert.strictEqual(runFn.callCount, 2);
                   done();
@@ -544,8 +557,9 @@ describe('TransactionRunner', () => {
   });
 
   describe('AsyncTransactionRunner', () => {
-    let runFn;
-    let runner;
+    let runFn: sinon.SinonStub;
+    // tslint:disable-next-line: no-any
+    let runner: Runner<any>;
 
     beforeEach(() => {
       runFn = sandbox.stub();
