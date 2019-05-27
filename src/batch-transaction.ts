@@ -17,7 +17,6 @@
 import {PreciseDate} from '@google-cloud/precise-date';
 import {promisifyAll} from '@google-cloud/promisify';
 import * as extend from 'extend';
-import * as r from 'request';
 import {CallOptions} from 'google-gax/build/src/gax';
 import {Readable} from 'stream';
 
@@ -26,24 +25,37 @@ import {
   ReadRequest,
   ExecuteSqlRequest,
   RunCallback,
-  ReadCallback as TransactionRequestReadCallback,
   Rows,
+  RequestOptions,
+  ReadCallback,
 } from './transaction';
 import {google as spanner_client} from '../proto/spanner';
-import {BasicCallback} from './common';
+import {BasicCallback, BasicResponse} from './common';
 
-export interface CreatePartitionsCallback {
+interface CreateQueryPartitionsCallback {
   (
     err: Error | null,
     partitions?: spanner_client.spanner.v1.IPartition[] | null,
     resp?: PartitionResponse
   ): void;
 }
-export interface PartitionResponse {
+type CreateQueryPartitionsResponse = [
+  spanner_client.spanner.v1.IPartition[] | null,
+  PartitionResponse
+];
+interface PartitionResponse {
   partitions: spanner_client.spanner.v1.IPartition[];
   transaction: spanner_client.spanner.v1.Transaction;
 }
-export interface PartitionRequestOptions
+interface CreateReadPartitionsCallback {
+  (
+    err: Error | null,
+    partitions?: ReadPartition[] | null,
+    resp?: PartitionResponse
+  ): void;
+}
+type CreateReadPartitionsResponse = [ReadPartition[] | null, PartitionResponse];
+interface PartitionRequestOptions
   extends spanner_client.spanner.v1.IPartitionReadRequest {
   limit?: number;
   resumeToken?: Uint8Array | string;
@@ -53,18 +65,21 @@ export interface PartitionRequestOptions
   keys?: spanner_client.protobuf.IListValue[] | null;
   ranges?: spanner_client.spanner.v1.IKeyRange[] | null;
 }
-export interface QueryPartition extends ExecuteSqlRequest {
+interface QueryPartition extends ExecuteSqlRequest {
   table?: string;
 }
-export interface ReadPartition extends ReadRequest {
-  table: string;
+interface ReadPartition
+  extends spanner_client.spanner.v1.IPartition,
+    RequestOptions {
+  gaxOptions?: CallOptions | {[k: string]: string};
+  table?: string;
 }
-export interface TransactionIdentifier {
+interface TransactionIdentifier {
   transaction: string;
   session: string;
   timestamp?: spanner_client.protobuf.ITimestamp;
 }
-export interface PartitionsConfig {
+interface PartitionsConfig {
   client?: string;
   method?: string;
   reqOpts?: {
@@ -122,9 +137,9 @@ class BatchTransaction extends Snapshot {
    *   return transaction.close();
    * });
    */
-  close(): Promise<[r.Response]>;
+  close(): Promise<BasicResponse>;
   close(callback: BasicCallback): void;
-  close(callback?: BasicCallback): void | Promise<[r.Response]> {
+  close(callback?: BasicCallback): void | Promise<BasicResponse> {
     this.session.delete(callback!);
   }
   /**
@@ -164,8 +179,8 @@ class BatchTransaction extends Snapshot {
    */
   createQueryPartitions(
     query: string | ExecuteSqlRequest,
-    callback: CreatePartitionsCallback
-  ): void | Promise<[spanner_client.spanner.v1.IPartition[], r.Response]> {
+    callback: CreateQueryPartitionsCallback
+  ): void | Promise<CreateQueryPartitionsResponse> {
     if (typeof query === 'string') {
       query = {
         sql: query,
@@ -203,7 +218,7 @@ class BatchTransaction extends Snapshot {
    */
   createPartitions_(
     config: PartitionsConfig,
-    callback: CreatePartitionsCallback
+    callback: CreateQueryPartitionsCallback | CreateReadPartitionsCallback
   ) {
     const query = extend({}, config.reqOpts, {
       session: this.session.formattedName_,
@@ -217,11 +232,9 @@ class BatchTransaction extends Snapshot {
         return;
       }
 
-      const partitions: spanner_client.spanner.v1.IPartition[] = resp.partitions.map(
-        partition => {
-          return extend({}, query, partition);
-        }
-      );
+      const partitions: ReadPartition[] = resp.partitions.map(partition => {
+        return extend({}, query, partition);
+      });
 
       if (resp.transaction) {
         const {id, readTimestamp} = resp.transaction;
@@ -266,9 +279,9 @@ class BatchTransaction extends Snapshot {
    * @returns {Promise<CreateReadPartitionsResponse>}
    */
   createReadPartitions(
-    options: ReadPartition,
-    callback: CreatePartitionsCallback
-  ): void | Promise<[spanner_client.spanner.v1.IPartition[], r.Response]> {
+    options: ReadRequest,
+    callback: CreateReadPartitionsCallback
+  ): void | Promise<CreateReadPartitionsResponse> {
     const reqOpts: PartitionRequestOptions = Object.assign({}, options, {
       keySet: Snapshot.encodeKeySet(options),
     });
@@ -307,15 +320,12 @@ class BatchTransaction extends Snapshot {
   execute(
     partition: ReadPartition
   ): Promise<[Rows, spanner_client.spanner.v1.ResultSetStats]>;
-  execute(
-    partition: ReadPartition,
-    callback: TransactionRequestReadCallback
-  ): void;
+  execute(partition: ReadPartition, callback: ReadCallback): void;
   execute(partition: QueryPartition): Promise<[Rows]>;
   execute(partition: QueryPartition, callback: RunCallback): void;
   execute(
     partition: ReadPartition | QueryPartition,
-    callback?: TransactionRequestReadCallback | RunCallback
+    callback?: ReadCallback | RunCallback
   ):
     | void
     | Promise<[Rows, spanner_client.spanner.v1.ResultSetStats]>
@@ -323,8 +333,8 @@ class BatchTransaction extends Snapshot {
     if (typeof partition.table === 'string') {
       this.read(
         partition.table,
-        partition,
-        callback as TransactionRequestReadCallback
+        partition as ReadRequest,
+        callback as ReadCallback
       );
       return;
     }
@@ -377,7 +387,7 @@ class BatchTransaction extends Snapshot {
    */
   executeStream(partition: ReadPartition | QueryPartition): Readable {
     if (typeof partition.table === 'string') {
-      return this.createReadStream(partition.table, partition);
+      return this.createReadStream(partition.table, partition as ReadRequest);
     }
     return this.runStream(partition as ExecuteSqlRequest);
   }

@@ -20,3 +20,4 @@ export interface GetTimestamp {
 }
 
 export type BasicCallback = (err: Error | null, resp?: r.Response) => void;
+export type BasicResponse = [r.Response];
