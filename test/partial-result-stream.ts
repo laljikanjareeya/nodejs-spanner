@@ -24,7 +24,7 @@ import * as sinon from 'sinon';
 import {Transform} from 'stream';
 import * as through from 'through2';
 
-import {codec} from '../src/codec';
+import {codec, Json} from '../src/codec';
 import * as prs from '../src/partial-result-stream';
 
 describe('PartialResultStream', () => {
@@ -32,7 +32,7 @@ describe('PartialResultStream', () => {
 
   // tslint:disable-next-line variable-name
   let PartialResultStream: typeof prs.PartialResultStream;
-  let partialResultStream;
+  let partialResultStream: typeof prs.PartialResultStream;
 
   const NAME = 'f1';
   const VALUE = 'abc';
@@ -69,7 +69,7 @@ describe('PartialResultStream', () => {
   afterEach(() => sandbox.restore());
 
   describe('acceptance tests', () => {
-    const TESTS = require('../../test/data/streaming-read-acceptance-test.json')
+    const TESTS: Json[] = require('../../test/data/streaming-read-acceptance-test.json')
       .tests;
 
     beforeEach(() => {
@@ -84,7 +84,7 @@ describe('PartialResultStream', () => {
 
         stream
           .on('error', done)
-          .on('data', row => {
+          .on('data', (row: prs.Row) => {
             values.push(row.map(({value}) => value));
           })
           .on('end', () => {
@@ -92,7 +92,7 @@ describe('PartialResultStream', () => {
             done();
           });
 
-        test.chunks.forEach(chunk => {
+        test.chunks.forEach((chunk: string) => {
           const parsed = JSON.parse(chunk);
           // for whatever reason the acceptance test values come as raw values
           // where as grpc gives them to us as google.protobuf.Value objects
@@ -201,15 +201,15 @@ describe('PartialResultStream', () => {
 
   describe('partialResultStream', () => {
     let stream: prs.PartialResultStream;
-    let fakeRequestStream;
+    let fakeRequestStream: prs.PartialResultStream;
 
     const RESULT_WITH_TOKEN = Object.assign({}, RESULT, {
       resumeToken: '...',
     });
 
     beforeEach(() => {
-      fakeRequestStream = through.obj();
-      stream = partialResultStream(() => fakeRequestStream);
+      fakeRequestStream = through.obj() as prs.PartialResultStream;
+      stream = new partialResultStream(() => fakeRequestStream);
     });
 
     it('should only push rows when there is a token', done => {
@@ -245,7 +245,7 @@ describe('PartialResultStream', () => {
       fakeRequestStream.push(null);
 
       stream.on('error', done).pipe(
-        concat(rows => {
+        concat((rows: prs.Row[]) => {
           assert.strictEqual(rows.length, 11);
           done();
         })
@@ -260,7 +260,7 @@ describe('PartialResultStream', () => {
       // - Confirm all rows were received.
       const fakeCheckpointStream = through.obj();
       // tslint:disable-next-line no-any
-      const resetStub = ((fakeCheckpointStream as any).reset = () => {});
+      (fakeCheckpointStream as any).reset = () => {};
       sandbox.stub(checkpointStream, 'obj').returns(fakeCheckpointStream);
 
       const firstFakeRequestStream = through.obj();
@@ -300,14 +300,12 @@ describe('PartialResultStream', () => {
         return secondFakeRequestStream;
       });
 
-      partialResultStream(requestFnStub)
-        .on('error', done)
-        .pipe(
-          concat(rows => {
-            assert.strictEqual(rows.length, 4);
-            done();
-          })
-        );
+      new partialResultStream(requestFnStub).on('error', done).pipe(
+        concat((rows: prs.Row[]) => {
+          assert.strictEqual(rows.length, 4);
+          done();
+        })
+      );
     });
 
     it('should emit rows and error when there is no token', done => {
@@ -331,7 +329,8 @@ describe('PartialResultStream', () => {
   });
 });
 
-function convertToIValue(value) {
+// tslint:disable-next-line: no-any
+function convertToIValue(value: any): any {
   let kind: string;
 
   if (typeof value === 'number') {
