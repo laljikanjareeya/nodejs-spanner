@@ -20,6 +20,14 @@ import * as extend from 'extend';
 import * as is from 'is';
 import {codec} from './codec';
 import {Snapshot} from './transaction';
+import {Session} from './session';
+
+export interface TransactionIdentifier {
+  session: string | Session;
+  transaction?: string;
+  timestamp?: PreciseDate;
+  readTimestamp?: PreciseDate;
+}
 
 /**
  * Use a BatchTransaction object to create partitions and read/query against
