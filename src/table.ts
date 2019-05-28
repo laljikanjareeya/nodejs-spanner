@@ -38,7 +38,7 @@ type Schema = string | string[] | {statements: string[]; operationId?: string};
 
 type CommitPromise = Promise<[s.CommitResponse]>;
 type CreateTablePromise = Promise<[Table, d.Operation, d.GrpcOperation]>;
-type DropTablePromise = Promise<[d.Operation, d.GrpcOperation]>;
+export type DropTablePromise = Promise<[d.Operation, d.GrpcOperation]>;
 type ReadPromise = Promise<[Array<Row | Json>]>;
 
 interface CreateTableCallback {
@@ -51,7 +51,7 @@ interface CreateTableCallback {
   ): void;
 }
 
-interface DropTableCallback {
+export interface DropTableCallback {
   (err: ServiceError, operation?: null, apiResponse?: null): void;
   (err: null, operation: d.Operation, apiResponse: d.GrpcOperation): void;
 }

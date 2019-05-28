@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {util} from '@google-cloud/common-grpc';
 import * as pfy from '@google-cloud/promisify';
 import * as assert from 'assert';
 import * as extend from 'extend';
@@ -24,11 +23,16 @@ import {split} from 'split-array-stream';
 import {Transform} from 'stream';
 import * as through from 'through2';
 
-import {TimestampBounds} from '../src/transaction';
+import {TimestampBounds, ReadRequest} from '../src/transaction';
+import {Key, Table, DropTableCallback, DropTablePromise} from '../src/table';
+import {Row, PartialResultStream} from '../src/partial-result-stream';
+import {Database} from '../src';
+import {ServiceError} from 'grpc';
+import {Json} from '../src/codec';
 
 let promisified = false;
 const fakePfy = extend({}, pfy, {
-  promisifyAll(klass, options) {
+  promisifyAll(klass: Function, options: pfy.PromisifyAllOptions) {
     if (klass.name !== 'Table') {
       return;
     }
@@ -38,18 +42,18 @@ const fakePfy = extend({}, pfy, {
 });
 
 class FakeTransaction {
-  commit(callback) {
+  commit(callback: Function) {
     callback(null, {});
   }
   createReadStream() {
     return through.obj();
   }
-  deleteRows(name, keys) {}
+  deleteRows(name: string, keys: Key[]) {}
   end() {}
-  insert(table, row) {}
-  replace(table, row) {}
-  upsert(table, row) {}
-  update(table, row) {}
+  insert(table: Table, row: Row) {}
+  replace(table: Table, row: Row) {}
+  upsert(table: Table, row: Row) {}
+  update(table: Table, row: Row) {}
 }
 
 interface GetSnapshotCallback {
@@ -64,12 +68,13 @@ describe('Table', () => {
   let Table: any;
   // tslint:disable-next-line no-any variable-name
   let TableCached: any;
-  let table;
+  let table: Table;
   let transaction: FakeTransaction;
 
   const DATABASE = {
-    runTransaction: callback => callback(null, transaction),
-    getSnapshot: (options, callback) => callback(null, transaction),
+    runTransaction: (callback: Function) => callback(null, transaction),
+    getSnapshot: (options: TimestampBounds, callback: GetSnapshotCallback) =>
+      callback(null, transaction),
   };
 
   const NAME = 'table-name';
@@ -112,7 +117,7 @@ describe('Table', () => {
           assert.strictEqual(schema_, schema);
           callback(); // done()
         },
-      };
+      } as Database;
 
       table.create(schema, done);
     });
@@ -197,7 +202,7 @@ describe('Table', () => {
     it('should throw an error if any arguments are provided', () => {
       const expectedErr = /Unexpected argument, please see Table#deleteRows to delete rows\./;
 
-      assert.throws(() => table.delete([]), expectedErr);
+      assert.throws(() => table.delete({} as DropTableCallback), expectedErr);
     });
 
     it('should update the schema on the database', () => {
@@ -211,7 +216,7 @@ describe('Table', () => {
           assert.strictEqual(callback_, callback);
           return updateSchemaReturnValue;
         },
-      };
+      } as Database;
 
       const returnValue = table.delete(callback);
       assert.strictEqual(returnValue, updateSchemaReturnValue);
@@ -251,10 +256,11 @@ describe('Table', () => {
 
   describe('drop', () => {
     it('should call through to Table#delete', done => {
-      const returnVal = Promise.resolve();
+      const returnVal: DropTablePromise = {} as DropTablePromise;
 
-      table.delete = callback => {
-        setImmediate(callback); // the done fn
+      // tslint:disable-next-line: no-any
+      table.delete = (callback?: (...args: any[]) => void) => {
+        setImmediate(callback!); // the done fn
         return returnVal;
       };
 
@@ -265,7 +271,7 @@ describe('Table', () => {
   });
 
   describe('insert', () => {
-    const ROW = {};
+    const ROW = {} as Row;
 
     it('should return any runTransaction errors', done => {
       const fakeError = new Error('err');
@@ -283,7 +289,7 @@ describe('Table', () => {
     it('should insert via transaction', done => {
       const stub = sandbox
         .stub(transaction, 'insert')
-        .withArgs(table.name, ROW);
+        .withArgs((table.name as {}) as Table, ROW);
 
       table.insert(ROW, err => {
         assert.ifError(err);
@@ -295,7 +301,7 @@ describe('Table', () => {
 
   describe('read', () => {
     it('should call and collect results from a stream', done => {
-      const keyVals = [];
+      const keyVals = {} as ReadRequest;
 
       const rows = [{}, {}];
 
@@ -303,7 +309,7 @@ describe('Table', () => {
         assert.strictEqual(keyVals_, keyVals);
         assert.deepStrictEqual(options, {});
 
-        const stream = through.obj();
+        const stream = through.obj() as PartialResultStream;
 
         setImmediate(() => {
           split(rows, stream).then(() => {
@@ -314,11 +320,14 @@ describe('Table', () => {
         return stream;
       };
 
-      table.read(keyVals, (err, rows_) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(rows_, rows);
-        done();
-      });
+      table.read(
+        keyVals,
+        (err?: ServiceError | null, rows_?: Array<Row | Json> | null) => {
+          assert.ifError(err);
+          assert.deepStrictEqual(rows_, rows);
+          done();
+        }
+      );
     });
 
     it('should accept an options object', done => {
@@ -327,7 +336,7 @@ describe('Table', () => {
       table.createReadStream = (keyVals, options) => {
         assert.strictEqual(OPTIONS, options);
 
-        const stream = through.obj();
+        const stream = through.obj() as PartialResultStream;
 
         setImmediate(() => {
           stream.end();
@@ -336,29 +345,32 @@ describe('Table', () => {
         return stream;
       };
 
-      table.read([], OPTIONS, done);
+      table.read({} as ReadRequest, OPTIONS, done);
     });
 
     it('should execute callback with error', done => {
       const error = new Error('Error.');
 
       table.createReadStream = () => {
-        const stream = through.obj();
+        const stream = through.obj() as PartialResultStream;
         setImmediate(() => {
           stream.destroy(error);
         });
         return stream;
       };
 
-      table.read([], err => {
-        assert.strictEqual(err, error);
-        done();
-      });
+      table.read(
+        {} as ReadRequest,
+        (err: ServiceError | null, rows_?: Array<Row | Json> | null) => {
+          assert.strictEqual(err, error);
+          done();
+        }
+      );
     });
   });
 
   describe('replace', () => {
-    const ROW = {};
+    const ROW = {} as Row;
 
     it('should return any runTransaction errors', done => {
       const fakeError = new Error('err');
@@ -376,7 +388,7 @@ describe('Table', () => {
     it('should replace via transaction', done => {
       const stub = sandbox
         .stub(transaction, 'replace')
-        .withArgs(table.name, ROW);
+        .withArgs((table.name as {}) as Table, ROW);
 
       table.replace(ROW, err => {
         assert.ifError(err);
@@ -387,7 +399,7 @@ describe('Table', () => {
   });
 
   describe('update', () => {
-    const ROW = {};
+    const ROW = {} as Row;
 
     it('should return any runTransaction errors', done => {
       const fakeError = new Error('err');
@@ -405,7 +417,7 @@ describe('Table', () => {
     it('should update via transaction', done => {
       const stub = sandbox
         .stub(transaction, 'update')
-        .withArgs(table.name, ROW);
+        .withArgs((table.name as {}) as Table, ROW);
 
       table.update(ROW, err => {
         assert.ifError(err);
@@ -416,7 +428,7 @@ describe('Table', () => {
   });
 
   describe('upsert', () => {
-    const ROW = {};
+    const ROW = {} as Row;
 
     it('should return any runTransaction errors', done => {
       const fakeError = new Error('err');
@@ -434,7 +446,7 @@ describe('Table', () => {
     it('should upsert via transaction', done => {
       const stub = sandbox
         .stub(transaction, 'upsert')
-        .withArgs(table.name, ROW);
+        .withArgs((table.name as {}) as Table, ROW);
 
       table.upsert(ROW, err => {
         assert.ifError(err);
