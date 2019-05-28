@@ -20,6 +20,12 @@ import * as extend from 'extend';
 import * as is from 'is';
 import {codec} from './codec';
 import {Snapshot} from './transaction';
+import {google as spanner_client} from '../proto/spanner';
+
+export interface PartitionResponse {
+  partitions: spanner_client.spanner.v1.IPartition[];
+  transaction: spanner_client.spanner.v1.Transaction;
+}
 
 /**
  * Use a BatchTransaction object to create partitions and read/query against

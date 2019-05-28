@@ -24,16 +24,11 @@ import * as sinon from 'sinon';
 import {Session} from '../src';
 import * as bt from '../src/batch-transaction';
 import {PartialResultStream} from '../src/partial-result-stream';
-
-function getFake(obj: {}) {
-  return obj as {
-    calledWith_: IArguments;
-  };
-}
+import {google as spanner_client} from '../proto/spanner';
 
 let promisified = false;
 const fakePfy = extend({}, pfy, {
-  promisifyAll(klass, options) {
+  promisifyAll(klass: Function, options: pfy.PromisifyAllOptions) {
     if (klass.name !== 'BatchTransaction') {
       return;
     }
@@ -61,8 +56,8 @@ const fakeCodec: any = {
 
 class FakeTransaction {
   calledWith_: IArguments;
-  session;
-  constructor(session) {
+  session: Session;
+  constructor(session: Session) {
     this.calledWith_ = arguments;
     this.session = session;
   }
@@ -114,7 +109,7 @@ describe('BatchTransaction', () => {
 
   describe('close', () => {
     it('should delete the session', done => {
-      SESSION.delete = callback => {
+      SESSION.delete = (callback: Function) => {
         callback(); // the done fn
       };
 
@@ -194,7 +189,9 @@ describe('BatchTransaction', () => {
       batchTransaction.session = (SESSION as {}) as Session;
       batchTransaction.id = ID;
 
-      REQUEST.callsFake((_, callback) => callback(null, RESPONSE));
+      REQUEST.callsFake((_: {}, callback: Function) =>
+        callback(null, RESPONSE)
+      );
     });
 
     it('should insert the session and transaction ids', () => {
@@ -210,14 +207,23 @@ describe('BatchTransaction', () => {
       const error = new Error('err');
       const response = {};
 
-      REQUEST.callsFake((_, callback) => callback(error, response));
+      REQUEST.callsFake((_: {}, callback: Function) =>
+        callback(error, response)
+      );
 
-      batchTransaction.createPartitions_(CONFIG, (err, parts, resp) => {
-        assert.strictEqual(err, error);
-        assert.strictEqual(parts, null);
-        assert.strictEqual(resp, response);
-        done();
-      });
+      batchTransaction.createPartitions_(
+        CONFIG,
+        (
+          err: Error | null,
+          parts?: spanner_client.spanner.v1.IPartition[] | null,
+          resp?: bt.PartitionResponse
+        ) => {
+          assert.strictEqual(err, error);
+          assert.strictEqual(parts, null);
+          assert.strictEqual(resp, response);
+          done();
+        }
+      );
     });
 
     it('should return the prepared partition configs', done => {
@@ -227,16 +233,22 @@ describe('BatchTransaction', () => {
         transaction: {id: ID},
       };
 
-      batchTransaction.createPartitions_(CONFIG, (err, parts) => {
-        assert.ifError(err);
+      batchTransaction.createPartitions_(
+        CONFIG,
+        (
+          err: Error | null,
+          parts?: spanner_client.spanner.v1.IPartition[] | null
+        ) => {
+          assert.ifError(err);
 
-        parts.forEach((partition, i) => {
-          const expectedPartition = extend({}, expectedQuery, PARTITIONS[i]);
-          assert.deepStrictEqual(partition, expectedPartition);
-        });
+          parts!.forEach((partition, i) => {
+            const expectedPartition = extend({}, expectedQuery, PARTITIONS[i]);
+            assert.deepStrictEqual(partition, expectedPartition);
+          });
 
-        done();
-      });
+          done();
+        }
+      );
     });
 
     it('should update the transaction with returned metadata', done => {
@@ -247,19 +259,28 @@ describe('BatchTransaction', () => {
         },
       });
 
-      REQUEST.callsFake((_, callback) => callback(null, response));
+      REQUEST.callsFake((_: {}, callback: Function) =>
+        callback(null, response)
+      );
 
-      batchTransaction.createPartitions_(CONFIG, (err, parts, resp) => {
-        assert.strictEqual(resp, response);
-        assert.strictEqual(batchTransaction.id, ID);
-        assert.strictEqual(batchTransaction.readTimestampProto, TIMESTAMP);
+      batchTransaction.createPartitions_(
+        CONFIG,
+        (
+          err: Error,
+          parts: spanner_client.spanner.v1.IPartition[] | null,
+          resp?: bt.PartitionResponse
+        ) => {
+          assert.strictEqual(resp, response);
+          assert.strictEqual(batchTransaction.id, ID);
+          assert.strictEqual(batchTransaction.readTimestampProto, TIMESTAMP);
 
-        const timestamp = (batchTransaction.readTimestamp as unknown) as FakeTimestamp;
-        assert(timestamp instanceof FakeTimestamp);
-        assert.strictEqual(timestamp.calledWith_[0], TIMESTAMP);
+          const timestamp = (batchTransaction.readTimestamp as unknown) as FakeTimestamp;
+          assert(timestamp instanceof FakeTimestamp);
+          assert.strictEqual(timestamp.calledWith_[0], TIMESTAMP);
 
-        done();
-      });
+          done();
+        }
+      );
     });
   });
 
