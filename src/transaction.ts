@@ -34,6 +34,7 @@ import {
 import {Session} from './session';
 import {Key} from './table';
 import {SpannerClient as s} from './v1';
+import {RowCountsServiceError} from './common';
 
 export type Rows = Array<Row | Json>;
 
@@ -83,7 +84,7 @@ export interface ReadRequest extends RequestOptions {
   partitionToken?: Uint8Array | string;
 }
 
-export interface BatchUpdateError extends ServiceError {
+export interface BatchUpdateError extends RowCountsServiceError {
   rowCounts: number[];
 }
 
@@ -1544,7 +1545,9 @@ export class Transaction extends Dml {
    */
   rollback(callback?: s.RollbackCallback): void | Promise<void> {
     if (!this.id) {
-      callback!(new Error('Transaction ID is unknown, nothing to rollback.'));
+      callback!(new Error(
+        'Transaction ID is unknown, nothing to rollback.'
+      ) as ServiceError);
       return;
     }
 

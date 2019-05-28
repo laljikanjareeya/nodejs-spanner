@@ -1,3 +1,6 @@
+import {status, Metadata, ServiceError} from 'grpc';
+import {CallOptions} from 'google-gax';
+
 export interface TransactionOptions {
   readOnly?: boolean;
   timeout?: number;
@@ -15,4 +18,24 @@ export interface CreateSessionOptions {
 export interface GetTimestamp {
   nanos: number;
   seconds: number;
+}
+
+export interface RowCountsServiceError {
+  //tslint:disable-next-line no-any
+  rowCounts?: number[] | ((rowCounts: any, arg1: never[]) => any);
+  code?: status;
+  metadata?: Metadata;
+  details?: string;
+}
+export interface RequestConfig {
+  client: string;
+  method: string;
+  reqOpts: {
+    poolOptions?: unknown;
+    extraStatements?: [unknown];
+    schema?: unknown;
+    instance?: unknown;
+    fieldMask?: unknown;
+  };
+  gaxOpts: CallOptions;
 }

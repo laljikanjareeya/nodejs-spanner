@@ -646,7 +646,7 @@ describe('Spanner', () => {
     it('should have created the instance', done => {
       instance.getMetadata((err, metadata) => {
         assert.ifError(err);
-        assert.strictEqual(metadata.name, instance.formattedName_);
+        assert.strictEqual(metadata!.name, instance.formattedName_);
         done();
       });
     });
@@ -710,7 +710,7 @@ describe('Spanner', () => {
 
           instance.getMetadata((err, metadata) => {
             assert.ifError(err);
-            assert.strictEqual(metadata.displayName, newData.displayName);
+            assert.strictEqual(metadata!.displayName, newData.displayName);
             done();
           });
         })
@@ -805,7 +805,7 @@ describe('Spanner', () => {
     it('should list the databases from an instance', done => {
       instance.getDatabases((err, databases) => {
         assert.ifError(err);
-        assert(databases.length > 0);
+        assert(databases!.length > 0);
         done();
       });
     });
@@ -1191,11 +1191,11 @@ describe('Spanner', () => {
       return table
         .create(
           `
-          CREATE TABLE SingersComposite (
+          CREATE TABLE SingersComposite(
             SingerId INT64 NOT NULL,
             Name STRING(1024),
           ) PRIMARY KEY(SingerId, Name)
-        `
+            `
         )
         .then(onPromiseOperationComplete)
         .then(() => {
@@ -2678,13 +2678,13 @@ describe('Spanner', () => {
           return table
             .create(
               `
-              CREATE TABLE LargeReads (
+              CREATE TABLE LargeReads(
                 Key STRING(MAX) NOT NULL,
                 StringValue STRING(MAX),
-                StringArray ARRAY<STRING(MAX)>,
+                StringArray ARRAY < STRING(MAX) >,
                 BytesValue BYTES(MAX),
-                BytesArray ARRAY<BYTES(MAX)>
-              ) PRIMARY KEY (Key)`
+                BytesArray ARRAY < BYTES(MAX) >
+              ) PRIMARY KEY(Key)`
             )
             .then(onPromiseOperationComplete)
             .then(() => {
