@@ -19,10 +19,11 @@ import * as pfy from '@google-cloud/promisify';
 import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
-
+import {google as spanner_client} from '../proto/spanner';
+import {RequestConfig} from '../src/common';
 let promisified = false;
 const fakePfy = extend({}, pfy, {
-  promisifyAll(klass, options) {
+  promisifyAll(klass: Function, options: pfy.PromisifyAllOptions) {
     if (klass.name !== 'Session') {
       return;
     }
@@ -104,7 +105,7 @@ describe('Session', () => {
       const formatName_ = Session.formatName_;
       const formattedName = 'formatted-name';
 
-      Session.formatName_ = (databaseName, name) => {
+      Session.formatName_ = (databaseName: string, name: string) => {
         Session.formatName_ = formatName_;
         assert.strictEqual(databaseName, DATABASE.formattedName_);
         assert.strictEqual(name, NAME);
@@ -140,7 +141,7 @@ describe('Session', () => {
         };
 
         const databaseInstance = extend({}, DATABASE, {
-          createSession(options_, callback) {
+          createSession(options_: {}, callback: Function) {
             assert.strictEqual(options_, options);
             callback(null, createdSession, apiResponse);
           },
@@ -152,7 +153,11 @@ describe('Session', () => {
         session.calledWith_[0].createMethod(
           null,
           options,
-          (err, sess, resp) => {
+          (
+            err: Error,
+            sess: spanner_client.spanner.v1.ISession,
+            resp: spanner_client.spanner.v1.Session
+          ) => {
             assert.ifError(err);
 
             assert.strictEqual(sess, session);
@@ -168,7 +173,7 @@ describe('Session', () => {
 
       it('should check for options', done => {
         const databaseInstance = extend({}, DATABASE, {
-          createSession(options, callback) {
+          createSession(options: object, callback: Function) {
             assert.deepStrictEqual(options, {});
             callback(null, {}, apiResponse);
           },
@@ -177,12 +182,19 @@ describe('Session', () => {
         const session = new Session(databaseInstance, NAME);
         const apiResponse = {};
 
-        session.calledWith_[0].createMethod(null, (err, sess, resp) => {
-          assert.ifError(err);
-          assert.strictEqual(sess, session);
-          assert.strictEqual(resp, apiResponse);
-          done();
-        });
+        session.calledWith_[0].createMethod(
+          null,
+          (
+            err: Error,
+            sess: spanner_client.spanner.v1.ISession,
+            resp: spanner_client.spanner.v1.Session
+          ) => {
+            assert.ifError(err);
+            assert.strictEqual(sess, session);
+            assert.strictEqual(resp, apiResponse);
+            done();
+          }
+        );
       });
 
       it('should return an error from creating a Session', done => {
@@ -190,7 +202,7 @@ describe('Session', () => {
         const apiResponse = {};
 
         const databaseInstance = extend({}, DATABASE, {
-          createSession(options_, callback) {
+          createSession(options_: {}, callback: Function) {
             callback(error, null, apiResponse);
           },
         });
@@ -198,12 +210,19 @@ describe('Session', () => {
         const session = new Session(databaseInstance, NAME);
         assert(session instanceof FakeGrpcServiceObject);
 
-        session.calledWith_[0].createMethod(null, (err, sess, resp) => {
-          assert.strictEqual(err, error);
-          assert.strictEqual(sess, null);
-          assert.strictEqual(resp, apiResponse);
-          done();
-        });
+        session.calledWith_[0].createMethod(
+          null,
+          (
+            err: Error,
+            sess: spanner_client.spanner.v1.ISession,
+            resp: spanner_client.spanner.v1.Session
+          ) => {
+            assert.strictEqual(err, error);
+            assert.strictEqual(sess, null);
+            assert.strictEqual(resp, apiResponse);
+            done();
+          }
+        );
       });
     });
   });
@@ -230,7 +249,7 @@ describe('Session', () => {
 
       function callback() {}
 
-      session.request = (config, callback_) => {
+      session.request = (config: RequestConfig, callback_: Function) => {
         assert.strictEqual(config.client, 'SpannerClient');
         assert.strictEqual(config.method, 'deleteSession');
         assert.deepStrictEqual(config.reqOpts, {
@@ -251,7 +270,7 @@ describe('Session', () => {
 
       function callback() {}
 
-      session.request = (config, callback_) => {
+      session.request = (config: RequestConfig, callback_: Function) => {
         assert.strictEqual(config.client, 'SpannerClient');
         assert.strictEqual(config.method, 'getSession');
         assert.deepStrictEqual(config.reqOpts, {
@@ -272,7 +291,7 @@ describe('Session', () => {
 
       function callback() {}
 
-      session.request = (config, callback_) => {
+      session.request = (config: RequestConfig, callback_: Function) => {
         assert.strictEqual(config.client, 'SpannerClient');
         assert.strictEqual(config.method, 'executeSql');
         assert.deepStrictEqual(config.reqOpts, {

@@ -1,3 +1,5 @@
+import {CallOptions} from 'grpc';
+
 export interface TransactionOptions {
   readOnly?: boolean;
   timeout?: number;
@@ -15,4 +17,12 @@ export interface CreateSessionOptions {
 export interface GetTimestamp {
   nanos: number;
   seconds: number;
+}
+
+export interface RequestConfig {
+  client: string;
+  method: string;
+  // tslint:disable-next-line: no-any
+  reqOpts: any;
+  gaxOpts: CallOptions;
 }
