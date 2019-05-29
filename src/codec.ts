@@ -123,8 +123,8 @@ abstract class WrappedNumber {
  * @see Spanner.float
  */
 export class Float extends WrappedNumber {
-  value: number;
-  constructor(value: number) {
+  value: number | string;
+  constructor(value: number | string) {
     super();
     this.value = value;
   }
@@ -138,8 +138,8 @@ export class Float extends WrappedNumber {
  * @see Spanner.int
  */
 export class Int extends WrappedNumber {
-  value: string;
-  constructor(value: string) {
+  value: string | number;
+  constructor(value: string | number) {
     super();
     this.value = value.toString();
   }

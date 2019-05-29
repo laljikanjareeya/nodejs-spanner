@@ -44,14 +44,14 @@ describe('Spanner', () => {
 
   before(async () => {
     await deleteOldTestInstances();
-    const [, operation] = await instance.create(INSTANCE_CONFIG);
+    const [, operation] = await instance!.create(INSTANCE_CONFIG);
     await operation.promise();
   });
 
   after(deleteTestInstances);
 
   describe('types', () => {
-    const database = instance.database(generateName('database'));
+    const database = instance!.database(generateName('database'));
     const table = database.table('TypeCheck');
 
     function insert(insertData, callback) {
@@ -641,9 +641,9 @@ describe('Spanner', () => {
 
   describe('Instances', () => {
     it('should have created the instance', done => {
-      instance.getMetadata((err, metadata) => {
+      instance!.getMetadata((err, metadata) => {
         assert.ifError(err);
-        assert.strictEqual(metadata.name, instance.formattedName_);
+        assert.strictEqual(metadata.name, instance!.formattedName_);
         done();
       });
     });
@@ -658,9 +658,9 @@ describe('Spanner', () => {
         INSTANCE_CONFIG
       );
 
-      instance.get(config, err => {
+      instance!.get(config, err => {
         assert.ifError(err);
-        instance.getMetadata(done);
+        instance!.getMetadata(done);
       });
     });
 
@@ -700,12 +700,12 @@ describe('Spanner', () => {
         displayName: 'new-display-name',
       };
 
-      instance.setMetadata(
+      instance!.setMetadata(
         newData,
         execAfterOperationComplete(err => {
           assert.ifError(err);
 
-          instance.getMetadata((err, metadata) => {
+          instance!.getMetadata((err, metadata) => {
             assert.ifError(err);
             assert.strictEqual(metadata.displayName, newData.displayName);
             done();
@@ -715,7 +715,7 @@ describe('Spanner', () => {
     });
 
     it('should return true for instances that exist', done => {
-      instance.exists((err, exists) => {
+      instance!.exists((err, exists) => {
         assert.ifError(err);
         assert.strictEqual(exists, true);
         done();
@@ -723,7 +723,7 @@ describe('Spanner', () => {
     });
 
     it('should return false for instances that do not exist', done => {
-      spanner.instance('bad-instance').exists((err, exists) => {
+      spanner.instance('bad-instance')!.exists((err, exists) => {
         assert.ifError(err);
         assert.strictEqual(exists, false);
         done();
@@ -735,7 +735,7 @@ describe('Spanner', () => {
     it('should list the available instanceConfigs', done => {
       spanner.getInstanceConfigs((err, instanceConfigs) => {
         assert.ifError(err);
-        assert(instanceConfigs.length > 0);
+        assert(instanceConfigs!.length > 0);
         done();
       });
     });
@@ -765,7 +765,7 @@ describe('Spanner', () => {
   });
 
   describe('Databases', () => {
-    const database = instance.database(generateName('database'));
+    const database = instance!.database(generateName('database'));
 
     before(done => {
       database.create(execAfterOperationComplete(done));
@@ -782,7 +782,7 @@ describe('Spanner', () => {
     });
 
     it('should auto create a database', done => {
-      const database = instance.database(generateName('database'));
+      const database = instance!.database(generateName('database'));
 
       database.get({autoCreate: true}, err => {
         assert.ifError(err);
@@ -800,7 +800,7 @@ describe('Spanner', () => {
     });
 
     it('should list the databases from an instance', done => {
-      instance.getDatabases((err, databases) => {
+      instance!.getDatabases((err, databases) => {
         assert.ifError(err);
         assert(databases.length > 0);
         done();
@@ -808,7 +808,7 @@ describe('Spanner', () => {
     });
 
     it('should list the databases in promise mode', done => {
-      instance
+      instance!
         .getDatabases()
         .then(data => {
           const databases = data[0];
@@ -819,7 +819,7 @@ describe('Spanner', () => {
     });
 
     it('should list the databases in stream mode', done => {
-      instance
+      instance!
         .getDatabasesStream()
         .on('error', done)
         .pipe(
@@ -839,7 +839,7 @@ describe('Spanner', () => {
     });
 
     it('should return false for databases that do not exist', done => {
-      instance.database('bad-database').exists((err, exists) => {
+      instance!.database('bad-database').exists((err, exists) => {
         assert.ifError(err);
         assert.strictEqual(exists, false);
         done();
@@ -878,7 +878,7 @@ describe('Spanner', () => {
   });
 
   describe('Sessions', () => {
-    const database = instance.database(generateName('database'));
+    const database = instance!.database(generateName('database'));
     const session = database.session();
 
     before(async () => {
@@ -925,7 +925,7 @@ describe('Spanner', () => {
   });
 
   describe('Tables', () => {
-    const database = instance.database(generateName('database'));
+    const database = instance!.database(generateName('database'));
     const table = database.table('Singers');
 
     before(() => {
@@ -3096,7 +3096,7 @@ describe('Spanner', () => {
       });
 
       it('should read over invalid database fails', done => {
-        const database = instance.database(generateName('invalid'));
+        const database = instance!.database(generateName('invalid'));
         const table = database.table('ReadTestTable');
 
         const query = {
@@ -3154,7 +3154,7 @@ describe('Spanner', () => {
   });
 
   describe('SessionPool', () => {
-    const database = instance.database(generateName('database'));
+    const database = instance!.database(generateName('database'));
     const table = database.table('Singers');
 
     before(async () => {
@@ -3316,7 +3316,7 @@ describe('Spanner', () => {
   });
 
   describe('Transactions', () => {
-    const database = instance.database(generateName('database'));
+    const database = instance!.database(generateName('database'));
     const table = database.table('TxnTable');
 
     const schema = `
@@ -4387,7 +4387,8 @@ function execAfterOperationComplete(callback) {
 async function deleteTestInstances() {
   const [instances] = await spanner.getInstances({
     filter: `labels.${LABEL}:true`,
-  });
+    // tslint:disable-next-line: no-any
+  } as any);
 
   return deleteInstanceArray(instances);
 }
@@ -4421,8 +4422,14 @@ function deleteInstanceArray(instanceArray) {
     instanceArray.map(instance =>
       limit(() =>
         setTimeout(() => {
+<<<<<<< HEAD
           instance.delete();
         }, delay)
+=======
+          // tslint:disable-next-line: no-any
+          (instance as any).delete();
+        }, 500)
+>>>>>>> refactor(types): enable noImplicitAny index.ts
       )
     )
   );
