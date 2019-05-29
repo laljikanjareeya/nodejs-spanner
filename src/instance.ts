@@ -23,7 +23,65 @@ import * as extend from 'extend';
 import * as is from 'is';
 import snakeCase = require('lodash.snakecase');
 import {Database} from './database';
+import {Operation as GaxOperation} from 'google-gax/build/src/longRunningCalls/longrunning';
+import {LongrunningIOperation} from './common';
+import {google as dbInstanceAdminClient} from '../proto/spanner_instance_admin';
+import * as r from 'request';
 
+export type CreateInstanceResponse = [
+  Instance,
+  GaxOperation,
+  LongrunningIOperation
+];
+
+export interface CreateInstanceCallback {
+  (
+    err: Error | null,
+    instance: Instance | null,
+    operation: GaxOperation | null,
+    apiResponse: LongrunningIOperation
+  ): void;
+}
+export interface CreateInstanceConfig {
+  config: string;
+  nodes: number;
+}
+export interface CreateInstanceRequest {
+  parent: string;
+  instanceId?: string;
+  instance: {
+    name?: string;
+    displayName?: string;
+    nodeCount?: number;
+  } & CreateInstanceConfig;
+}
+
+export type GetInstancesResponse = [
+  Instance[],
+  dbInstanceAdminClient.spanner.admin.instance.v1.IListInstanceConfigsRequest,
+  dbInstanceAdminClient.spanner.admin.instance.v1.IListInstanceConfigsResponse
+];
+export interface GetInstancesCallback {
+  (
+    err: Error | null,
+    instances?: Instance[],
+    nextQuery?: dbInstanceAdminClient.spanner.admin.instance.v1.IListInstanceConfigsRequest,
+    apiResponse?: dbInstanceAdminClient.spanner.admin.instance.v1.IListInstanceConfigsResponse
+  ): void;
+}
+export type GetInstanceConfigsResponse = [
+  dbInstanceAdminClient.spanner.admin.instance.v1.IInstanceConfig[],
+  dbInstanceAdminClient.spanner.admin.instance.v1.IGetInstanceConfigRequest,
+  r.Response
+];
+export interface GetInstanceConfigsCallback {
+  (
+    err: Error | null,
+    configs?: dbInstanceAdminClient.spanner.admin.instance.v1.IInstanceConfig[],
+    nextQuery?: dbInstanceAdminClient.spanner.admin.instance.v1.IGetInstanceConfigRequest,
+    apiResponse?: r.Response
+  ): void;
+}
 /**
  * The {@link Instance} class represents a [Cloud Spanner
  * instance](https://cloud.google.com/spanner/docs/instances).

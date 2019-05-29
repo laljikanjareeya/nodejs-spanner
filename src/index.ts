@@ -27,7 +27,17 @@ import * as streamEvents from 'stream-events';
 import * as through from 'through2';
 import {GrpcServiceConfig} from '@google-cloud/common-grpc/build/src/service';
 import {Database} from './database';
-import {Instance} from './instance';
+import {
+  Instance,
+  CreateInstanceCallback,
+  CreateInstanceRequest,
+  CreateInstanceResponse,
+  CreateInstanceConfig,
+  GetInstancesResponse,
+  GetInstancesCallback,
+  GetInstanceConfigsResponse,
+  GetInstanceConfigsCallback,
+} from './instance';
 import {Session} from './session';
 import {SessionPool} from './session-pool';
 import {Table} from './table';
@@ -39,6 +49,8 @@ import {codec, SpannerDate, Float, Int, Json, Struct} from './codec';
 import {Readable} from 'stream';
 import {CallOptions} from 'google-gax';
 import {Interceptor} from '@google-cloud/common';
+import {Operation as GaxOperation} from 'google-gax/build/src/longRunningCalls/longrunning';
+import {LongrunningIOperation} from './common';
 
 // Import the clients for each version supported by this package.
 const gapic = Object.freeze({
@@ -286,28 +298,6 @@ class Spanner extends Service {
      */
     this.getInstancesStream = paginator.streamify('getInstances');
   }
-  createInstance(
-    name: string
-  ): Promise<
-    [
-      instance_admin_client.spanner.admin.instance.v1.Instance,
-      instance_admin_client.longrunning.Operation
-    ]
-  >;
-  createInstance(
-    name: string,
-    config: CreateInstanceConfig
-  ): Promise<
-    [
-      instance_admin_client.spanner.admin.instance.v1.Instance,
-      instance_admin_client.longrunning.Operation
-    ]
-  >;
-  createInstance(
-    name: string,
-    config: CreateInstanceConfig,
-    callback: CreateInstanceCallback
-  ): void;
   /**
    * Config for the new instance.
    *
@@ -382,16 +372,21 @@ class Spanner extends Service {
    *     // Instance created successfully.
    *   });
    */
+  createInstance(name: string): Promise<CreateInstanceResponse>;
+  createInstance(
+    name: string,
+    config: CreateInstanceConfig
+  ): Promise<CreateInstanceResponse>;
+  createInstance(
+    name: string,
+    config: CreateInstanceConfig,
+    callback: CreateInstanceCallback
+  ): void;
   createInstance(
     name: string,
     config?: CreateInstanceConfig,
     callback?: CreateInstanceCallback
-  ): void | Promise<
-    [
-      instance_admin_client.spanner.admin.instance.v1.Instance,
-      instance_admin_client.longrunning.Operation
-    ]
-  > {
+  ): void | Promise<CreateInstanceResponse> {
     if (!name) {
       throw new Error('A name is required to create an instance.');
     }
@@ -426,11 +421,7 @@ class Spanner extends Service {
         method: 'createInstance',
         reqOpts,
       },
-      (
-        err: Error,
-        operation: instance_admin_client.longrunning.Operation,
-        resp: instance_admin_client.longrunning.Operation
-      ) => {
+      (err: Error, operation: GaxOperation, resp: LongrunningIOperation) => {
         if (err) {
           callback!(err, null, null, resp);
           return;
@@ -440,16 +431,6 @@ class Spanner extends Service {
       }
     );
   }
-  getInstances(
-    query?: CallOptions
-  ): Promise<
-    [
-      instance_admin_client.spanner.admin.instance.v1.Instance[],
-      instance_admin_client.longrunning.Operation
-    ]
-  >;
-  getInstances(callback: GetInstanceCallback): void;
-  getInstances(query: CallOptions, callback: GetInstanceCallback): void;
   /**
    * Query object for listing instances.
    *
@@ -529,19 +510,17 @@ class Spanner extends Service {
    *   const instances = data[0];
    * });
    */
+  getInstances(query?: CallOptions): Promise<GetInstancesResponse>;
+  getInstances(callback: GetInstancesCallback): void;
+  getInstances(query: CallOptions, callback: GetInstancesCallback): void;
   getInstances(
-    queryOrCallback?: CallOptions | GetInstanceCallback,
-    cb?: GetInstanceCallback
-  ): void | Promise<
-    [
-      instance_admin_client.spanner.admin.instance.v1.Instance[],
-      instance_admin_client.longrunning.Operation
-    ]
-  > {
+    queryOrCallback?: CallOptions | GetInstancesCallback,
+    cb?: GetInstancesCallback
+  ): void | Promise<GetInstancesResponse> {
     const self = this;
     const callback =
       typeof queryOrCallback === 'function'
-        ? (queryOrCallback as GetInstanceCallback)
+        ? (queryOrCallback as GetInstancesCallback)
         : cb!;
     const query =
       typeof queryOrCallback === 'object'
@@ -579,19 +558,6 @@ class Spanner extends Service {
       }
     );
   }
-  getInstanceConfigs(
-    query?: CallOptions
-  ): Promise<
-    [
-      instance_admin_client.spanner.admin.instance.v1.IInstanceConfig[],
-      instance_admin_client.longrunning.Operation
-    ]
-  >;
-  getInstanceConfigs(callback: GetInstanceConfigsCallback): void;
-  getInstanceConfigs(
-    query: CallOptions,
-    callback: GetInstanceConfigsCallback
-  ): void;
   /**
    * Query object for listing instance configs.
    *
@@ -665,15 +631,16 @@ class Spanner extends Service {
    *   const instanceConfigs = data[0];
    * });
    */
+  getInstanceConfigs(query?: CallOptions): Promise<GetInstanceConfigsResponse>;
+  getInstanceConfigs(callback: GetInstanceConfigsCallback): void;
+  getInstanceConfigs(
+    query: CallOptions,
+    callback: GetInstanceConfigsCallback
+  ): void;
   getInstanceConfigs(
     queryOrCallback?: CallOptions | GetInstanceConfigsCallback,
     cb?: GetInstanceConfigsCallback
-  ): void | Promise<
-    [
-      instance_admin_client.spanner.admin.instance.v1.IInstanceConfig[],
-      instance_admin_client.longrunning.Operation
-    ]
-  > {
+  ): void | Promise<GetInstanceConfigsResponse> {
     const callback =
       typeof queryOrCallback === 'function'
         ? (queryOrCallback as GetInstanceConfigsCallback)
@@ -758,7 +725,7 @@ class Spanner extends Service {
    * const spanner = new Spanner();
    * const instance = spanner.instance('my-instance');
    */
-  instance(name: string): Instance | undefined {
+  instance(name: string): Instance | null {
     if (!name) {
       throw new Error('A name is required to access an Instance object.');
     }
@@ -836,7 +803,7 @@ class Spanner extends Service {
    * @returns {Promise}
    */
   // tslint:disable-next-line: no-any
-  request(config: any, callback?: any): any {
+  request(config: Config, callback?: any): any {
     if (typeof callback === 'function') {
       this.prepareGapicRequest_(config, (err, requestFn) => {
         if (err) {
@@ -950,7 +917,7 @@ class Spanner extends Service {
    */
   static timestamp(
     value?: string | number | instance_admin_client.protobuf.ITimestamp
-  ): PreciseDate {
+  ) {
     value = value || Date.now();
     return new PreciseDate(value as number);
   }
@@ -965,7 +932,7 @@ class Spanner extends Service {
    * const {Spanner} = require('@google-cloud/spanner');
    * const float = Spanner.float(10);
    */
-  static float(value: string | number): Float {
+  static float(value: string | number) {
     return new codec.Float(value);
   }
 
@@ -979,7 +946,7 @@ class Spanner extends Service {
    * const {Spanner} = require('@google-cloud/spanner');
    * const int = Spanner.int(10);
    */
-  static int(value: string | number): Int {
+  static int(value: string | number) {
     return new codec.Int(value);
   }
 
@@ -996,7 +963,7 @@ class Spanner extends Service {
    *   age: 32
    * });
    */
-  static struct(value?: Json): Struct {
+  static struct(value?: Json) {
     if (Array.isArray(value)) {
       return codec.Struct.fromArray(value);
     }
@@ -1034,41 +1001,11 @@ export interface Config {
   reqOpts?: {};
   uri?: string;
 }
-export interface CreateInstanceConfig {
-  config?: string;
-  nodes?: number;
-}
-export interface CreateInstanceCallback {
-  (
-    err: Error | null,
-    instance?: Instance | null,
-    operation?: instance_admin_client.longrunning.Operation | null,
-    apiResponse?: instance_admin_client.longrunning.Operation
-  ): void;
-}
-export interface CreateInstanceRequest {
-  parent: string;
-  instanceId?: string;
-  instance: {
-    name?: string;
-    displayName?: string;
-    nodeCount?: number;
-  } & CreateInstanceConfig;
-}
 export interface GetInstanceCallback {
   (
     err: Error | null,
     instances: Instance[],
     apiResponse: instance_admin_client.longrunning.Operation
-  ): void;
-}
-export interface GetInstanceConfigsCallback {
-  (
-    err?: Error | null,
-    configs?: instance_admin_client.spanner.admin.instance.v1.IInstanceConfig[],
-    configName?: string,
-    configDisplayName?: string,
-    apiResponse?: instance_admin_client.longrunning.Operation
   ): void;
 }
 export interface PrepareGapicRequestCallback {

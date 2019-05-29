@@ -667,7 +667,7 @@ describe('Spanner', () => {
     it('should list the instances', done => {
       spanner.getInstances((err, instances) => {
         assert.ifError(err);
-        assert(instances.length > 0);
+        assert(instances!.length > 0);
         done();
       });
     });

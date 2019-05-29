@@ -29,6 +29,7 @@ import * as sinon from 'sinon';
 import * as spnr from '../src';
 import {RequestConfig} from '../src/common';
 import {CallOptions} from 'google-gax';
+import {CreateInstanceConfig, CreateInstanceRequest} from '../src/instance';
 const apiConfig = require('../src/spanner_grpc_config.json');
 
 // tslint:disable-next-line: no-any
@@ -355,9 +356,9 @@ describe('Spanner', () => {
     const NAME = 'instance-name';
     let PATH: string;
 
-    const CONFIG = {
+    const CONFIG = ({
       a: 'b',
-    } as spnr.CreateInstanceConfig;
+    } as {}) as CreateInstanceConfig;
     const ORIGINAL_CONFIG = extend({}, CONFIG);
 
     beforeEach(() => {
@@ -421,7 +422,7 @@ describe('Spanner', () => {
         spanner.createInstance(NAME, config, assert.ifError);
 
         const [config_] = stub.lastCall.args;
-        const reqOpts = config_.reqOpts;
+        const reqOpts = config_.reqOpts as CreateInstanceRequest;
         assert.strictEqual(reqOpts.instance.nodeCount, config.nodes);
         assert.strictEqual(reqOpts.instance.nodes, undefined);
       });

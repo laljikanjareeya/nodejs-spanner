@@ -1,4 +1,5 @@
 import {CallOptions} from 'google-gax';
+import {google as dbInstanceAdminClient} from '../proto/spanner_instance_admin';
 
 export interface TransactionOptions {
   readOnly?: boolean;
@@ -25,3 +26,4 @@ export interface RequestConfig {
   reqOpts: any;
   gaxOpts: CallOptions;
 }
+export type LongrunningIOperation = dbInstanceAdminClient.longrunning.IOperation;
