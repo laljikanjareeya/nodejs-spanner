@@ -23,6 +23,9 @@ import * as sinon from 'sinon';
 
 import {codec} from '../src/codec';
 import {SpannerClient as s} from '../src/v1';
+import {BatchUpdateError, Rows} from '../src/transaction';
+import {KeyStringObj} from '../src/common';
+import {ServiceError} from 'grpc';
 
 describe('Transaction', () => {
   const sandbox = sinon.createSandbox();
@@ -41,13 +44,13 @@ describe('Transaction', () => {
   const PROMISIFY_ALL = sandbox.stub();
 
   // tslint:disable-next-line no-any variable-name
-  let Snapshot;
+  let Snapshot: any;
   // tslint:disable-next-line no-any variable-name
-  let Dml;
+  let Dml: any;
   // tslint:disable-next-line no-any variable-name
-  let Transaction;
+  let Transaction: any;
   // tslint:disable-next-line no-any variable-name
-  let PartitionedDml;
+  let PartitionedDml: any;
 
   before(() => {
     const txns = proxyquire('../src/transaction', {
@@ -67,7 +70,8 @@ describe('Transaction', () => {
   describe('Snapshot', () => {
     const OPTIONS = {a: 'b', c: 'd'};
 
-    let snapshot;
+    // tslint:disable-next-line: no-any
+    let snapshot: any;
 
     beforeEach(() => {
       sandbox.stub(Snapshot, 'encodeTimestampBounds').returns(OPTIONS);
@@ -142,18 +146,20 @@ describe('Transaction', () => {
       it('should return any request errors', done => {
         const fakeError = new Error('err');
 
-        REQUEST.callsFake((_, callback) => callback(fakeError));
+        REQUEST.callsFake((_: {}, callback: Function) => callback(fakeError));
 
-        snapshot.begin(err => {
+        snapshot.begin((err: Error | null) => {
           assert.strictEqual(err, fakeError);
           done();
         });
       });
 
       it('should localize `id`', done => {
-        REQUEST.callsFake((_, callback) => callback(null, BEGIN_RESPONSE));
+        REQUEST.callsFake((_: {}, callback: Function) =>
+          callback(null, BEGIN_RESPONSE)
+        );
 
-        snapshot.begin(err => {
+        snapshot.begin((err: Error | null) => {
           assert.ifError(err);
           assert.strictEqual(snapshot.id, BEGIN_RESPONSE.id);
           done();
@@ -161,9 +167,11 @@ describe('Transaction', () => {
       });
 
       it('should localize the response as `metadata`', done => {
-        REQUEST.callsFake((_, callback) => callback(null, BEGIN_RESPONSE));
+        REQUEST.callsFake((_: {}, callback: Function) =>
+          callback(null, BEGIN_RESPONSE)
+        );
 
-        snapshot.begin(err => {
+        snapshot.begin((err: Error | null) => {
           assert.ifError(err);
           assert.strictEqual(snapshot.metadata, BEGIN_RESPONSE);
           done();
@@ -175,9 +183,11 @@ describe('Transaction', () => {
         const readTimestamp = {seconds: 0, nanos: 0};
         const response = Object.assign({readTimestamp}, BEGIN_RESPONSE);
 
-        REQUEST.callsFake((_, callback) => callback(null, response));
+        REQUEST.callsFake((_: {}, callback: Function) =>
+          callback(null, response)
+        );
 
-        snapshot.begin(err => {
+        snapshot.begin((err: Error | null) => {
           assert.ifError(err);
           assert.deepStrictEqual(snapshot.readTimestamp, expectedTimestamp);
           assert.strictEqual(snapshot.readTimestampProto, readTimestamp);
@@ -186,9 +196,11 @@ describe('Transaction', () => {
       });
 
       it('should return the response', done => {
-        REQUEST.callsFake((_, callback) => callback(null, BEGIN_RESPONSE));
+        REQUEST.callsFake((_: {}, callback: Function) =>
+          callback(null, BEGIN_RESPONSE)
+        );
 
-        snapshot.begin((err, resp) => {
+        snapshot.begin((err: Error | null, resp: object) => {
           assert.ifError(err);
           assert.strictEqual(resp, BEGIN_RESPONSE);
           done();
@@ -353,8 +365,9 @@ describe('Transaction', () => {
     describe('read', () => {
       const TABLE = 'my-table-123';
 
-      let fakeStream;
-      let stub;
+      let fakeStream: EventEmitter;
+      // tslint:disable-next-line: no-any
+      let stub: sinon.SinonStub<any, any>;
 
       beforeEach(() => {
         fakeStream = new EventEmitter();
@@ -375,7 +388,7 @@ describe('Transaction', () => {
       it('should return any request errors', done => {
         const fakeError = new Error('err');
 
-        snapshot.read(TABLE, {}, err => {
+        snapshot.read(TABLE, {}, (err: Error | null) => {
           assert.strictEqual(err, fakeError);
           done();
         });
@@ -386,7 +399,7 @@ describe('Transaction', () => {
       it('should concatenate rows and return them on "end" event', done => {
         const fakeRows = [{a: 'b'}, {c: 'd'}, {e: 'f'}];
 
-        snapshot.read(TABLE, {}, (err, rows) => {
+        snapshot.read(TABLE, {}, (err: ServiceError | null, rows: Rows) => {
           assert.ifError(err);
           assert.deepStrictEqual(rows, fakeRows);
           done();
@@ -405,8 +418,9 @@ describe('Transaction', () => {
     describe('run', () => {
       const QUERY = 'SELET * FROM `MyTable`';
 
-      let fakeStream;
-      let stub;
+      let fakeStream: EventEmitter;
+      // tslint:disable-next-line: no-any
+      let stub: sinon.SinonStub<any, any>;
 
       beforeEach(() => {
         fakeStream = new EventEmitter();
@@ -424,7 +438,7 @@ describe('Transaction', () => {
       it('should return any request errors', done => {
         const fakeError = new Error('err');
 
-        snapshot.run(QUERY, err => {
+        snapshot.run(QUERY, (err: ServiceError | null) => {
           assert.strictEqual(err, fakeError);
           done();
         });
@@ -435,7 +449,7 @@ describe('Transaction', () => {
       it('should concatenate rows and return them on "end" event', done => {
         const fakeRows = [{a: 'b'}, {c: 'd'}, {e: 'f'}];
 
-        snapshot.run(QUERY, (err, rows) => {
+        snapshot.run(QUERY, (err: ServiceError | null, rows: Rows) => {
           assert.ifError(err);
           assert.deepStrictEqual(rows, fakeRows);
           done();
@@ -448,11 +462,14 @@ describe('Transaction', () => {
       it('should pass back `stats` if available', done => {
         const fakeStats = {};
 
-        snapshot.run(QUERY, (err, rows, stats) => {
-          assert.ifError(err);
-          assert.strictEqual(stats, fakeStats);
-          done();
-        });
+        snapshot.run(
+          QUERY,
+          (err: ServiceError | null, rows: Rows, stats: s.ResultSetStats) => {
+            assert.ifError(err);
+            assert.strictEqual(stats, fakeStats);
+            done();
+          }
+        );
 
         fakeStream.emit('stats', fakeStats);
         fakeStream.emit('end');
@@ -615,7 +632,8 @@ describe('Transaction', () => {
     });
 
     describe('encodeKeySet', () => {
-      function toListValue(thing): p.IListValue {
+      // tslint:disable-next-line: no-any
+      function toListValue(thing: any): p.IListValue {
         return {
           values: [{stringValue: thing}],
         };
@@ -833,7 +851,8 @@ describe('Transaction', () => {
   });
 
   describe('Dml', () => {
-    let dml;
+    // tslint:disable-next-line: no-any
+    let dml: any;
 
     beforeEach(() => {
       dml = new Dml(SESSION);
@@ -940,7 +959,8 @@ describe('Transaction', () => {
   });
 
   describe('Transaction', () => {
-    let transaction;
+    // tslint:disable-next-line: no-any
+    let transaction: any;
 
     beforeEach(() => {
       transaction = new Transaction(SESSION);
@@ -1015,7 +1035,7 @@ describe('Transaction', () => {
       ];
 
       it('should return an error if statements are missing', done => {
-        transaction.batchUpdate(null, err => {
+        transaction.batchUpdate(null, (err: BatchUpdateError) => {
           assert.strictEqual(
             err.message,
             'batchUpdate requires at least 1 DML statement.'
@@ -1027,7 +1047,7 @@ describe('Transaction', () => {
       });
 
       it('should return an error if statements are empty', done => {
-        transaction.batchUpdate([], err => {
+        transaction.batchUpdate([], (err: BatchUpdateError) => {
           assert.strictEqual(
             err.message,
             'batchUpdate requires at least 1 DML statement.'
@@ -1079,7 +1099,11 @@ describe('Transaction', () => {
 
         transaction.batchUpdate(
           OBJ_STATEMENTS,
-          (err, rowCounts, apiResponse) => {
+          (
+            err: BatchUpdateError,
+            rowCounts: number[],
+            apiResponse: s.ExecuteBatchDmlResponse
+          ) => {
             assert.strictEqual(err, fakeError);
             assert.deepStrictEqual(err.rowCounts, []);
             assert.deepStrictEqual(rowCounts, []);
@@ -1104,7 +1128,11 @@ describe('Transaction', () => {
 
         transaction.batchUpdate(
           OBJ_STATEMENTS,
-          (err, rowCounts, apiResponse) => {
+          (
+            err: BatchUpdateError,
+            rowCounts: number[],
+            apiResponse: s.ExecuteBatchDmlResponse
+          ) => {
             assert.ifError(err);
             assert.deepStrictEqual(rowCounts, expectedRowCounts);
             assert.strictEqual(apiResponse, fakeResponse);
@@ -1125,7 +1153,11 @@ describe('Transaction', () => {
 
         transaction.batchUpdate(
           OBJ_STATEMENTS,
-          (err, rowCounts, apiResponse) => {
+          (
+            err: BatchUpdateError,
+            rowCounts: number[],
+            apiResponse: s.ExecuteBatchDmlResponse
+          ) => {
             assert.ifError(err);
             assert.deepStrictEqual(rowCounts, expectedRowCounts);
             assert.strictEqual(apiResponse, fakeResponse);
@@ -1150,7 +1182,11 @@ describe('Transaction', () => {
 
         transaction.batchUpdate(
           OBJ_STATEMENTS,
-          (err, rowCounts, apiResponse) => {
+          (
+            err: BatchUpdateError,
+            rowCounts: number[],
+            apiResponse: s.ExecuteBatchDmlResponse
+          ) => {
             assert(err instanceof Error);
             assert.strictEqual(err.code, fakeResponse.status.code);
             assert.strictEqual(err.message, fakeResponse.status.details);
@@ -1288,7 +1324,7 @@ describe('Transaction', () => {
     describe('insert', () => {
       it('should queue an "insert" mutation', () => {
         const fakeTable = 'my-table-123';
-        const fakeKeyVals = {
+        const fakeKeyVals: KeyStringObj = {
           name: 'Joe West',
           id: 'Id3b',
         };
@@ -1319,7 +1355,7 @@ describe('Transaction', () => {
     describe('replace', () => {
       it('should queue a "replace" mutation', () => {
         const fakeTable = 'my-table-123';
-        const fakeKeyVals = {
+        const fakeKeyVals: KeyStringObj = {
           name: 'Joe West',
           id: 'Id3b',
         };
@@ -1361,7 +1397,7 @@ describe('Transaction', () => {
 
         delete transaction.id;
 
-        transaction.rollback(err => {
+        transaction.rollback((err: Error) => {
           assert.deepStrictEqual(err, expectedError);
           done();
         });
@@ -1412,7 +1448,7 @@ describe('Transaction', () => {
     describe('update', () => {
       it('should queue an "update" mutation', () => {
         const fakeTable = 'my-table-123';
-        const fakeKeyVals = {
+        const fakeKeyVals: KeyStringObj = {
           name: 'Joe West',
           id: 'Id3b',
         };
@@ -1443,7 +1479,7 @@ describe('Transaction', () => {
     describe('upsert', () => {
       it('should queue an "insertOrUpdate" mutation', () => {
         const fakeTable = 'my-table-123';
-        const fakeKeyVals = {
+        const fakeKeyVals: KeyStringObj = {
           name: 'Joe West',
           id: 'Id3b',
         };
@@ -1479,7 +1515,7 @@ describe('Transaction', () => {
         const rows = [{name: 'dave', id: '1'}, {name: 'stephen', id: '2'}];
 
         const expectedColumns = Object.keys(rows[0]).sort();
-        const expectedValues = rows.map(row => {
+        const expectedValues = rows.map((row: KeyStringObj) => {
           return {
             values: expectedColumns.map(column => {
               return {stringValue: row[column]};
@@ -1524,7 +1560,8 @@ describe('Transaction', () => {
   });
 
   describe('PartitionedDml', () => {
-    let pdml;
+    // tslint:disable-next-line: no-any
+    let pdml: any;
 
     beforeEach(() => {
       pdml = new PartitionedDml(SESSION);

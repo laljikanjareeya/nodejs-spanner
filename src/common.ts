@@ -16,3 +16,6 @@ export interface GetTimestamp {
   nanos: number;
   seconds: number;
 }
+export interface KeyStringObj {
+  [k: string]: string;
+}
