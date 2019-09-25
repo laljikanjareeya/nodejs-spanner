@@ -31,18 +31,13 @@ import {
   TimestampBounds,
 } from './transaction';
 import {google as spanner_client} from '../proto/spanner';
-import {BasicCallback, BasicResponse} from './common';
 import {
   Database,
-  CreateSessionOptions,
   CreateSessionCallback,
+  CreateSessionOptions,
 } from './database';
-import {
-  ServiceObjectConfig,
-  DeleteCallback,
-  Metadata,
-  MetadataCallback,
-} from '@google-cloud/common';
+import {ServiceObjectConfig, DeleteCallback} from '@google-cloud/common';
+import {NormalCallback, ResourceCallback} from './common';
 
 export type GetSessionResponse = [Session, r.Response];
 
@@ -54,11 +49,10 @@ export const enum types {
   ReadWrite = 'readwrite',
 }
 
-export type GetSessionMetadataCallback = (
-  err: Error | null,
-  metadata?: spanner_client.spanner.v1.ISession | null,
-  apiResponse?: r.Response
-) => void;
+export type GetSessionMetadataCallback = ResourceCallback<
+  spanner_client.spanner.v1.ISession,
+  r.Response
+>;
 type GetSessionMetadataResponse = [
   spanner_client.spanner.v1.ISession | null,
   r.Response
@@ -217,9 +211,7 @@ export class Session extends ServiceObject {
       methods,
       createMethod: (
         _: {},
-        optionsOrCallback:
-          | spanner_client.spanner.v1.ISession
-          | CreateSessionCallback,
+        optionsOrCallback: CreateSessionOptions | CreateSessionCallback,
         callback: CreateSessionCallback
       ) => {
         const options =
@@ -228,20 +220,14 @@ export class Session extends ServiceObject {
           typeof optionsOrCallback === 'function'
             ? (optionsOrCallback as CreateSessionCallback)
             : callback;
-        return database.createSession(
-          options,
-          (
-            err,
-            session,
-            apiResponse
-          ) => {
-            if (err) {
-              callback(err, null, apiResponse);
-              return;
-            }
+        return database.createSession(options, (err, session, apiResponse) => {
+          if (err) {
+            callback(err, null, apiResponse);
+            return;
+          }
 
-            extend(this, session);
-            callback(null, this, apiResponse);
+          extend(this, session);
+          callback(null, this, apiResponse);
         });
       },
     } as {}) as ServiceObjectConfig);
@@ -282,7 +268,7 @@ export class Session extends ServiceObject {
    *   const apiResponse = data[0];
    * });
    */
-  delete(callback?: DeleteCallback): void | Promise<BasicResponse> {
+  delete(callback?: DeleteCallback): void | Promise<[r.Response]> {
     const reqOpts = {
       name: this.formattedName_,
     };
@@ -295,7 +281,7 @@ export class Session extends ServiceObject {
       callback!
     );
   }
-  getMetadata(): Promise<[GetSessionMetadataResponse]>;
+  getMetadata(): Promise<GetSessionMetadataResponse>;
   getMetadata(callback: GetSessionMetadataCallback): void;
   /**
    * @typedef {array} GetSessionMetadataResponse
@@ -332,7 +318,7 @@ export class Session extends ServiceObject {
    */
   getMetadata(
     callback?: GetSessionMetadataCallback
-  ): void | Promise<[GetSessionMetadataResponse]> {
+  ): void | Promise<GetSessionMetadataResponse> {
     const reqOpts = {
       name: this.formattedName_,
     };
@@ -358,9 +344,11 @@ export class Session extends ServiceObject {
    *   }
    * });
    */
-  keepAlive(): Promise<BasicResponse>;
-  keepAlive(callback: BasicCallback): void;
-  keepAlive(callback?: BasicCallback): void | Promise<BasicResponse> {
+  keepAlive(): Promise<[r.Response]>;
+  keepAlive(callback: NormalCallback<r.Response>): void;
+  keepAlive(
+    callback?: NormalCallback<r.Response>
+  ): void | Promise<[r.Response]> {
     const reqOpts = {
       session: this.formattedName_,
       sql: 'SELECT 1',

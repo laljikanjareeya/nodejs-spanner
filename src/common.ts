@@ -18,10 +18,7 @@ import {ServiceError, CallOptions} from 'grpc';
 import {Operation as GaxOperation} from 'google-gax';
 import {google as instanceAdmin} from '../proto/spanner_instance_admin';
 import {google as databaseAdmin} from '../proto/spanner_database_admin';
-import * as r from 'teeny-request';
 
-export type BasicCallback = (err: Error | null, res?: r.Response) => void;
-export type BasicResponse = [r.Response];
 export type IOperation = instanceAdmin.longrunning.IOperation;
 
 export type Schema =
