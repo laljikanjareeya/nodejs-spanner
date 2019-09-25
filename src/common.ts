@@ -1,11 +1,73 @@
-import * as r from 'request';
-import {google as database_admin_client} from '../proto/spanner_database_admin';
+/*!
+ * Copyright 2017 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import {ServiceError, CallOptions} from 'grpc';
+import {Operation as GaxOperation} from 'google-gax';
+import {google as instanceAdmin} from '../proto/spanner_instance_admin';
+import {google as databaseAdmin} from '../proto/spanner_database_admin';
+import * as r from 'teeny-request';
 
 export type BasicCallback = (err: Error | null, res?: r.Response) => void;
 export type BasicResponse = [r.Response];
+export type IOperation = instanceAdmin.longrunning.IOperation;
+
 export type Schema =
   | string
-  | database_admin_client.spanner.admin.database.v1.IUpdateDatabaseDdlRequest;
+  | string[]
+  | databaseAdmin.spanner.admin.database.v1.IUpdateDatabaseDdlRequest;
 
-// tslint:disable-next-line no-any
-export type Any = any;
+export interface ResourceCallback<Resource, Response> {
+  (
+    err: ServiceError | null,
+    resource?: Resource | null,
+    response?: Response
+  ): void;
+}
+export type PagedResponse<Item, Response> =
+  | [Item[]]
+  | [Item[], {} | null, Response];
+
+export type RequestCallback<T, R = void> = R extends void
+  ? NormalCallback<T>
+  : PagedCallback<T, R>;
+
+export interface NormalCallback<TResponse> {
+  (err: ServiceError | null, res?: TResponse | null): void;
+}
+
+export interface PagedCallback<Item, Response> {
+  (
+    err: ServiceError | null,
+    results?: Item[] | null,
+    nextQuery?: {} | null,
+    response?: Response | null
+  ): void;
+}
+
+export interface LongRunningCallback<Resource> {
+  (
+    err: ServiceError | null,
+    resource?: Resource | null,
+    operation?: GaxOperation | null,
+    apiResponse?: IOperation
+  ): void;
+}
+
+export type PagedRequest<P> = P & {
+  autoPaginate?: boolean;
+  maxApiCalls?: number;
+  gaxOptions?: CallOptions;
+};

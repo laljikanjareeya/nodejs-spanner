@@ -23,23 +23,28 @@
 import {ServiceObject} from '@google-cloud/common-grpc';
 import {promisifyAll} from '@google-cloud/promisify';
 import * as extend from 'extend';
-import * as r from 'request';
+import * as r from 'teeny-request';
 import {
   Snapshot,
   Transaction,
   PartitionedDml,
   TimestampBounds,
 } from './transaction';
-import {Database} from './database';
-import {ServiceObjectConfig} from '@google-cloud/common';
 import {google as spanner_client} from '../proto/spanner';
 import {BasicCallback, BasicResponse} from './common';
+import {
+  Database,
+  CreateSessionOptions,
+  CreateSessionCallback,
+} from './database';
+import {
+  ServiceObjectConfig,
+  DeleteCallback,
+  Metadata,
+  MetadataCallback,
+} from '@google-cloud/common';
 
 export type GetSessionResponse = [Session, r.Response];
-
-export interface CreateSessionCallback {
-  (err: Error | null, session?: Session | null, apiResponse?: r.Response): void;
-}
 
 /**
  * enum to capture the possible session types
@@ -226,9 +231,9 @@ export class Session extends ServiceObject {
         return database.createSession(
           options,
           (
-            err: Error | null,
-            session?: spanner_client.spanner.v1.ISession,
-            apiResponse?: r.Response
+            err,
+            session,
+            apiResponse
           ) => {
             if (err) {
               callback(err, null, apiResponse);
@@ -237,8 +242,7 @@ export class Session extends ServiceObject {
 
             extend(this, session);
             callback(null, this, apiResponse);
-          }
-        );
+        });
       },
     } as {}) as ServiceObjectConfig);
 
@@ -249,6 +253,8 @@ export class Session extends ServiceObject {
       this.formattedName_ = Session.formatName_(database.formattedName_, name);
     }
   }
+  delete(): Promise<[r.Response]>;
+  delete(callback: DeleteCallback): void;
   /**
    * Delete a session.
    *
@@ -276,9 +282,7 @@ export class Session extends ServiceObject {
    *   const apiResponse = data[0];
    * });
    */
-  delete(): Promise<BasicResponse>;
-  delete(callback: BasicCallback): void;
-  delete(callback?: BasicCallback): void | Promise<BasicResponse> {
+  delete(callback?: DeleteCallback): void | Promise<BasicResponse> {
     const reqOpts = {
       name: this.formattedName_,
     };
@@ -291,6 +295,8 @@ export class Session extends ServiceObject {
       callback!
     );
   }
+  getMetadata(): Promise<[GetSessionMetadataResponse]>;
+  getMetadata(callback: GetSessionMetadataCallback): void;
   /**
    * @typedef {array} GetSessionMetadataResponse
    * @property {object} 0 The session's metadata.
@@ -324,11 +330,9 @@ export class Session extends ServiceObject {
    *   const apiResponse = data[1];
    * });
    */
-  getMetadata(): Promise<GetSessionMetadataResponse>;
-  getMetadata(callback: GetSessionMetadataCallback): void;
   getMetadata(
     callback?: GetSessionMetadataCallback
-  ): void | Promise<GetSessionMetadataResponse> {
+  ): void | Promise<[GetSessionMetadataResponse]> {
     const reqOpts = {
       name: this.formattedName_,
     };

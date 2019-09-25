@@ -17,7 +17,6 @@
 const gapicConfig = require('./database_admin_client_config.json');
 const gax = require('google-gax');
 const path = require('path');
-const protobuf = require('protobufjs');
 
 const VERSION = require('../../../package.json').version;
 
@@ -56,12 +55,22 @@ class DatabaseAdminClient {
    *     your project ID will be detected automatically.
    * @param {function} [options.promise] - Custom promise module to use instead
    *     of native Promises.
-   * @param {string} [options.servicePath] - The domain name of the
+   * @param {string} [options.apiEndpoint] - The domain name of the
    *     API remote host.
    */
   constructor(opts) {
     opts = opts || {};
     this._descriptors = {};
+
+    if (global.isBrowser) {
+      // If we're in browser, we use gRPC fallback.
+      opts.fallback = true;
+    }
+
+    // If we are in browser, we are already using fallback because of the
+    // "browser" field in package.json.
+    // But if we were explicitly requested to use fallback, let's do it now.
+    const gaxModule = !global.isBrowser && opts.fallback ? gax.fallback : gax;
 
     const servicePath =
       opts.servicePath || opts.apiEndpoint || this.constructor.servicePath;
@@ -79,36 +88,51 @@ class DatabaseAdminClient {
     // Create a `gaxGrpc` object, with any grpc-specific options
     // sent to the client.
     opts.scopes = this.constructor.scopes;
-    const gaxGrpc = new gax.GrpcClient(opts);
+    const gaxGrpc = new gaxModule.GrpcClient(opts);
 
     // Save the auth object to the client, for use by other methods.
     this.auth = gaxGrpc.auth;
 
     // Determine the client header string.
-    const clientHeader = [
-      `gl-node/${process.version}`,
-      `grpc/${gaxGrpc.grpcVersion}`,
-      `gax/${gax.version}`,
-      `gapic/${VERSION}`,
-    ];
+    const clientHeader = [];
+
+    if (typeof process !== 'undefined' && 'versions' in process) {
+      clientHeader.push(`gl-node/${process.versions.node}`);
+    }
+    clientHeader.push(`gax/${gaxModule.version}`);
+    if (opts.fallback) {
+      clientHeader.push(`gl-web/${gaxModule.version}`);
+    } else {
+      clientHeader.push(`grpc/${gaxGrpc.grpcVersion}`);
+    }
+    clientHeader.push(`gapic/${VERSION}`);
     if (opts.libName && opts.libVersion) {
       clientHeader.push(`${opts.libName}/${opts.libVersion}`);
     }
 
     // Load the applicable protos.
+    // For Node.js, pass the path to JSON proto file.
+    // For browsers, pass the JSON content.
+
+    const nodejsProtoPath = path.join(
+      __dirname,
+      '..',
+      '..',
+      'protos',
+      'protos.json'
+    );
     const protos = gaxGrpc.loadProto(
-      path.join(__dirname, '..', '..', 'protos'),
-      ['google/spanner/admin/database/v1/spanner_database_admin.proto']
+      opts.fallback ? require('../../protos/protos.json') : nodejsProtoPath
     );
 
     // This API contains "path templates"; forward-slash-separated
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
     this._pathTemplates = {
-      databasePathTemplate: new gax.PathTemplate(
+      databasePathTemplate: new gaxModule.PathTemplate(
         'projects/{project}/instances/{instance}/databases/{database}'
       ),
-      instancePathTemplate: new gax.PathTemplate(
+      instancePathTemplate: new gaxModule.PathTemplate(
         'projects/{project}/instances/{instance}'
       ),
     };
@@ -117,28 +141,21 @@ class DatabaseAdminClient {
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
     this._descriptors.page = {
-      listDatabases: new gax.PageDescriptor(
+      listDatabases: new gaxModule.PageDescriptor(
         'pageToken',
         'nextPageToken',
         'databases'
       ),
     };
-    let protoFilesRoot = new gax.GoogleProtoFilesRoot();
-    protoFilesRoot = protobuf.loadSync(
-      path.join(
-        __dirname,
-        '..',
-        '..',
-        'protos',
-        'google/spanner/admin/database/v1/spanner_database_admin.proto'
-      ),
-      protoFilesRoot
-    );
+
+    const protoFilesRoot = opts.fallback
+      ? gaxModule.protobuf.Root.fromJSON(require('../../protos/protos.json'))
+      : gaxModule.protobuf.loadSync(nodejsProtoPath);
 
     // This API contains "long-running operations", which return a
     // an Operation object that allows for tracking of the operation,
     // rather than holding a request open.
-    this.operationsClient = new gax.lro({
+    this.operationsClient = new gaxModule.lro({
       auth: gaxGrpc.auth,
       grpc: gaxGrpc.grpc,
     }).operationsClient(opts);
@@ -157,12 +174,12 @@ class DatabaseAdminClient {
     );
 
     this._descriptors.longrunning = {
-      createDatabase: new gax.LongrunningDescriptor(
+      createDatabase: new gaxModule.LongrunningDescriptor(
         this.operationsClient,
         createDatabaseResponse.decode.bind(createDatabaseResponse),
         createDatabaseMetadata.decode.bind(createDatabaseMetadata)
       ),
-      updateDatabaseDdl: new gax.LongrunningDescriptor(
+      updateDatabaseDdl: new gaxModule.LongrunningDescriptor(
         this.operationsClient,
         updateDatabaseDdlResponse.decode.bind(updateDatabaseDdlResponse),
         updateDatabaseDdlMetadata.decode.bind(updateDatabaseDdlMetadata)
@@ -185,7 +202,9 @@ class DatabaseAdminClient {
     // Put together the "service stub" for
     // google.spanner.admin.database.v1.DatabaseAdmin.
     const databaseAdminStub = gaxGrpc.createStub(
-      protos.google.spanner.admin.database.v1.DatabaseAdmin,
+      opts.fallback
+        ? protos.lookupService('google.spanner.admin.database.v1.DatabaseAdmin')
+        : protos.google.spanner.admin.database.v1.DatabaseAdmin,
       opts
     );
 
@@ -203,18 +222,16 @@ class DatabaseAdminClient {
       'testIamPermissions',
     ];
     for (const methodName of databaseAdminStubMethods) {
-      this._innerApiCalls[methodName] = gax.createApiCall(
-        databaseAdminStub.then(
-          stub =>
-            function() {
-              const args = Array.prototype.slice.call(arguments, 0);
-              return stub[methodName].apply(stub, args);
-            },
-          err =>
-            function() {
-              throw err;
-            }
-        ),
+      const innerCallPromise = databaseAdminStub.then(
+        stub => (...args) => {
+          return stub[methodName].apply(stub, args);
+        },
+        err => () => {
+          throw err;
+        }
+      );
+      this._innerApiCalls[methodName] = gaxModule.createApiCall(
+        innerCallPromise,
         defaults[methodName],
         this._descriptors.page[methodName] ||
           this._descriptors.longrunning[methodName]
@@ -358,6 +375,7 @@ class DatabaseAdminClient {
       callback = options;
       options = {};
     }
+    request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
@@ -545,6 +563,7 @@ class DatabaseAdminClient {
       callback = options;
       options = {};
     }
+    request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
@@ -599,6 +618,7 @@ class DatabaseAdminClient {
       callback = options;
       options = {};
     }
+    request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
@@ -742,6 +762,7 @@ class DatabaseAdminClient {
       callback = options;
       options = {};
     }
+    request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
@@ -787,6 +808,7 @@ class DatabaseAdminClient {
       callback = options;
       options = {};
     }
+    request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
@@ -842,6 +864,7 @@ class DatabaseAdminClient {
       callback = options;
       options = {};
     }
+    request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
@@ -912,6 +935,7 @@ class DatabaseAdminClient {
       callback = options;
       options = {};
     }
+    request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
@@ -936,6 +960,11 @@ class DatabaseAdminClient {
    * @param {string} request.resource
    *   REQUIRED: The resource for which the policy is being requested.
    *   See the operation documentation for the appropriate value for this field.
+   * @param {Object} [request.options]
+   *   OPTIONAL: A `GetPolicyOptions` object for specifying options to
+   *   `GetIamPolicy`. This field is only used by Cloud IAM.
+   *
+   *   This object should have the same structure as [GetPolicyOptions]{@link google.iam.v1.GetPolicyOptions}
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/interfaces/CallOptions.html} for the details.
@@ -970,6 +999,7 @@ class DatabaseAdminClient {
       callback = options;
       options = {};
     }
+    request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
@@ -1039,6 +1069,7 @@ class DatabaseAdminClient {
       callback = options;
       options = {};
     }
+    request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
