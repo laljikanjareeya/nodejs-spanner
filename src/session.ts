@@ -30,14 +30,14 @@ import {
   PartitionedDml,
   TimestampBounds,
 } from './transaction';
-import {google as spanner_client} from '../proto/spanner';
+import {google} from '../proto/spanner';
 import {
   Database,
   CreateSessionCallback,
   CreateSessionOptions,
 } from './database';
 import {ServiceObjectConfig, DeleteCallback} from '@google-cloud/common';
-import {NormalCallback, ResourceCallback} from './common';
+import {NormalCallback} from './common';
 
 export type GetSessionResponse = [Session, r.Response];
 
@@ -49,15 +49,14 @@ export const enum types {
   ReadWrite = 'readwrite',
 }
 
-export type GetSessionMetadataCallback = ResourceCallback<
-  spanner_client.spanner.v1.ISession,
-  r.Response
+export type GetSessionMetadataCallback = NormalCallback<
+  google.spanner.v1.ISession
 >;
-type GetSessionMetadataResponse = [
-  spanner_client.spanner.v1.ISession | null,
-  r.Response
-];
+export type GetSessionMetadataResponse = [google.spanner.v1.ISession];
 
+export type KeepAliveCallback = NormalCallback<google.spanner.v1.IResultSet>;
+export type KeepAliveResponse = [google.spanner.v1.IResultSet];
+export type DeleteResponse = [r.Response];
 /**
  * Create a Session object to interact with a Cloud Spanner session.
  *
@@ -218,7 +217,7 @@ export class Session extends ServiceObject {
           typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
         callback =
           typeof optionsOrCallback === 'function'
-            ? (optionsOrCallback as CreateSessionCallback)
+            ? optionsOrCallback
             : callback;
         return database.createSession(options, (err, session, apiResponse) => {
           if (err) {
@@ -239,7 +238,7 @@ export class Session extends ServiceObject {
       this.formattedName_ = Session.formatName_(database.formattedName_, name);
     }
   }
-  delete(): Promise<[r.Response]>;
+  delete(): Promise<DeleteResponse>;
   delete(callback: DeleteCallback): void;
   /**
    * Delete a session.
@@ -268,7 +267,7 @@ export class Session extends ServiceObject {
    *   const apiResponse = data[0];
    * });
    */
-  delete(callback?: DeleteCallback): void | Promise<[r.Response]> {
+  delete(callback?: DeleteCallback): void | Promise<DeleteResponse> {
     const reqOpts = {
       name: this.formattedName_,
     };
@@ -331,6 +330,8 @@ export class Session extends ServiceObject {
       callback!
     );
   }
+  keepAlive(): Promise<KeepAliveResponse>;
+  keepAlive(callback: KeepAliveCallback): void;
   /**
    * Ping the session with `SELECT 1` to prevent it from expiring.
    *
@@ -344,11 +345,7 @@ export class Session extends ServiceObject {
    *   }
    * });
    */
-  keepAlive(): Promise<[r.Response]>;
-  keepAlive(callback: NormalCallback<r.Response>): void;
-  keepAlive(
-    callback?: NormalCallback<r.Response>
-  ): void | Promise<[r.Response]> {
+  keepAlive(callback?: KeepAliveCallback): void | Promise<KeepAliveResponse> {
     const reqOpts = {
       session: this.formattedName_,
       sql: 'SELECT 1',
