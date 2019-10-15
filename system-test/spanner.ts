@@ -3368,7 +3368,7 @@ describe('Spanner', () => {
 
           transaction!.run('SELECT * FROM TxnTable', (err, rows) => {
             assert.ifError(err);
-            assert.strictEqual(rows.length, records.length);
+            assert.strictEqual(rows!.length, records.length);
 
             transaction!.end();
             done();
@@ -3392,7 +3392,7 @@ describe('Spanner', () => {
 
           transaction!.read(table.name, query, (err, rows) => {
             assert.ifError(err);
-            assert.strictEqual(rows.length, records.length);
+            assert.strictEqual(rows!.length, records.length);
 
             transaction!.end();
             done();
@@ -3411,9 +3411,9 @@ describe('Spanner', () => {
           transaction!.run('SELECT * FROM TxnTable', (err, rows) => {
             assert.ifError(err);
 
-            assert.strictEqual(rows.length, 1);
+            assert.strictEqual(rows!.length, 1);
 
-            const row = rows[0].toJSON();
+            const row = rows![0].toJSON();
 
             assert.strictEqual(row.Key, records[0].Key);
             assert.strictEqual(row.StringValue, records[0].StringValue);
@@ -3450,9 +3450,9 @@ describe('Spanner', () => {
 
           transaction!.run('SELECT * FROM TxnTable', (err, rows) => {
             assert.ifError(err);
-            assert.strictEqual(rows.length, 2);
+            assert.strictEqual(rows!.length, 2);
 
-            const rowJson = rows.map(x => x.toJSON());
+            const rowJson = rows!.map(x => x.toJSON());
 
             assert.strictEqual(rowJson[0].Key, 'k0');
             assert.strictEqual(rowJson[0].StringValue, 'v0');
@@ -3493,7 +3493,7 @@ describe('Spanner', () => {
 
           transaction!.run(query, (err, rows) => {
             assert.ifError(err);
-            assert.strictEqual(rows.length, records.length);
+            assert.strictEqual(rows!.length, records.length);
 
             table.update(
               {
@@ -3536,7 +3536,7 @@ describe('Spanner', () => {
             // Make arbitrary update.
             table.update(
               {
-                Key: rows[0].toJSON().Key,
+                Key: rows![0].toJSON().Key,
                 StringValue: 'overridden value',
               },
               err => {
@@ -3570,7 +3570,7 @@ describe('Spanner', () => {
 
           transaction!.run(query, (err, rows) => {
             assert.ifError(err);
-            assert.strictEqual(rows.length, 1);
+            assert.strictEqual(rows!.length, 1);
 
             table.update(
               {
@@ -3582,7 +3582,7 @@ describe('Spanner', () => {
 
                 transaction!.run(query, (err, rows) => {
                   assert.ifError(err);
-                  assert.strictEqual(rows.length, 1);
+                  assert.strictEqual(rows!.length, 1);
 
                   transaction!.end();
                   done();

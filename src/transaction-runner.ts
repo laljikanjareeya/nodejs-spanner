@@ -15,13 +15,14 @@
  */
 
 import {promisify} from '@google-cloud/promisify';
-import {Metadata, ServiceError, status} from 'grpc';
-import {join} from 'path';
+import {ServiceError, status} from 'grpc';
 import {Root} from 'protobufjs';
 import * as through from 'through2';
 
 import {Session} from './session';
 import {Transaction} from './transaction';
+import {RequestConfig} from '.';
+import {NormalCallback} from './common';
 
 const jsonProtos = require('../protos/protos.json');
 const RETRY_INFO = 'google.rpc.retryinfo-bin';
@@ -249,20 +250,22 @@ export class TransactionRunner extends Runner<void> {
   ): void {
     const request = transaction.request;
 
-    transaction.request = promisify((config: object, callback: Function) => {
-      request(config, (err: null | ServiceError, resp: object) => {
-        if (!err || !RETRYABLE.includes(err.code!)) {
-          callback(err, resp);
-          return;
-        }
+    transaction.request = promisify(
+      (config: RequestConfig, callback: NormalCallback<object>) => {
+        request<object>(config, (err, resp) => {
+          if (!err || !RETRYABLE.includes(err.code!)) {
+            callback(err, resp);
+            return;
+          }
 
-        reject(err);
-      });
-    });
+          reject(err);
+        });
+      }
+    );
 
     const requestStream = transaction.requestStream;
 
-    transaction.requestStream = (config: object) => {
+    transaction.requestStream = (config: RequestConfig) => {
       const proxyStream = through.obj();
       const stream = requestStream(config);
 

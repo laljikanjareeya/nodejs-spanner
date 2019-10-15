@@ -35,7 +35,8 @@ import {Session} from './session';
 import {Key} from './table';
 import {SpannerClient as s} from './v1';
 import {google as spannerClient} from '../proto/spanner';
-import {NormalCallback} from './common';
+import {NormalCallback, ResourceCallback} from './common';
+import {RequestConfig} from '.';
 
 export type Rows = Array<Row | Json>;
 
@@ -93,7 +94,7 @@ export interface BatchUpdateError extends ServiceError {
 export type CommitRequest = spannerClient.spanner.v1.ICommitRequest;
 
 export type BatchUpdateResponse = [number[], s.ExecuteBatchDmlResponse];
-export type BeginResponse = [spannerClient.spanner.v1.ITransaction];
+export type BeginTransactionResponse = [spannerClient.spanner.v1.ITransaction];
 
 export type BeginTransactionCallback = NormalCallback<
   spannerClient.spanner.v1.ITransaction
@@ -112,21 +113,14 @@ export interface BatchUpdateCallback {
   ): void;
 }
 
-export interface ReadCallback {
-  (err: null | ServiceError, rows: Rows): void;
-}
+export type ReadCallback = NormalCallback<Rows>;
 
-export interface RunCallback {
-  (
-    err: null | ServiceError,
-    rows: Rows,
-    stats: spannerClient.spanner.v1.ResultSetStats
-  ): void;
-}
+export type RunCallback = ResourceCallback<
+  Rows,
+  spannerClient.spanner.v1.ResultSetStats
+>;
 
-export interface RunUpdateCallback {
-  (err: null | ServiceError, rowCount: number): void;
-}
+export type RunUpdateCallback = NormalCallback<number>;
 
 export type CommitCallback = NormalCallback<
   spannerClient.spanner.v1.ICommitResponse
@@ -192,8 +186,8 @@ export class Snapshot extends EventEmitter {
   metadata?: spannerClient.spanner.v1.ITransaction;
   readTimestamp?: PreciseDate;
   readTimestampProto?: spannerClient.protobuf.ITimestamp;
-  request: (config: {}, callback: Function) => void;
-  requestStream: (config: {}) => Readable;
+  request: <T>(config: RequestConfig, callback: NormalCallback<T>) => void;
+  requestStream: (config: RequestConfig) => Readable;
   session: Session;
 
   /**
@@ -249,7 +243,7 @@ export class Snapshot extends EventEmitter {
     this._options = {readOnly};
   }
 
-  begin(): Promise<BeginResponse>;
+  begin(): Promise<BeginTransactionResponse>;
   begin(callback: BeginTransactionCallback): void;
   /**
    * @typedef {object} TransactionResponse
@@ -289,7 +283,9 @@ export class Snapshot extends EventEmitter {
    *     const apiResponse = data[0];
    *   });
    */
-  begin(callback?: BeginTransactionCallback): void | Promise<BeginResponse> {
+  begin(
+    callback?: BeginTransactionCallback
+  ): void | Promise<BeginTransactionResponse> {
     const session = this.session.formattedName_!;
     const options = this._options;
     const reqOpts: spannerClient.spanner.v1.IBeginTransactionRequest = {
@@ -297,25 +293,22 @@ export class Snapshot extends EventEmitter {
       options,
     };
 
-    this.request(
+    this.request<spannerClient.spanner.v1.ITransaction>(
       {
         client: 'SpannerClient',
         method: 'beginTransaction',
         reqOpts,
       },
-      (
-        err: null | ServiceError,
-        resp: spannerClient.spanner.v1.ITransaction
-      ) => {
+      (err, resp) => {
         if (err) {
           callback!(err, resp);
           return;
         }
 
-        const {id, readTimestamp} = resp;
+        const {id, readTimestamp} = resp!;
 
         this.id = id!;
-        this.metadata = resp;
+        this.metadata = resp!;
 
         if (readTimestamp) {
           this.readTimestampProto = readTimestamp;
@@ -469,7 +462,7 @@ export class Snapshot extends EventEmitter {
    */
   createReadStream(
     table: string,
-    request = {} as ReadRequest
+    request: ReadRequest = {}
   ): PartialResultStream {
     const {gaxOptions, json, jsonOptions} = request;
     const keySet = Snapshot.encodeKeySet(request);
@@ -774,7 +767,7 @@ export class Snapshot extends EventEmitter {
     callback?: RunCallback
   ): void | Promise<RunResponse> {
     const rows: Rows = [];
-    let stats;
+    let stats: spannerClient.spanner.v1.ResultSetStats;
 
     this.runStream(query)
       .on('error', callback!)
@@ -860,7 +853,7 @@ export class Snapshot extends EventEmitter {
       query = {sql: query} as ExecuteSqlRequest;
     }
 
-    query = Object.assign({}, query) as ExecuteSqlRequest;
+    query = Object.assign({}, query);
 
     const {gaxOptions, json, jsonOptions} = query;
     const {params, paramTypes} = Snapshot.encodeParams(query);
@@ -915,10 +908,12 @@ export class Snapshot extends EventEmitter {
 
     if (request.ranges) {
       keySet.ranges = arrify(request.ranges).map(range => {
-        const encodedRange: spannerClient.spanner.v1.IKeyRange = {};
+        const encodedRange: Json = {};
 
         Object.keys(range).forEach(bound => {
-          encodedRange[bound] = codec.convertToListValue(range[bound]);
+          encodedRange[bound] = codec.convertToListValue(
+            (range as Json)[bound]
+          );
         });
 
         return encodedRange;
@@ -948,22 +943,22 @@ export class Snapshot extends EventEmitter {
     const {returnReadTimestamp = true} = options;
 
     if (options.minReadTimestamp instanceof PreciseDate) {
-      readOnly.minReadTimestamp = (options.minReadTimestamp as PreciseDate).toStruct();
+      readOnly.minReadTimestamp = options.minReadTimestamp.toStruct();
     }
 
     if (options.readTimestamp instanceof PreciseDate) {
-      readOnly.readTimestamp = (options.readTimestamp as PreciseDate).toStruct();
+      readOnly.readTimestamp = options.readTimestamp.toStruct();
     }
 
     if (typeof options.maxStaleness === 'number') {
       readOnly.maxStaleness = codec.convertMsToProtoTimestamp(
-        options.maxStaleness as number
+        options.maxStaleness
       );
     }
 
     if (typeof options.exactStaleness === 'number') {
       readOnly.exactStaleness = codec.convertMsToProtoTimestamp(
-        options.exactStaleness as number
+        options.exactStaleness
       );
     }
 
@@ -993,7 +988,7 @@ export class Snapshot extends EventEmitter {
     const paramTypes: {[field: string]: s.Type} = {};
 
     if (request.params) {
-      const fields = {};
+      const fields: Json = {};
 
       Object.keys(request.params).forEach(param => {
         const value = request.params![param];
@@ -1072,22 +1067,15 @@ export class Dml extends Snapshot {
       query = {sql: query} as ExecuteSqlRequest;
     }
 
-    this.run(
-      query,
-      (
-        err: null | ServiceError,
-        rows: Rows,
-        stats: spannerClient.spanner.v1.ResultSetStats
-      ) => {
-        let rowCount = 0;
+    this.run(query, (err, rows, stats) => {
+      let rowCount = 0;
 
-        if (stats && stats.rowCount) {
-          rowCount = Math.floor(stats[stats.rowCount] as number);
-        }
-
-        callback!(err, rowCount);
+      if (stats && stats.rowCount) {
+        rowCount = Math.floor(stats[stats.rowCount] as number);
       }
-    );
+
+      callback!(err, rowCount);
+    });
   }
 }
 
@@ -1182,7 +1170,7 @@ export class Transaction extends Dml {
    *   }
    * });
    */
-  constructor(session: Session, options = {} as s.ReadWrite) {
+  constructor(session: Session, options: s.ReadWrite = {}) {
     super(session);
 
     this._queuedMutations = [];
@@ -1278,25 +1266,26 @@ export class Transaction extends Dml {
       statements,
     };
 
-    this.request(
+    this.request<s.ExecuteBatchDmlResponse>(
       {
         client: 'SpannerClient',
         method: 'executeBatchDml',
         reqOpts,
       },
-      (err: null | ServiceError, resp: s.ExecuteBatchDmlResponse) => {
+      (err, resp) => {
         let batchUpdateError: BatchUpdateError;
 
         if (err) {
           const rowCounts: number[] = [];
           batchUpdateError = Object.assign(err, {rowCounts});
-          callback!(batchUpdateError, rowCounts, resp);
+          callback!(batchUpdateError, rowCounts, resp!);
           return;
         }
 
-        const {resultSets, status} = resp;
+        const {resultSets, status} = resp!;
         const rowCounts: number[] = resultSets.map(({stats}) => {
-          return (stats && Number(stats[stats.rowCount])) || 0;
+          // tslint:disable-next-line: no-any
+          return (stats && Number((stats as any)[stats.rowCount])) || 0;
         });
 
         if (status && status.code !== 0) {
@@ -1308,7 +1297,7 @@ export class Transaction extends Dml {
           });
         }
 
-        callback!(batchUpdateError!, rowCounts, resp);
+        callback!(batchUpdateError!, rowCounts, resp!);
       }
     );
   }
@@ -1372,13 +1361,13 @@ export class Transaction extends Dml {
       reqOpts.singleUseTransaction = this._options;
     }
 
-    this.request(
+    this.request<spannerClient.spanner.v1.ICommitResponse>(
       {
         client: 'SpannerClient',
         method: 'commit',
         reqOpts,
       },
-      (err: null | Error, resp: spannerClient.spanner.v1.ICommitResponse) => {
+      (err, resp) => {
         this.end();
 
         if (resp && resp.commitTimestamp) {
@@ -1587,7 +1576,7 @@ export class Transaction extends Dml {
         method: 'rollback',
         reqOpts,
       },
-      (err: null | ServiceError) => {
+      err => {
         this.end();
         callback!(err);
       }
@@ -1682,7 +1671,7 @@ export class Transaction extends Dml {
     table: string,
     keyVals: object | object[]
   ): void {
-    const rows: object[] = arrify(keyVals);
+    const rows: Array<Row | Json> = arrify(keyVals);
     const columns = Transaction.getUniqueKeys(rows);
 
     const values = rows.map((row, index) => {
@@ -1698,7 +1687,7 @@ export class Transaction extends Dml {
         );
       }
 
-      const values = columns.map(column => row[column]);
+      const values = columns.map(column => (row as Json)![column]);
       return codec.convertToListValue(values);
     });
 
@@ -1749,7 +1738,7 @@ promisifyAll(Transaction, {
  * @see Database#runPartitionedUpdate
  */
 export class PartitionedDml extends Dml {
-  constructor(session: Session, options = {} as s.PartitionedDml) {
+  constructor(session: Session, options: s.PartitionedDml = {}) {
     super(session);
     this._options = {partitionedDml: options};
   }
