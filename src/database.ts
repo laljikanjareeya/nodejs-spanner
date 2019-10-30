@@ -21,7 +21,7 @@ import {
   ServiceObjectConfig,
   GetConfig,
 } from '@google-cloud/common';
-import {ServiceObject} from '@google-cloud/common-grpc';
+import {GrpcServiceObject} from './common-grpc/service-object';
 import {promisify, promisifyAll} from '@google-cloud/promisify';
 import arrify = require('arrify');
 import * as extend from 'extend';
@@ -98,12 +98,12 @@ export interface SessionPoolConstructor {
   ): SessionPoolInterface;
 }
 
-type UpdateSchemaCallback = ResourceCallback<
+export type UpdateSchemaCallback = ResourceCallback<
   GaxOperation,
   databaseAdmin.longrunning.IOperation
 >;
 
-type UpdateSchemaResponse = [
+export type UpdateSchemaResponse = [
   GaxOperation,
   databaseAdmin.longrunning.IOperation
 ];
@@ -176,7 +176,7 @@ export interface CancelableDuplex extends Duplex {
  * const instance = spanner.instance('my-instance');
  * const database = instance.database('my-database');
  */
-class Database extends ServiceObject {
+class Database extends GrpcServiceObject {
   formattedName_: string;
   pool_: SessionPoolInterface;
   request: <T, R = void>(

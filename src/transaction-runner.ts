@@ -48,10 +48,7 @@ export interface RunTransactionOptions {
  * @param {Transaction} transaction The transaction object. The transaction has
  *     already been created, and is ready to be queried and committed against.
  */
-export interface RunTransactionCallback {
-  (err: ServiceError, transaction?: null): void;
-  (err: null, transaction: Transaction): void;
-}
+export type RunTransactionCallback = NormalCallback<Transaction>;
 
 /**
  * A function to execute in the context of a transaction.
