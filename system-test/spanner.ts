@@ -931,6 +931,15 @@ describe('Spanner', () => {
     it('should keep the session alive', done => {
       session.keepAlive(done);
     });
+
+    it('should batch create sessions', async () => {
+      const count = 5;
+      const [sessions] = await database.batchCreateSessions({count});
+
+      assert.strictEqual(sessions.length, count);
+
+      await Promise.all(sessions.map(session => session.delete()));
+    });
   });
 
   describe('Tables', () => {
@@ -1192,7 +1201,10 @@ describe('Spanner', () => {
 
       const table = database.table('SingersComposite');
 
-      const keys = ([[id1, name1], [id2, name2]] as {}) as string[];
+      const keys = ([
+        [id1, name1],
+        [id2, name2],
+      ] as {}) as string[];
 
       return table
         .create(
