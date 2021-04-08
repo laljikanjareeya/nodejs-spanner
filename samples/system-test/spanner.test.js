@@ -24,7 +24,6 @@ const pLimit = require('p-limit');
 const execSync = cmd => cp.execSync(cmd, {encoding: 'utf-8'});
 
 const batchCmd = 'node batch.js';
-const crudCmd = 'node crud.js';
 const schemaCmd = 'node schema.js';
 const indexingCmd = 'node indexing.js';
 const queryOptionsCmd = 'node queryoptions.js';
@@ -322,7 +321,7 @@ describe('Spanner', () => {
   // insert_data
   it('should insert rows into an example table', async () => {
     const output = execSync(
-      `${crudCmd} insert ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node insertData ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Inserted data\./);
   });
@@ -330,13 +329,13 @@ describe('Spanner', () => {
   // delete_data
   it('should delete and then insert rows in the example tables', async () => {
     let output = execSync(
-      `${crudCmd} delete ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node deleteData ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.include(output, 'Deleted individual rows in Albums.');
     assert.include(output, '2 records deleted from Singers.');
     assert.include(output, '3 records deleted from Singers.');
     output = execSync(
-      `${crudCmd} insert ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node insertData ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Inserted data\./);
   });
@@ -344,7 +343,7 @@ describe('Spanner', () => {
   // query_data
   it('should query an example table and return matching rows', async () => {
     const output = execSync(
-      `${crudCmd} query ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node queryData ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk/);
   });
@@ -352,7 +351,7 @@ describe('Spanner', () => {
   // read_data
   it('should read an example table', async () => {
     const output = execSync(
-      `${crudCmd} read ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node readData ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk/);
   });
@@ -369,7 +368,7 @@ describe('Spanner', () => {
   // update_data
   it('should update existing rows in an example table', async () => {
     const output = execSync(
-      `${crudCmd} update ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node updateData ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Updated data\./);
   });
@@ -380,7 +379,7 @@ describe('Spanner', () => {
     // 15 seconds have elapsed since the update_data test.
     await new Promise(r => setTimeout(r, 16000));
     const output = execSync(
-      `${crudCmd} read-stale ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node readStaleData ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(
       output,
@@ -1081,7 +1080,7 @@ describe('Spanner', () => {
   // get_commit_stats
   it('should update rows in Albums example table and return CommitStats', async () => {
     const output = execSync(
-      `${crudCmd} getCommitStats ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node getCommitStats ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, new RegExp('Updated data with (\\d+) mutations'));
   });

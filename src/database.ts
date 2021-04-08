@@ -2117,7 +2117,7 @@ class Database extends common.GrpcServiceObject {
    *   const rows = data[0];
    * });
    *
-   * @example <caption>include:samples/crud.js</caption>
+   * @example <caption>include:samples/queryData.js</caption>
    * region_tag:spanner_query_data
    * Full example:
    *

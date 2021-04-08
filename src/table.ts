@@ -507,7 +507,7 @@ class Table {
    *     const apiResponse = data[0];
    *   });
    *
-   * @example <caption>include:samples/crud.js</caption>
+   * @example <caption>include:samples/insertData.js</caption>
    * region_tag:spanner_insert_data
    * Full example:
    */
@@ -666,11 +666,11 @@ class Table {
    *     const rows = data[0];
    *   });
    *
-   * @example <caption>include:samples/crud.js</caption>
+   * @example <caption>include:samples/readData.js</caption>
    * region_tag:spanner_read_data
    * Full example:
    *
-   * @example <caption>include:samples/crud.js</caption>
+   * @example <caption>include:samples/readStaleData.js</caption>
    * region_tag:spanner_read_stale_data
    * Reading stale data:
    *
@@ -813,7 +813,7 @@ class Table {
    *     const apiResponse = data[0];
    *   });
    *
-   * @example <caption>include:samples/crud.js</caption>
+   * @example <caption>include:samples/updateData.js</caption>
    * region_tag:spanner_update_data
    * Full example:
    */
