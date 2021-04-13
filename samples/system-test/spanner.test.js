@@ -321,7 +321,7 @@ describe('Spanner', () => {
   // insert_data
   it('should insert rows into an example table', async () => {
     const output = execSync(
-      `node insertData ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node insert-data ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Inserted data\./);
   });
@@ -329,13 +329,13 @@ describe('Spanner', () => {
   // delete_data
   it('should delete and then insert rows in the example tables', async () => {
     let output = execSync(
-      `node deleteData ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node delete-data ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.include(output, 'Deleted individual rows in Albums.');
     assert.include(output, '2 records deleted from Singers.');
     assert.include(output, '3 records deleted from Singers.');
     output = execSync(
-      `node insertData ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node insert-data ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Inserted data\./);
   });
@@ -343,7 +343,7 @@ describe('Spanner', () => {
   // query_data
   it('should query an example table and return matching rows', async () => {
     const output = execSync(
-      `node queryData ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node query-data ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk/);
   });
@@ -351,7 +351,7 @@ describe('Spanner', () => {
   // read_data
   it('should read an example table', async () => {
     const output = execSync(
-      `node readData ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node read-data ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk/);
   });
@@ -368,7 +368,7 @@ describe('Spanner', () => {
   // update_data
   it('should update existing rows in an example table', async () => {
     const output = execSync(
-      `node updateData ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node update-data ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Updated data\./);
   });
@@ -379,7 +379,7 @@ describe('Spanner', () => {
     // 15 seconds have elapsed since the update_data test.
     await new Promise(r => setTimeout(r, 16000));
     const output = execSync(
-      `node readStaleData ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node read-stale-data ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(
       output,
@@ -1080,7 +1080,7 @@ describe('Spanner', () => {
   // get_commit_stats
   it('should update rows in Albums example table and return CommitStats', async () => {
     const output = execSync(
-      `node getCommitStats ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node get-commit-stats ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, new RegExp('Updated data with (\\d+) mutations'));
   });
