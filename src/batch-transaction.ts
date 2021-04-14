@@ -115,7 +115,7 @@ class BatchTransaction extends Snapshot {
    * @param {CreateQueryPartitionsCallback} [callback] Callback callback function.
    * @returns {Promise<CreateQueryPartitionsResponse>}
    *
-   * @example <caption>include:samples/batch.js</caption>
+   * @example <caption>include:samples/create-and-execute-query-partitions.js</caption>
    * region_tag:spanner_batch_client
    */
   createQueryPartitions(query, callback) {
@@ -245,7 +245,7 @@ class BatchTransaction extends Snapshot {
    *     function.
    * @returns {Promise<RunResponse>|Promise<TransactionRequestReadResponse>}
    *
-   * @example <caption>include:samples/batch.js</caption>
+   * @example <caption>include:samples/execute-partition.js</caption>
    * region_tag:spanner_batch_execute_partitions
    */
   execute(partition, callback) {
