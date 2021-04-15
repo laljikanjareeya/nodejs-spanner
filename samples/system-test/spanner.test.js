@@ -32,7 +32,6 @@ const rpcPriorityCommand = 'node rpc-priority.js';
 const transactionCmd = 'node transaction.js';
 const timestampCmd = 'node timestamp.js';
 const structCmd = 'node struct.js';
-const dmlCmd = 'node dml.js';
 const datatypesCmd = 'node datatypes.js';
 const backupsCmd = 'node backups.js';
 const instanceCmd = 'node instance.js';
@@ -669,7 +668,7 @@ describe('Spanner', () => {
   // dml_standard_insert
   it('should insert rows into an example table using a DML statement', async () => {
     const output = execSync(
-      `${dmlCmd} insertUsingDml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node insert-using-dml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(
       output,
@@ -680,7 +679,7 @@ describe('Spanner', () => {
   // dml_standard_update
   it('should update a row in an example table using a DML statement', async () => {
     const output = execSync(
-      `${dmlCmd} updateUsingDml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node update-using-dml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Successfully updated 1 record/);
   });
@@ -688,7 +687,7 @@ describe('Spanner', () => {
   // dml_standard_delete
   it('should delete a row from an example table using a DML statement', async () => {
     const output = execSync(
-      `${dmlCmd} deleteUsingDml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node delete-using-dml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Successfully deleted 1 record\./);
   });
@@ -696,7 +695,7 @@ describe('Spanner', () => {
   // dml_standard_update_with_timestamp
   it('should update the timestamp of multiple records in an example table using a DML statement', async () => {
     const output = execSync(
-      `${dmlCmd} updateUsingDmlWithTimestamp ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node update-using-dml-with-timestamp ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Successfully updated 2 records/);
   });
@@ -704,7 +703,7 @@ describe('Spanner', () => {
   // dml_write_then_read
   it('should insert a record in an example table using a DML statement and then query the record', async () => {
     const output = execSync(
-      `${dmlCmd} writeAndReadUsingDml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node write-and-read-using-dml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Timothy Campbell/);
   });
@@ -712,7 +711,7 @@ describe('Spanner', () => {
   // dml_structs
   it('should update a record in an example table using a DML statement along with a struct value', async () => {
     const output = execSync(
-      `${dmlCmd} updateUsingDmlWithStruct ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node update-using-dml-with-struct ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Successfully updated 1 record/);
   });
@@ -720,7 +719,7 @@ describe('Spanner', () => {
   // dml_getting_started_insert
   it('should insert multiple records into an example table using a DML statement', async () => {
     const output = execSync(
-      `${dmlCmd} writeUsingDml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node write-using-dml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /4 records inserted/);
   });
@@ -728,7 +727,7 @@ describe('Spanner', () => {
   // dml_query_with_parameter
   it('should use a parameter query to query record that was inserted using a DML statement', async () => {
     const output = execSync(
-      `${dmlCmd} queryWithParameter ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node query-with-parameter ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /SingerId: 12, FirstName: Melissa, LastName: Garcia/);
   });
@@ -736,7 +735,7 @@ describe('Spanner', () => {
   // dml_getting_started_update
   it('should transfer value from one record to another using DML statements within a transaction', async () => {
     const output = execSync(
-      `${dmlCmd} writeWithTransactionUsingDml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node write-with-transaction-using-dml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(
       output,
@@ -747,7 +746,7 @@ describe('Spanner', () => {
   //  dml_partitioned_update
   it('should update multiple records using a partitioned DML statement', async () => {
     const output = execSync(
-      `${dmlCmd} updateUsingPartitionedDml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node update-using-partitioned-dml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Successfully updated 3 records/);
   });
@@ -755,7 +754,7 @@ describe('Spanner', () => {
   //  dml_partitioned_delete
   it('should delete multiple records using a partitioned DML statement', async () => {
     const output = execSync(
-      `${dmlCmd} deleteUsingPartitionedDml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node delete-using-partitioned-dml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Successfully deleted 5 records/);
   });
@@ -763,7 +762,7 @@ describe('Spanner', () => {
   //  dml_batch_update
   it('should insert and update records using Batch DML', async () => {
     const output = execSync(
-      `${dmlCmd} updateUsingBatchDml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node update-using-batch-dml ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(
       output,
@@ -1073,7 +1072,7 @@ describe('Spanner', () => {
   // custom_timeout_and_retry
   it('should insert with custom timeout and retry settings', async () => {
     const output = execSync(
-      `${dmlCmd} insertWithCustomTimeoutAndRetrySettings ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node insert-with-custom-timeout-and-retry-settings ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /record inserted./);
   });
