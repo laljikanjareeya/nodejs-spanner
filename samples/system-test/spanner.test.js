@@ -727,7 +727,7 @@ describe('Spanner', () => {
   // dml_query_with_parameter
   it('should use a parameter query to query record that was inserted using a DML statement', async () => {
     const output = execSync(
-      `node query-with-parameter ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node query-data-with-parameter ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /SingerId: 12, FirstName: Melissa, LastName: Garcia/);
   });
