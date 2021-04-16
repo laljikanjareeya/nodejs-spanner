@@ -13,45 +13,55 @@
  * limitations under the License.
  */
 
+// sample-metadata:
+//  title: Updates the expire time of a backup
+//  usage: node updateBackup <INSTANCE_ID> <BACKUP_ID> <PROJECT_ID>
+
 'use strict';
 
-async function updateBackup(instanceId, backupId, projectId) {
+function main(
+  instanceId = 'my-instance',
+  backupId = 'my-backup',
+  projectId = 'my-project-id'
+) {
   // [START spanner_update_backup]
+  /**
+   * TODO(developer): Uncomment these variables before running the sample.
+   */
+  // const instanceId = 'my-instance';
+  // const backupId = 'my-backup';
+  // const projectId = 'my-project-id';
+
   // Imports the Google Cloud client library and precise date library
   const {Spanner} = require('@google-cloud/spanner');
   const {PreciseDate} = require('@google-cloud/precise-date');
 
-  /**
-   * TODO(developer): Uncomment the following lines before running the sample.
-   */
-  // const projectId = 'my-project-id';
-  // const instanceId = 'my-instance';
-  // const backupId = 'my-backup';
-
-  // Creates a client
+  // Instantiates a client
   const spanner = new Spanner({
     projectId: projectId,
   });
 
-  // Gets a reference to a Cloud Spanner instance and backup
-  const instance = spanner.instance(instanceId);
-  const backup = instance.backup(backupId);
+  async function updateBackup() {
+    // Gets a reference to a Cloud Spanner instance and backup
+    const instance = spanner.instance(instanceId);
+    const backup = instance.backup(backupId);
 
-  // Read backup metadata and update expiry time
-  try {
-    const currentExpireTime = await backup.getExpireTime();
-    const newExpireTime = new PreciseDate(currentExpireTime);
-    newExpireTime.setDate(newExpireTime.getDate() + 30);
-    console.log(
-      `Backup ${backupId} current expire time: ${currentExpireTime.toISOString()}`
-    );
-    console.log(`Updating expire time to ${newExpireTime.toISOString()}`);
-    await backup.updateExpireTime(newExpireTime);
-    console.log('Expire time updated.');
-  } catch (err) {
-    console.error('ERROR:', err);
+    // Read backup metadata and update expiry time
+    try {
+      const currentExpireTime = await backup.getExpireTime();
+      const newExpireTime = new PreciseDate(currentExpireTime);
+      newExpireTime.setDate(newExpireTime.getDate() + 30);
+      console.log(
+        `Backup ${backupId} current expire time: ${currentExpireTime.toISOString()}`
+      );
+      console.log(`Updating expire time to ${newExpireTime.toISOString()}`);
+      await backup.updateExpireTime(newExpireTime);
+      console.log('Expire time updated.');
+    } catch (err) {
+      console.error('ERROR:', err);
+    }
   }
+  updateBackup().catch(console.error);
   // [END spanner_update_backup]
 }
-
-module.exports.updateBackup = updateBackup;
+main(...process.argv.slice(2));

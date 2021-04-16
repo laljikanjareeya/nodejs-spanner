@@ -13,50 +13,60 @@
  * limitations under the License.
  */
 
+// sample-metadata:
+//  title: Lists all backup operations in the instance
+//  usage: node getBackupOperations <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+
 'use strict';
 
-async function getBackupOperations(instanceId, databaseId, projectId) {
+function main(
+  instanceId = 'my-instance',
+  databaseId = 'my-database',
+  projectId = 'my-project-id'
+) {
   // [START spanner_list_backup_operations]
+  /**
+   * TODO(developer): Uncomment these variables before running the sample.
+   */
+  // const instanceId = 'my-instance';
+  // const databaseId = 'my-database';
+  // const projectId = 'my-project-id';
+
   // Imports the Google Cloud client library
   const {Spanner, protos} = require('@google-cloud/spanner');
 
-  /**
-   * TODO(developer): Uncomment the following lines before running the sample.
-   */
-  // const projectId = 'my-project-id';
-  // const databaseId = 'my-database';
-  // const instanceId = 'my-instance';
-
-  // Creates a client
+  // Instantiates a client
   const spanner = new Spanner({
     projectId: projectId,
   });
 
-  // Gets a reference to a Cloud Spanner instance
-  const instance = spanner.instance(instanceId);
+  async function getBackupOperations() {
+    // Gets a reference to a Cloud Spanner instance
+    const instance = spanner.instance(instanceId);
 
-  // List backup operations
-  try {
-    const [backupOperations] = await instance.getBackupOperations({
-      filter:
-        `(metadata.database:${databaseId}) AND ` +
-        '(metadata.@type:type.googleapis.com/google.spanner.admin.database.v1.CreateBackupMetadata)',
-    });
-    console.log('Create Backup Operations:');
-    backupOperations.forEach(backupOperation => {
-      const metadata =
-        protos.google.spanner.admin.database.v1.CreateBackupMetadata.decode(
-          backupOperation.metadata.value
+    // List backup operations
+    try {
+      const [backupOperations] = await instance.getBackupOperations({
+        filter:
+          `(metadata.database:${databaseId}) AND ` +
+          '(metadata.@type:type.googleapis.com/google.spanner.admin.database.v1.CreateBackupMetadata)',
+      });
+      console.log('Create Backup Operations:');
+      backupOperations.forEach(backupOperation => {
+        const metadata =
+          protos.google.spanner.admin.database.v1.CreateBackupMetadata.decode(
+            backupOperation.metadata.value
+          );
+        console.log(
+          `Backup ${metadata.name} on database ${metadata.database} is ` +
+            `${metadata.progress.progressPercent}% complete.`
         );
-      console.log(
-        `Backup ${metadata.name} on database ${metadata.database} is ` +
-          `${metadata.progress.progressPercent}% complete.`
-      );
-    });
-  } catch (err) {
-    console.error('ERROR:', err);
+      });
+    } catch (err) {
+      console.error('ERROR:', err);
+    }
   }
+  getBackupOperations().catch(console.error);
   // [END spanner_list_backup_operations]
 }
-
-module.exports.getBackupOperations = getBackupOperations;
+main(...process.argv.slice(2));

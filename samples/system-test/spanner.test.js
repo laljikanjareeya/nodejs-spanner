@@ -34,7 +34,6 @@ const timestampCmd = 'node timestamp.js';
 const structCmd = 'node struct.js';
 const dmlCmd = 'node dml.js';
 const datatypesCmd = 'node datatypes.js';
-const backupsCmd = 'node backups.js';
 const instanceCmd = 'node instance.js';
 
 const CURRENT_TIME = Math.round(Date.now() / 1000).toString();
@@ -929,7 +928,7 @@ describe('Spanner', () => {
     const versionTime = rows[0].toJSON().Timestamp.toISOString();
 
     const output = execSync(
-      `${backupsCmd} createBackup ${INSTANCE_ID} ${DATABASE_ID} ${BACKUP_ID} ${PROJECT_ID} ${versionTime}`
+      `node backups-create ${INSTANCE_ID} ${DATABASE_ID} ${BACKUP_ID} ${PROJECT_ID} ${versionTime}`
     );
     assert.match(output, new RegExp(`Backup (.+)${BACKUP_ID} of size`));
   });
@@ -939,7 +938,7 @@ describe('Spanner', () => {
     const key = await getCryptoKey();
 
     const output = execSync(
-      `${backupsCmd} createBackupWithEncryptionKey ${INSTANCE_ID} ${DATABASE_ID} ${ENCRYPTED_BACKUP_ID} ${PROJECT_ID} ${key.name}`
+      `node backups-create-with-encryption-key ${INSTANCE_ID} ${DATABASE_ID} ${ENCRYPTED_BACKUP_ID} ${PROJECT_ID} ${key.name}`
     );
     assert.match(
       output,
@@ -951,7 +950,7 @@ describe('Spanner', () => {
   // cancel_backup
   it('should cancel a backup of the database', async () => {
     const output = execSync(
-      `${backupsCmd} cancelBackup ${INSTANCE_ID} ${DATABASE_ID} ${CANCELLED_BACKUP_ID} ${PROJECT_ID}`
+      `node backups-cancel ${INSTANCE_ID} ${DATABASE_ID} ${CANCELLED_BACKUP_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Backup cancelled./);
   });
@@ -959,7 +958,7 @@ describe('Spanner', () => {
   // get_backups
   it('should list backups in the instance', async () => {
     const output = execSync(
-      `${backupsCmd} getBackups ${INSTANCE_ID} ${DATABASE_ID} ${BACKUP_ID} ${PROJECT_ID}`
+      `node backups-get ${INSTANCE_ID} ${DATABASE_ID} ${BACKUP_ID} ${PROJECT_ID}`
     );
     assert.include(output, 'All backups:');
     assert.include(output, 'Backups matching backup name:');
@@ -975,7 +974,7 @@ describe('Spanner', () => {
   // list_backup_operations
   it('should list backup operations in the instance', async () => {
     const output = execSync(
-      `${backupsCmd} getBackupOperations ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node backups-get-operations ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Create Backup Operations:/);
     assert.match(
@@ -987,7 +986,7 @@ describe('Spanner', () => {
   // update_backup_expire_time
   it('should update the expire time of a backup', async () => {
     const output = execSync(
-      `${backupsCmd} updateBackup ${INSTANCE_ID} ${BACKUP_ID} ${PROJECT_ID}`
+      `node backups-update ${INSTANCE_ID} ${BACKUP_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Expire time updated./);
   });
@@ -1001,7 +1000,7 @@ describe('Spanner', () => {
     await delay(this.test);
 
     const output = execSync(
-      `${backupsCmd} restoreBackup ${INSTANCE_ID} ${RESTORE_DATABASE_ID} ${BACKUP_ID} ${PROJECT_ID}`
+      `node backups-restore ${INSTANCE_ID} ${RESTORE_DATABASE_ID} ${BACKUP_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Database restored from backup./);
     assert.match(
@@ -1024,7 +1023,7 @@ describe('Spanner', () => {
     const key = await getCryptoKey();
 
     const output = execSync(
-      `${backupsCmd} restoreBackupWithEncryptionKey ${INSTANCE_ID} ${ENCRYPTED_RESTORE_DATABASE_ID} ${ENCRYPTED_BACKUP_ID} ${PROJECT_ID} ${key.name}`
+      `node backups-restore-with-encryption-key ${INSTANCE_ID} ${ENCRYPTED_RESTORE_DATABASE_ID} ${ENCRYPTED_BACKUP_ID} ${PROJECT_ID} ${key.name}`
     );
     assert.match(output, /Database restored from backup./);
     assert.match(
@@ -1039,7 +1038,7 @@ describe('Spanner', () => {
   // list_database_operations
   it('should list database operations in the instance', async () => {
     const output = execSync(
-      `${backupsCmd} getDatabaseOperations ${INSTANCE_ID} ${PROJECT_ID}`
+      `node backups-get-database-operations ${INSTANCE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Optimize Database Operations:/);
     assert.match(
@@ -1065,7 +1064,7 @@ describe('Spanner', () => {
     }
 
     const output = execSync(
-      `${backupsCmd} deleteBackup ${INSTANCE_ID} ${RESTORE_DATABASE_ID} ${BACKUP_ID} ${PROJECT_ID}`
+      `node backups-delete ${INSTANCE_ID} ${BACKUP_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Backup deleted./);
   });
