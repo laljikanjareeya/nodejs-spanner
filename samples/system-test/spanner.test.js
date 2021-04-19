@@ -26,7 +26,6 @@ const execSync = cmd => cp.execSync(cmd, {encoding: 'utf-8'});
 const batchCmd = 'node batch.js';
 const crudCmd = 'node crud.js';
 const schemaCmd = 'node schema.js';
-const indexingCmd = 'node indexing.js';
 const queryOptionsCmd = 'node queryoptions.js';
 const rpcPriorityCommand = 'node rpc-priority.js';
 const transactionCmd = 'node transaction.js';
@@ -404,7 +403,7 @@ describe('Spanner', () => {
   // create_index
   it('should create an index in an example table', async () => {
     const output = execSync(
-      `${indexingCmd} createIndex ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node index-create ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Waiting for operation to complete\.\.\./);
     assert.match(output, /Added the AlbumsByAlbumTitle index\./);
@@ -417,7 +416,7 @@ describe('Spanner', () => {
     await delay(this.test);
 
     const output = execSync(
-      `${indexingCmd} createStoringIndex ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node index-create-storing ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Waiting for operation to complete\.\.\./);
     assert.match(output, /Added the AlbumsByAlbumTitle2 index\./);
@@ -426,7 +425,7 @@ describe('Spanner', () => {
   // query_data_with_index
   it('should query an example table with an index and return matching rows', async () => {
     const output = execSync(
-      `${indexingCmd} queryIndex ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node index-query-data ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(
       output,
@@ -440,11 +439,7 @@ describe('Spanner', () => {
 
   it('should respect query boundaries when querying an example table with an index', async () => {
     const output = execSync(
-      `${indexingCmd} queryIndex ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID} -s Ardvark -e Zoo`
-    );
-    assert.match(
-      output,
-      /AlbumId: 1, AlbumTitle: Total Junk, MarketingBudget:/
+      `node index-query-data ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID} "Ardvark" "Goo"`
     );
     assert.match(
       output,
@@ -455,7 +450,7 @@ describe('Spanner', () => {
   // read_data_with_index
   it('should read an example table with an index', async () => {
     const output = execSync(
-      `${indexingCmd} readIndex ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node index-read-data ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /AlbumId: 1, AlbumTitle: Total Junk/);
   });
@@ -463,7 +458,7 @@ describe('Spanner', () => {
   // read_data_with_storing_index
   it('should read an example table with a storing index', async () => {
     const output = execSync(
-      `${indexingCmd} readStoringIndex ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node index-read-data-with-storing ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /AlbumId: 1, AlbumTitle: Total Junk/);
   });
