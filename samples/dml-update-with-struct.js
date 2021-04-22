@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Updates multiple records using DML.
-//  usage: node updateUsingPartitionedDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Updates record using DML and a struct value.
+//  usage: node updateUsingDmlWithStruct <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -23,7 +23,7 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_dml_partitioned_update]
+  // [START spanner_dml_structs]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
@@ -39,24 +39,45 @@ function main(
     projectId: projectId,
   });
 
-  async function updateUsingPartitionedDml() {
+  async function updateUsingDmlWithStruct() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
 
-    try {
-      const [rowCount] = await database.runPartitionedUpdate({
-        sql: 'UPDATE Albums SET MarketingBudget = 100000 WHERE SingerId > 1',
-      });
-      console.log(`Successfully updated ${rowCount} records.`);
-    } catch (err) {
-      console.error('ERROR:', err);
-    } finally {
-      // Close the database when finished.
-      database.close();
-    }
+    const nameStruct = Spanner.struct({
+      FirstName: 'Timothy',
+      LastName: 'Campbell',
+    });
+
+    database.runTransaction(async (err, transaction) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      try {
+        const [rowCount] = await transaction.runUpdate({
+          sql: `UPDATE Singers SET LastName = 'Grant'
+            WHERE STRUCT<FirstName STRING, LastName STRING>(FirstName, LastName) = @name`,
+          params: {
+            name: nameStruct,
+          },
+        });
+
+        console.log(`Successfully updated ${rowCount} record.`);
+        await transaction.commit();
+      } catch (err) {
+        console.error('ERROR:', err);
+      } finally {
+        // Close the database when finished.
+        database.close();
+      }
+    });
   }
-  updateUsingPartitionedDml().catch(console.error);
-  // [END spanner_dml_partitioned_update]
+  updateUsingDmlWithStruct().catch(console.error);
+  // [END spanner_dml_structs]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

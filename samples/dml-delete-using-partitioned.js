@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Inserts multiple records using DML.
-//  usage: node writeUsingDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Deletes multilple records using DML.
+//  usage: node deleteUsingPartitionedDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -23,7 +23,7 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_dml_getting_started_insert]
+  // [START spanner_dml_partitioned_delete]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
@@ -39,35 +39,28 @@ function main(
     projectId: projectId,
   });
 
-  async function writeUsingDml() {
+  async function deleteUsingPartitionedDml() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
 
-    database.runTransaction(async (err, transaction) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      try {
-        const [rowCount] = await transaction.runUpdate({
-          sql: `INSERT Singers (SingerId, FirstName, LastName) VALUES
-            (12, 'Melissa', 'Garcia'),
-            (13, 'Russell', 'Morales'),
-            (14, 'Jacqueline', 'Long'),
-            (15, 'Dylan', 'Shaw')`,
-        });
-        console.log(`${rowCount} records inserted.`);
-        await transaction.commit();
-      } catch (err) {
-        console.error('ERROR:', err);
-      } finally {
-        // Close the database when finished.
-        database.close();
-      }
-    });
+    try {
+      const [rowCount] = await database.runPartitionedUpdate({
+        sql: 'DELETE FROM Singers WHERE SingerId > 10',
+      });
+      console.log(`Successfully deleted ${rowCount} records.`);
+    } catch (err) {
+      console.error('ERROR:', err);
+    } finally {
+      // Close the database when finished.
+      database.close();
+    }
   }
-  writeUsingDml().catch(console.error);
-  // [END spanner_dml_getting_started_insert]
+  deleteUsingPartitionedDml().catch(console.error);
+  // [END spanner_dml_partitioned_delete]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

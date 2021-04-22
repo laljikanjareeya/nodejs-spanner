@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Inserts and reads record using DML.
-//  usage: node writeAndReadUsingDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Query record inserted using DML with a query parameter.
+//  usage: node queryDataWithParameter <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -23,7 +23,7 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_dml_write_then_read]
+  // [START spanner_query_with_parameter]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
@@ -39,40 +39,41 @@ function main(
     projectId: projectId,
   });
 
-  async function writeAndReadUsingDml() {
+  async function queryDataWithParameter() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
 
-    database.runTransaction(async (err, transaction) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      try {
-        await transaction.runUpdate({
-          sql: `INSERT Singers (SingerId, FirstName, LastName)
-                  VALUES (11, 'Timothy', 'Campbell')`,
-        });
+    const query = {
+      sql: `SELECT SingerId, FirstName, LastName
+              FROM Singers WHERE LastName = @lastName`,
+      params: {
+        lastName: 'Garcia',
+      },
+    };
 
-        const [rows] = await transaction.run({
-          sql: 'SELECT FirstName, LastName FROM Singers',
-        });
-        rows.forEach(row => {
-          const json = row.toJSON();
-          console.log(`${json.FirstName} ${json.LastName}`);
-        });
+    // Queries rows from the Albums table
+    try {
+      const [rows] = await database.run(query);
 
-        await transaction.commit();
-      } catch (err) {
-        console.error('ERROR:', err);
-      } finally {
-        // Close the database when finished.
-        database.close();
-      }
-    });
+      rows.forEach(row => {
+        const json = row.toJSON();
+        console.log(
+          `SingerId: ${json.SingerId}, FirstName: ${json.FirstName}, LastName: ${json.LastName}`
+        );
+      });
+    } catch (err) {
+      console.error('ERROR:', err);
+    } finally {
+      // Close the database when finished.
+      database.close();
+    }
   }
-  writeAndReadUsingDml().catch(console.error);
-  // [END spanner_dml_write_then_read]
+  queryDataWithParameter().catch(console.error);
+  // [END spanner_query_with_parameter]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

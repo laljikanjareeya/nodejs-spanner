@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Deletes multilple records using DML.
-//  usage: node deleteUsingPartitionedDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Deletes record using DML
+//  usage: node deleteUsingDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -23,7 +23,7 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_dml_partitioned_delete]
+  // [START spanner_dml_standard_delete]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
@@ -39,24 +39,36 @@ function main(
     projectId: projectId,
   });
 
-  async function deleteUsingPartitionedDml() {
+  async function deleteUsingDml() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
 
-    try {
-      const [rowCount] = await database.runPartitionedUpdate({
-        sql: 'DELETE FROM Singers WHERE SingerId > 10',
-      });
-      console.log(`Successfully deleted ${rowCount} records.`);
-    } catch (err) {
-      console.error('ERROR:', err);
-    } finally {
-      // Close the database when finished.
-      database.close();
-    }
+    database.runTransaction(async (err, transaction) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      try {
+        const [rowCount] = await transaction.runUpdate({
+          sql: "DELETE FROM Singers WHERE FirstName = 'Alice'",
+        });
+
+        console.log(`Successfully deleted ${rowCount} record.`);
+        await transaction.commit();
+      } catch (err) {
+        console.error('ERROR:', err);
+      } finally {
+        // Close the database when finished.
+        database.close();
+      }
+    });
   }
-  deleteUsingPartitionedDml().catch(console.error);
-  // [END spanner_dml_partitioned_delete]
+  deleteUsingDml().catch(console.error);
+  // [END spanner_dml_standard_delete]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

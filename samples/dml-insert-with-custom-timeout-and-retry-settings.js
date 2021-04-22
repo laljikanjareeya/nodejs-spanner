@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Insert and Update records using Batch DML.
-//  usage: node updateUsingBatchDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Insert records using custom timeout and retry settings.
+//  usage: node insertWithCustomTimeoutAndRetrySettings <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -23,7 +23,7 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_dml_batch_update]
+  // [START spanner_set_custom_timeout_and_retry]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
@@ -39,40 +39,46 @@ function main(
     projectId: projectId,
   });
 
-  async function updateUsingBatchDml() {
+  async function insertWithCustomTimeoutAndRetrySettings() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
+    const table = database.table('Singers');
 
-    const insert = {
-      sql: `INSERT INTO Albums (SingerId, AlbumId, AlbumTitle, MarketingBudget)
-          VALUES (1, 3, "Test Album Title", 10000)`,
+    const DEADLINE_EXCEEDED_STATUS_CODE = 4;
+    const UNAVAILABLE_STATUS_CODE = 14;
+    const retryAndTimeoutSettings = {
+      retry: {
+        retryCodes: [DEADLINE_EXCEEDED_STATUS_CODE, UNAVAILABLE_STATUS_CODE],
+        backoffSettings: {
+          // Configure retry delay settings.
+          initialRetryDelayMillis: 500,
+          maxRetryDelayMillis: 64000,
+          retryDelayMultiplier: 1.5,
+          // Configure RPC and total timeout settings.
+          initialRpcTimeoutMillis: 60000,
+          rpcTimeoutMultiplier: 1.0,
+          maxRpcTimeoutMillis: 60000,
+          totalTimeoutMillis: 60000,
+        },
+      },
     };
 
-    const update = {
-      sql: `UPDATE Albums SET MarketingBudget = MarketingBudget * 2
-          WHERE SingerId = 1 and AlbumId = 3`,
+    const row = {
+      SingerId: 16,
+      FirstName: 'Martha',
+      LastName: 'Waller',
     };
 
-    const dmlStatements = [insert, update];
+    await table.insert(row, retryAndTimeoutSettings);
 
-    try {
-      await database.runTransactionAsync(async transaction => {
-        const [rowCounts] = await transaction.batchUpdate(dmlStatements);
-        await transaction.commit();
-        console.log(
-          `Successfully executed ${rowCounts.length} SQL statements using Batch DML.`
-        );
-      });
-    } catch (err) {
-      console.error('ERROR:', err);
-      throw err;
-    } finally {
-      // Close the database when finished.
-      database.close();
-    }
+    console.log('record inserted.');
   }
-  updateUsingBatchDml().catch(console.error);
-  // [END spanner_dml_batch_update]
+  insertWithCustomTimeoutAndRetrySettings().catch(console.error);
+  // [END spanner_set_custom_timeout_and_retry]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

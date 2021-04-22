@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Insert records using custom timeout and retry settings.
-//  usage: node insertWithCustomTimeoutAndRetrySettings <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Updates record using DML.
+//  usage: node updateUsingDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -23,7 +23,7 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_set_custom_timeout_and_retry]
+  // [START spanner_dml_standard_update]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
@@ -39,42 +39,37 @@ function main(
     projectId: projectId,
   });
 
-  async function insertWithCustomTimeoutAndRetrySettings() {
+  async function updateUsingDml() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
-    const table = database.table('Singers');
 
-    const DEADLINE_EXCEEDED_STATUS_CODE = 4;
-    const UNAVAILABLE_STATUS_CODE = 14;
-    const retryAndTimeoutSettings = {
-      retry: {
-        retryCodes: [DEADLINE_EXCEEDED_STATUS_CODE, UNAVAILABLE_STATUS_CODE],
-        backoffSettings: {
-          // Configure retry delay settings.
-          initialRetryDelayMillis: 500,
-          maxRetryDelayMillis: 64000,
-          retryDelayMultiplier: 1.5,
-          // Configure RPC and total timeout settings.
-          initialRpcTimeoutMillis: 60000,
-          rpcTimeoutMultiplier: 1.0,
-          maxRpcTimeoutMillis: 60000,
-          totalTimeoutMillis: 60000,
-        },
-      },
-    };
+    database.runTransaction(async (err, transaction) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      try {
+        const [rowCount] = await transaction.runUpdate({
+          sql: `UPDATE Albums SET MarketingBudget = MarketingBudget * 2
+              WHERE SingerId = 1 and AlbumId = 1`,
+        });
 
-    const row = {
-      SingerId: 16,
-      FirstName: 'Martha',
-      LastName: 'Waller',
-    };
-
-    await table.insert(row, retryAndTimeoutSettings);
-
-    console.log('record inserted.');
+        console.log(`Successfully updated ${rowCount} record.`);
+        await transaction.commit();
+      } catch (err) {
+        console.error('ERROR:', err);
+      } finally {
+        // Close the database when finished.
+        database.close();
+      }
+    });
   }
-  insertWithCustomTimeoutAndRetrySettings().catch(console.error);
-  // [END spanner_set_custom_timeout_and_retry]
+  updateUsingDml().catch(console.error);
+  // [END spanner_dml_standard_update]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

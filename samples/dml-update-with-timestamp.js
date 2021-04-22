@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Deletes record using DML
-//  usage: node deleteUsingDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Updates records with timestamp using DML
+//  usage: node updateUsingDmlWithTimestamp <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -23,7 +23,7 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_dml_standard_delete]
+  // [START spanner_dml_standard_update_with_timestamp]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
@@ -39,7 +39,7 @@ function main(
     projectId: projectId,
   });
 
-  async function deleteUsingDml() {
+  async function updateUsingDmlWithTimestamp() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
@@ -51,10 +51,12 @@ function main(
       }
       try {
         const [rowCount] = await transaction.runUpdate({
-          sql: "DELETE FROM Singers WHERE FirstName = 'Alice'",
+          sql: `UPDATE Albums
+              SET LastUpdateTime = PENDING_COMMIT_TIMESTAMP()
+              WHERE SingerId = 1`,
         });
 
-        console.log(`Successfully deleted ${rowCount} record.`);
+        console.log(`Successfully updated ${rowCount} records.`);
         await transaction.commit();
       } catch (err) {
         console.error('ERROR:', err);
@@ -64,7 +66,11 @@ function main(
       }
     });
   }
-  deleteUsingDml().catch(console.error);
-  // [END spanner_dml_standard_delete]
+  updateUsingDmlWithTimestamp().catch(console.error);
+  // [END spanner_dml_standard_update_with_timestamp]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

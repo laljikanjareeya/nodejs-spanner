@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Query record inserted using DML with a query parameter.
-//  usage: node queryDataWithParameter <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Inserts record using DML into an example Cloud Spanner table.
+//  usage: node insertUsingDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -23,7 +23,7 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_query_with_parameter]
+  // [START spanner_dml_standard_insert]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
@@ -39,37 +39,44 @@ function main(
     projectId: projectId,
   });
 
-  async function queryDataWithParameter() {
+  async function insertUsingDml() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
 
-    const query = {
-      sql: `SELECT SingerId, FirstName, LastName
-              FROM Singers WHERE LastName = @lastName`,
-      params: {
-        lastName: 'Garcia',
-      },
-    };
+    database.runTransaction(async (err, transaction) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      try {
+        const [rowCount] = await transaction.runUpdate({
+          sql:
+            'INSERT Singers (SingerId, FirstName, LastName) VALUES (10, @firstName, @lastName)',
+          params: {
+            firstName: 'Virginia',
+            lastName: 'Watson',
+          },
+        });
 
-    // Queries rows from the Albums table
-    try {
-      const [rows] = await database.run(query);
-
-      rows.forEach(row => {
-        const json = row.toJSON();
         console.log(
-          `SingerId: ${json.SingerId}, FirstName: ${json.FirstName}, LastName: ${json.LastName}`
+          `Successfully inserted ${rowCount} record into the Singers table.`
         );
-      });
-    } catch (err) {
-      console.error('ERROR:', err);
-    } finally {
-      // Close the database when finished.
-      database.close();
-    }
+
+        await transaction.commit();
+      } catch (err) {
+        console.error('ERROR:', err);
+      } finally {
+        // Close the database when finished.
+        database.close();
+      }
+    });
   }
-  queryDataWithParameter().catch(console.error);
-  // [END spanner_query_with_parameter]
+  insertUsingDml().catch(console.error);
+  // [END spanner_dml_standard_insert]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

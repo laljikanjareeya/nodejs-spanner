@@ -136,4 +136,8 @@ function main(
   writeWithTransactionUsingDml().catch(console.error);
   // [END spanner_dml_getting_started_update]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

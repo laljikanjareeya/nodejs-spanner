@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Updates record using DML.
-//  usage: node updateUsingDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Updates multiple records using DML.
+//  usage: node updateUsingPartitionedDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -23,7 +23,7 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_dml_standard_update]
+  // [START spanner_dml_partitioned_update]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
@@ -39,33 +39,28 @@ function main(
     projectId: projectId,
   });
 
-  async function updateUsingDml() {
+  async function updateUsingPartitionedDml() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
 
-    database.runTransaction(async (err, transaction) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      try {
-        const [rowCount] = await transaction.runUpdate({
-          sql: `UPDATE Albums SET MarketingBudget = MarketingBudget * 2
-              WHERE SingerId = 1 and AlbumId = 1`,
-        });
-
-        console.log(`Successfully updated ${rowCount} record.`);
-        await transaction.commit();
-      } catch (err) {
-        console.error('ERROR:', err);
-      } finally {
-        // Close the database when finished.
-        database.close();
-      }
-    });
+    try {
+      const [rowCount] = await database.runPartitionedUpdate({
+        sql: 'UPDATE Albums SET MarketingBudget = 100000 WHERE SingerId > 1',
+      });
+      console.log(`Successfully updated ${rowCount} records.`);
+    } catch (err) {
+      console.error('ERROR:', err);
+    } finally {
+      // Close the database when finished.
+      database.close();
+    }
   }
-  updateUsingDml().catch(console.error);
-  // [END spanner_dml_standard_update]
+  updateUsingPartitionedDml().catch(console.error);
+  // [END spanner_dml_partitioned_update]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

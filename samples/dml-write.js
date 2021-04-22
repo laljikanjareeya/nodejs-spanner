@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Updates records with timestamp using DML
-//  usage: node updateUsingDmlWithTimestamp <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Inserts multiple records using DML.
+//  usage: node writeUsingDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -23,7 +23,7 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_dml_standard_update_with_timestamp]
+  // [START spanner_dml_getting_started_insert]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
@@ -39,7 +39,7 @@ function main(
     projectId: projectId,
   });
 
-  async function updateUsingDmlWithTimestamp() {
+  async function writeUsingDml() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
@@ -51,12 +51,13 @@ function main(
       }
       try {
         const [rowCount] = await transaction.runUpdate({
-          sql: `UPDATE Albums
-              SET LastUpdateTime = PENDING_COMMIT_TIMESTAMP()
-              WHERE SingerId = 1`,
+          sql: `INSERT Singers (SingerId, FirstName, LastName) VALUES
+            (12, 'Melissa', 'Garcia'),
+            (13, 'Russell', 'Morales'),
+            (14, 'Jacqueline', 'Long'),
+            (15, 'Dylan', 'Shaw')`,
         });
-
-        console.log(`Successfully updated ${rowCount} records.`);
+        console.log(`${rowCount} records inserted.`);
         await transaction.commit();
       } catch (err) {
         console.error('ERROR:', err);
@@ -66,7 +67,11 @@ function main(
       }
     });
   }
-  updateUsingDmlWithTimestamp().catch(console.error);
-  // [END spanner_dml_standard_update_with_timestamp]
+  writeUsingDml().catch(console.error);
+  // [END spanner_dml_getting_started_insert]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

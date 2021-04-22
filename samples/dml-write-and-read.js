@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Inserts record using DML into an example Cloud Spanner table.
-//  usage: node insertUsingDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Inserts and reads record using DML.
+//  usage: node writeAndReadUsingDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -23,7 +23,7 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_dml_standard_insert]
+  // [START spanner_dml_write_then_read]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
@@ -39,7 +39,7 @@ function main(
     projectId: projectId,
   });
 
-  async function insertUsingDml() {
+  async function writeAndReadUsingDml() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
@@ -50,18 +50,18 @@ function main(
         return;
       }
       try {
-        const [rowCount] = await transaction.runUpdate({
-          sql:
-            'INSERT Singers (SingerId, FirstName, LastName) VALUES (10, @firstName, @lastName)',
-          params: {
-            firstName: 'Virginia',
-            lastName: 'Watson',
-          },
+        await transaction.runUpdate({
+          sql: `INSERT Singers (SingerId, FirstName, LastName)
+                  VALUES (11, 'Timothy', 'Campbell')`,
         });
 
-        console.log(
-          `Successfully inserted ${rowCount} record into the Singers table.`
-        );
+        const [rows] = await transaction.run({
+          sql: 'SELECT FirstName, LastName FROM Singers',
+        });
+        rows.forEach(row => {
+          const json = row.toJSON();
+          console.log(`${json.FirstName} ${json.LastName}`);
+        });
 
         await transaction.commit();
       } catch (err) {
@@ -72,7 +72,11 @@ function main(
       }
     });
   }
-  insertUsingDml().catch(console.error);
-  // [END spanner_dml_standard_insert]
+  writeAndReadUsingDml().catch(console.error);
+  // [END spanner_dml_write_then_read]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

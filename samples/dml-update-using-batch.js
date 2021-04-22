@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Updates record using DML and a struct value.
-//  usage: node updateUsingDmlWithStruct <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Insert and Update records using Batch DML.
+//  usage: node updateUsingBatchDml <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -23,7 +23,7 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_dml_structs]
+  // [START spanner_dml_batch_update]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
@@ -39,41 +39,44 @@ function main(
     projectId: projectId,
   });
 
-  async function updateUsingDmlWithStruct() {
+  async function updateUsingBatchDml() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
 
-    const nameStruct = Spanner.struct({
-      FirstName: 'Timothy',
-      LastName: 'Campbell',
-    });
+    const insert = {
+      sql: `INSERT INTO Albums (SingerId, AlbumId, AlbumTitle, MarketingBudget)
+          VALUES (1, 3, "Test Album Title", 10000)`,
+    };
 
-    database.runTransaction(async (err, transaction) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      try {
-        const [rowCount] = await transaction.runUpdate({
-          sql: `UPDATE Singers SET LastName = 'Grant'
-            WHERE STRUCT<FirstName STRING, LastName STRING>(FirstName, LastName) = @name`,
-          params: {
-            name: nameStruct,
-          },
-        });
+    const update = {
+      sql: `UPDATE Albums SET MarketingBudget = MarketingBudget * 2
+          WHERE SingerId = 1 and AlbumId = 3`,
+    };
 
-        console.log(`Successfully updated ${rowCount} record.`);
+    const dmlStatements = [insert, update];
+
+    try {
+      await database.runTransactionAsync(async transaction => {
+        const [rowCounts] = await transaction.batchUpdate(dmlStatements);
         await transaction.commit();
-      } catch (err) {
-        console.error('ERROR:', err);
-      } finally {
-        // Close the database when finished.
-        database.close();
-      }
-    });
+        console.log(
+          `Successfully executed ${rowCounts.length} SQL statements using Batch DML.`
+        );
+      });
+    } catch (err) {
+      console.error('ERROR:', err);
+      throw err;
+    } finally {
+      // Close the database when finished.
+      database.close();
+    }
   }
-  updateUsingDmlWithStruct().catch(console.error);
-  // [END spanner_dml_structs]
+  updateUsingBatchDml().catch(console.error);
+  // [END spanner_dml_batch_update]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));
