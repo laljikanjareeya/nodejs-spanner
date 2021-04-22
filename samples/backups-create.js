@@ -91,4 +91,8 @@ function main(
   createBackup().catch(console.error);
   // [END spanner_create_backup]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

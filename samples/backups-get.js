@@ -125,4 +125,8 @@ function main(
   getBackups().catch(console.error);
   // [END spanner_list_backups]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

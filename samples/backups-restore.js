@@ -72,4 +72,8 @@ function main(
   restoreBackup().catch(console.error);
   // [END spanner_restore_backup]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

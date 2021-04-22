@@ -80,4 +80,8 @@ function main(
   restoreBackupWithEncryptionKey().catch(console.error);
   // [END spanner_restore_backup_with_encryption_key]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

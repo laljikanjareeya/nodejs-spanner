@@ -63,4 +63,8 @@ function main(instanceId = 'my-instance', projectId = 'my-project-id') {
   getDatabaseOperations().catch(console.error);
   // [END spanner_list_database_operations]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));

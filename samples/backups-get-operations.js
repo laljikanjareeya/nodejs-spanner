@@ -69,4 +69,8 @@ function main(
   getBackupOperations().catch(console.error);
   // [END spanner_list_backup_operations]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));
