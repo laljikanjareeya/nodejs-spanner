@@ -13,26 +13,22 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Executes a partition
-//  usage: node executePartition <INSTANCE_ID> <DATABASE_ID> <IDENTIFIER> <PARTITION>
+//  title: Creates query partitions and executes them
+//  usage: node createAndExecuteQueryPartitions <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
 function main(
   instanceId = 'my-instance',
   databaseId = 'my-database',
-  identifier = 'identifier',
-  partition = 'partition',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_batch_execute_partitions]
+  // [START spanner_batch_client]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
   // const instanceId = 'my-instance';
   // const databaseId = 'my-database';
-  // const identifier = {};
-  // const partition = {};
   // const projectId = 'my-project-id';
 
   // Imports the Google Cloud Spanner client library
@@ -43,18 +39,43 @@ function main(
     projectId: projectId,
   });
 
-  async function executePartition() {
+  async function createAndExecuteQueryPartitions() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
-    const transaction = database.batchTransaction(identifier);
+    const [transaction] = await database.createBatchTransaction();
 
-    const [rows] = await transaction.execute(partition);
-    console.log(
-      `Successfully received ${rows.length} from executed partition.`
-    );
+    const query = 'SELECT * FROM Singers';
+
+    const [partitions] = await transaction.createQueryPartitions(query);
+    console.log(`Successfully created ${partitions.length} query partitions.`);
+
+    let row_count = 0;
+    const promises = [];
+    partitions.forEach(partition => {
+      promises.push(
+        transaction.execute(partition).then(results => {
+          const rows = results[0].map(row => row.toJSON());
+          row_count += rows.length;
+        })
+      );
+    });
+    Promise.all(promises)
+      .then(() => {
+        console.log(
+          `Successfully received ${row_count} from executed partitions.`
+        );
+        transaction.close();
+      })
+      .then(() => {
+        database.close();
+      });
   }
-  executePartition().catch(console.error);
-  // [END spanner_batch_execute_partitions]
+  createAndExecuteQueryPartitions().catch(console.error);
+  // [END spanner_batch_client]
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));
