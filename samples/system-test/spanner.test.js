@@ -263,7 +263,7 @@ describe('Spanner', () => {
   // create_database
   it('should create an example database', async () => {
     const output = execSync(
-      `${schemaCmd} createDatabase "${INSTANCE_ID}" "${DATABASE_ID}" ${PROJECT_ID}`
+      `node create-database "${INSTANCE_ID}" "${DATABASE_ID}" ${PROJECT_ID}`
     );
     assert.match(
       output,
@@ -360,7 +360,7 @@ describe('Spanner', () => {
   // add_column
   it('should add a column to a table', async () => {
     const output = execSync(
-      `${schemaCmd} addColumn ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node add-column ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Waiting for operation to complete\.\.\./);
     assert.match(output, /Added the MarketingBudget column\./);
@@ -395,7 +395,7 @@ describe('Spanner', () => {
   // query_data_with_new_column
   it('should query an example table with an additional column and return matching rows', async () => {
     const output = execSync(
-      `${schemaCmd} queryNewColumn ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node query-data-with-new-column ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /SingerId: 1, AlbumId: 1, MarketingBudget: 100000/);
     assert.match(output, /SingerId: 2, AlbumId: 2, MarketingBudget: 500000/);
@@ -522,7 +522,7 @@ describe('Spanner', () => {
       /Successfully executed read-write transaction to transfer 200000 from Album 2 to Album 1./
     );
     output = execSync(
-      `${schemaCmd} queryNewColumn ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node query-data-with-new-column ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /SingerId: 1, AlbumId: 1, MarketingBudget: 300000/);
     assert.match(output, /SingerId: 2, AlbumId: 2, MarketingBudget: 300000/);

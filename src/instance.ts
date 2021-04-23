@@ -782,7 +782,7 @@ class Instance extends common.GrpcServiceObject {
    *     // Database created successfully.
    *   });
    *
-   * @example <caption>include:samples/schema.js</caption>
+   * @example <caption>include:samples/create-database.js</caption>
    * region_tag:spanner_create_database
    * Full example:
    */
