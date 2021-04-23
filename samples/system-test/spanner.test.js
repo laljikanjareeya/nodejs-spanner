@@ -31,7 +31,6 @@ const queryOptionsCmd = 'node queryoptions.js';
 const rpcPriorityCommand = 'node rpc-priority.js';
 const transactionCmd = 'node transaction.js';
 const timestampCmd = 'node timestamp.js';
-const structCmd = 'node struct.js';
 const dmlCmd = 'node dml.js';
 const datatypesCmd = 'node datatypes.js';
 const backupsCmd = 'node backups.js';
@@ -626,7 +625,7 @@ describe('Spanner', () => {
   // write_data_for_struct_queries
   it('should insert rows into an example table for use with struct query examples', async () => {
     const output = execSync(
-      `${structCmd} writeDataForStructQueries ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node write-data-for-struct-queries ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Inserted data\./);
   });
@@ -634,7 +633,7 @@ describe('Spanner', () => {
   // query_with_struct_param
   it('should query an example table with a STRUCT param', async () => {
     const output = execSync(
-      `${structCmd} queryDataWithStruct ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node query-data-with-struct ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /SingerId: 6/);
   });
@@ -642,7 +641,7 @@ describe('Spanner', () => {
   // query_with_array_of_struct_param
   it('should query an example table with an array of STRUCT param', async () => {
     const output = execSync(
-      `${structCmd} queryWithArrayOfStruct ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node query-with-array-of-struct ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /SingerId: 6\nSingerId: 7\nSingerId: 8/);
   });
@@ -650,7 +649,7 @@ describe('Spanner', () => {
   // query_with_struct_field_param
   it('should query an example table with a STRUCT field param', async () => {
     const output = execSync(
-      `${structCmd} queryStructField ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node query-struct-field ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /SingerId: 6/);
   });
@@ -658,7 +657,7 @@ describe('Spanner', () => {
   // query_with_nested_struct_param
   it('should query an example table with a nested STRUCT param', async () => {
     const output = execSync(
-      `${structCmd} queryNestedStructField ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node query-nested-struct-field ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(
       output,
