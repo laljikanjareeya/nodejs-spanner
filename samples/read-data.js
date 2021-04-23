@@ -73,5 +73,8 @@ function main(
   readData().catch(console.error);
   // [END spanner_read_data]
 }
-
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2));
