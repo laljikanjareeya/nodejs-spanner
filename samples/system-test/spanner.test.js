@@ -30,7 +30,6 @@ const indexingCmd = 'node indexing.js';
 const queryOptionsCmd = 'node queryoptions.js';
 const rpcPriorityCommand = 'node rpc-priority.js';
 const transactionCmd = 'node transaction.js';
-const timestampCmd = 'node timestamp.js';
 const structCmd = 'node struct.js';
 const dmlCmd = 'node dml.js';
 const datatypesCmd = 'node datatypes.js';
@@ -558,7 +557,7 @@ describe('Spanner', () => {
   // add_timestamp_column
   it('should add a timestamp column to a table', async () => {
     const output = execSync(
-      `${timestampCmd} addTimestampColumn ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node add-timestamp-column ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Waiting for operation to complete\.\.\./);
     assert.match(
@@ -570,7 +569,7 @@ describe('Spanner', () => {
   // update_data_with_timestamp_column
   it('should update existing rows in an example table with commit timestamp column', async () => {
     const output = execSync(
-      `${timestampCmd} updateWithTimestamp ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node update-with-timestamp ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Updated data\./);
   });
@@ -578,7 +577,7 @@ describe('Spanner', () => {
   // query_data_with_timestamp_column
   it('should query an example table with an additional timestamp column and return matching rows', async () => {
     const output = execSync(
-      `${timestampCmd} queryWithTimestamp ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node query-with-timestamp ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(
       output,
@@ -593,7 +592,7 @@ describe('Spanner', () => {
   // create_table_with_timestamp_column
   it('should create an example table with a timestamp column', async () => {
     const output = execSync(
-      `${timestampCmd} createTableWithTimestamp "${INSTANCE_ID}" "${DATABASE_ID}" ${PROJECT_ID}`
+      `node create-table-with-timestamp "${INSTANCE_ID}" "${DATABASE_ID}" ${PROJECT_ID}`
     );
 
     assert.match(
@@ -609,7 +608,7 @@ describe('Spanner', () => {
   // insert_data_with_timestamp
   it('should insert rows into an example table with timestamp column', async () => {
     const output = execSync(
-      `${timestampCmd} insertWithTimestamp ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node insert-with-timestamp ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Inserted data\./);
   });
@@ -617,7 +616,7 @@ describe('Spanner', () => {
   // query_new_table_with_timestamp
   it('should query an example table with a non-null timestamp column and return matching rows', async () => {
     const output = execSync(
-      `${timestampCmd} queryTableWithTimestamp ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node query-table-with-timestamp ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /SingerId: 1, VenueId: 4, EventDate:/);
     assert.match(output, /Revenue: 15000, LastUpdateTime:/);
