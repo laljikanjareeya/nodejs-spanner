@@ -27,7 +27,6 @@ const batchCmd = 'node batch.js';
 const crudCmd = 'node crud.js';
 const schemaCmd = 'node schema.js';
 const indexingCmd = 'node indexing.js';
-const queryOptionsCmd = 'node queryoptions.js';
 const rpcPriorityCommand = 'node rpc-priority.js';
 const timestampCmd = 'node timestamp.js';
 const structCmd = 'node struct.js';
@@ -470,7 +469,7 @@ describe('Spanner', () => {
   // spanner_create_client_with_query_options
   it('should use query options from a database reference', async () => {
     const output = execSync(
-      `${queryOptionsCmd} databaseWithQueryOptions ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node database-with-query-options ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(
       output,
@@ -481,7 +480,7 @@ describe('Spanner', () => {
   // spanner_query_with_query_options
   it('should use query options on request', async () => {
     const output = execSync(
-      `${queryOptionsCmd} queryWithQueryOptions ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node query-with-query-options ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(
       output,
