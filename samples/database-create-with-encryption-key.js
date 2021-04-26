@@ -12,60 +12,69 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// sample-metadata:
+//  title: Create Database with Encryption Key
+//  usage: node createDatabaseWithEncryptionKey <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+
 'use strict';
 
-async function createDatabaseWithEncryptionKey(
-  instanceId,
-  databaseId,
-  projectId,
-  keyName
+function main(
+  instanceId = 'my-instance',
+  databaseId = 'my-database',
+  projectId = 'my-project-id',
+  keyName = 'projects/my-project-id/my-region/keyRings/my-key-ring/cryptoKeys/my-key'
 ) {
   // [START spanner_create_database_with_encryption_key]
-  // Imports the Google Cloud client library
-  const {Spanner} = require('@google-cloud/spanner');
-
   /**
-   * TODO(developer): Uncomment the following lines before running the sample.
+   * TODO(developer): Uncomment these variables before running the sample.
    */
-  // const projectId = 'my-project-id';
   // const instanceId = 'my-instance';
   // const databaseId = 'my-database';
+  // const projectId = 'my-project-id';
   // const keyName =
   //   'projects/my-project-id/my-region/keyRings/my-key-ring/cryptoKeys/my-key';
 
-  // Creates a client
+  // Imports the Google Cloud client library and precise date library
+  const {Spanner} = require('@google-cloud/spanner');
+
+  // Instantiates a client
   const spanner = new Spanner({
     projectId: projectId,
   });
 
-  // Gets a reference to a Cloud Spanner instance
-  const instance = spanner.instance(instanceId);
+  async function createDatabaseWithEncryptionKey() {
+    // Gets a reference to a Cloud Spanner instance and database
+    const instance = spanner.instance(instanceId);
 
-  const request = {
-    encryptionConfig: {
-      kmsKeyName: keyName,
-    },
-  };
+    const request = {
+      encryptionConfig: {
+        kmsKeyName: keyName,
+      },
+    };
 
-  // Creates a database
-  const [database, operation] = await instance.createDatabase(
-    databaseId,
-    request
-  );
+    // Creates a database
+    const [database, operation] = await instance.createDatabase(
+      databaseId,
+      request
+    );
 
-  console.log(`Waiting for operation on ${database.id} to complete...`);
-  await operation.promise();
+    console.log(`Waiting for operation on ${database.id} to complete...`);
+    await operation.promise();
 
-  console.log(`Created database ${databaseId} on instance ${instanceId}.`);
+    console.log(`Created database ${databaseId} on instance ${instanceId}.`);
 
-  // Get encryption key
-  const [data] = await database.get();
+    // Get encryption key
+    const [data] = await database.get();
 
-  console.log(
-    `Database encrypted with key ${data.metadata.encryptionConfig.kmsKeyName}.`
-  );
+    console.log(
+      `Database encrypted with key ${data.metadata.encryptionConfig.kmsKeyName}.`
+    );
+  }
+  createDatabaseWithEncryptionKey().catch(console.error);
   // [END spanner_create_database_with_encryption_key]
 }
-
-module.exports.createDatabaseWithEncryptionKey =
-  createDatabaseWithEncryptionKey;
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
+main(...process.argv.slice(2));
