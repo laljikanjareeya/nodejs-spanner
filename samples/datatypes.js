@@ -609,7 +609,7 @@ async function queryWithTimestamp(instanceId, databaseId, projectId) {
 
 const {addNumericColumn} = require('./numeric-add-column');
 const {updateWithNumericData} = require('./numeric-update-data');
-const {queryWithNumericParameter} = require('./numeric-query-parameter');
+const {queryWithNumericParameter} = require('./query-with-numeric');
 
 require('yargs')
   .demand(1)

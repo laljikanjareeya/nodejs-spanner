@@ -1,4 +1,4 @@
-// Copyright 2020 Google LLC
+// Copyright 2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Update Data with numeric Column
-//  usage: node updateWithNumericData <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Query With Numeric parameter
+//  usage: node queryWithNumericParameter <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -23,7 +23,7 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_update_data_with_numeric_column]
+  // [START spanner_query_with_numeric_parameter]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
@@ -39,36 +39,36 @@ function main(
     projectId: projectId,
   });
 
-  async function updateWithNumericData() {
+  async function queryWithNumericParameter() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
 
-    // Instantiate Spanner table objects.
-    const venuesTable = database.table('Venues');
+    const fieldType = {
+      type: 'numeric',
+    };
 
-    const data = [
-      {
-        VenueId: '4',
-        Revenue: Spanner.numeric('35000'),
-        LastUpdateTime: 'spanner.commit_timestamp()',
-      },
-      {
-        VenueId: '19',
-        Revenue: Spanner.numeric('104500'),
-        LastUpdateTime: 'spanner.commit_timestamp()',
-      },
-      {
-        VenueId: '42',
-        Revenue: Spanner.numeric('99999999999999999999999999999.99'),
-        LastUpdateTime: 'spanner.commit_timestamp()',
-      },
-    ];
+    const exampleNumeric = Spanner.numeric('100000');
 
-    // Updates rows in the Venues table.
+    const query = {
+      sql: `SELECT VenueId, VenueName, Revenue FROM Venues
+                    WHERE Revenue < @revenue`,
+      params: {
+        revenue: exampleNumeric,
+      },
+      types: {
+        revenue: fieldType,
+      },
+    };
+
+    // Queries rows from the Venues table.
     try {
-      await venuesTable.update(data);
-      console.log('Updated data.');
+      const [rows] = await database.run(query);
+
+      rows.forEach(row => {
+        const json = row.toJSON();
+        console.log(`VenueId: ${json.VenueId}, Revenue: ${json.Revenue.value}`);
+      });
     } catch (err) {
       console.error('ERROR:', err);
     } finally {
@@ -76,8 +76,8 @@ function main(
       database.close();
     }
   }
-  updateWithNumericData().catch(console.error);
-  // [END spanner_update_data_with_numeric_column]
+  queryWithNumericParameter().catch(console.error);
+  // [END spanner_query_with_numeric_parameter]
 }
 process.on('unhandledRejection', err => {
   console.error(err.message);
