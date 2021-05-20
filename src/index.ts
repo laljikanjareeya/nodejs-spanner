@@ -217,7 +217,7 @@ class Spanner extends GrpcService {
         }
       }
     }
-    options = (Object.assign(
+    options = Object.assign(
       {
         libName: 'gccl',
         libVersion: require('../../package.json').version,
@@ -229,7 +229,7 @@ class Spanner extends GrpcService {
         grpc,
       },
       options || {}
-    ) as {}) as SpannerOptions;
+    ) as {} as SpannerOptions;
     const emulatorHost = Spanner.getSpannerEmulatorHost();
     if (
       emulatorHost &&
@@ -240,7 +240,7 @@ class Spanner extends GrpcService {
       options.port = emulatorHost.port;
       options.sslCreds = grpc.credentials.createInsecure();
     }
-    const config = ({
+    const config = {
       baseUrl:
         options.apiEndpoint ||
         options.servicePath ||
@@ -254,7 +254,7 @@ class Spanner extends GrpcService {
       },
       scopes: ['https://www.googleapis.com/auth/cloud-platform'],
       packageJson: require('../../package.json'),
-    } as {}) as GrpcServiceConfig;
+    } as {} as GrpcServiceConfig;
     super(config, options);
     this.options = options;
     this.auth = new GoogleAuth(this.options);
