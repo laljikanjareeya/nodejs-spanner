@@ -46,7 +46,8 @@ import {SessionPool} from './session-pool';
 import {Table} from './table';
 import {PartitionedDml, Snapshot, Transaction} from './transaction';
 import grpcGcpModule = require('grpc-gcp');
-const grpcGcp = grpcGcpModule(grpc);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const grpcGcp = grpcGcpModule(grpc as any);
 import * as v1 from './v1';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
