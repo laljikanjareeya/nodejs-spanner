@@ -27,9 +27,7 @@ const batchCmd = 'node batch.js';
 const crudCmd = 'node crud.js';
 const schemaCmd = 'node schema.js';
 const indexingCmd = 'node indexing.js';
-const queryOptionsCmd = 'node queryoptions.js';
 const rpcPriorityCommand = 'node rpc-priority.js';
-const transactionCmd = 'node transaction.js';
 const timestampCmd = 'node timestamp.js';
 const structCmd = 'node struct.js';
 const dmlCmd = 'node dml.js';
@@ -471,7 +469,7 @@ describe('Spanner', () => {
   // spanner_create_client_with_query_options
   it('should use query options from a database reference', async () => {
     const output = execSync(
-      `${queryOptionsCmd} databaseWithQueryOptions ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node database-with-query-options ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(
       output,
@@ -482,7 +480,7 @@ describe('Spanner', () => {
   // spanner_query_with_query_options
   it('should use query options on request', async () => {
     const output = execSync(
-      `${queryOptionsCmd} queryWithQueryOptions ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node query-with-query-options ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(
       output,
@@ -504,7 +502,7 @@ describe('Spanner', () => {
   // read_only_transaction
   it('should read an example table using transactions', async () => {
     const output = execSync(
-      `${transactionCmd} readOnly ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node transaction-read-only ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk/);
     assert.match(output, /Successfully executed read-only transaction\./);
@@ -513,7 +511,7 @@ describe('Spanner', () => {
   // read_write_transaction
   it('should read from and write to an example table using transactions', async () => {
     let output = execSync(
-      `${transactionCmd} readWrite ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node transaction-read-write ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /The first album's marketing budget: 100000/);
     assert.match(output, /The second album's marketing budget: 500000/);

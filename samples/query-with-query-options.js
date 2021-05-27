@@ -14,8 +14,8 @@
  */
 
 // sample-metadata:
-//  title: Creates database with version retension period
-//  usage: node createDatabaseWithVersionRetentionPeriod <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Execute a query using specific query options
+//  usage: node queryWithQueryOptions <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -24,7 +24,7 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_create_database_with_version_retention_period]
+  // [START spanner_query_with_query_options]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
@@ -40,41 +40,42 @@ function main(
     projectId: projectId,
   });
 
-  async function createDatabaseWithVersionRetentionPeriod() {
+  async function queryWithQueryOptions() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
 
+    const query = {
+      sql: `SELECT AlbumId, AlbumTitle, MarketingBudget
+              FROM Albums
+              ORDER BY AlbumTitle`,
+      queryOptions: {
+        optimizerVersion: 'latest',
+      },
+    };
+
+    // Queries rows from the Albums table
     try {
-      // Create a new database with an extra statement which will alter the
-      // database after creation to set the version retention period.
-      console.log(`Creating database ${instance.formattedName_}.`);
-      const versionRetentionStatement = `
-        ALTER DATABASE \`${databaseId}\`
-        SET OPTIONS (version_retention_period = '1d')`;
-      const [, operation] = await database.create({
-        extraStatements: [versionRetentionStatement],
+      const [rows] = await database.run(query);
+
+      rows.forEach(row => {
+        const json = row.toJSON();
+        const marketingBudget = json.MarketingBudget
+          ? json.MarketingBudget
+          : null; // This value is nullable
+        console.log(
+          `AlbumId: ${json.AlbumId}, AlbumTitle: ${json.AlbumTitle}, MarketingBudget: ${marketingBudget}`
+        );
       });
-
-      console.log(`Waiting for operation on ${database.id} to complete...`);
-      await operation.promise();
-      console.log(`
-          Created database ${databaseId} with version retention period.`);
-
-      const [data] = await database.get();
-      console.log(
-        `Version retention period: ${data.metadata.versionRetentionPeriod}`
-      );
-      const earliestVersionTime = Spanner.timestamp(
-        data.metadata.earliestVersionTime
-      );
-      console.log(`Earliest version time: ${earliestVersionTime}`);
     } catch (err) {
       console.error('ERROR:', err);
+    } finally {
+      // Close the database when finished.
+      database.close();
     }
   }
-  createDatabaseWithVersionRetentionPeriod().catch(console.error);
-  // [END spanner_create_database_with_version_retention_period]
+  queryWithQueryOptions().catch(console.error);
+  // [END spanner_query_with_query_options]
 }
 process.on('unhandledRejection', err => {
   console.error(err.message);

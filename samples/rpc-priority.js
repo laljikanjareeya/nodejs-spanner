@@ -66,6 +66,10 @@ async function main(instanceId, databaseId, projectId) {
   }
   await queryWithRpcPriority(instanceId, databaseId);
 }
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
 main(...process.argv.slice(2)).then(() =>
   console.log('Finished executing sample')
 );

@@ -12,35 +12,53 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// sample-metadata:
+//  title: Quick start
+//  usage: node quickstart <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+
 'use strict';
 
-async function quickstart(
-  projectId = 'YOUR-PROJECT-ID', // Your Google Cloud Platform project ID
-  instanceId = 'my-instance', // Your Cloud Spanner instance ID
-  databaseId = 'my-database' // Your Cloud Spanner database ID
+function main(
+  projectId = 'my-project-id',
+  instanceId = 'my-instance',
+  databaseId = 'my-database'
 ) {
   // [START spanner_quickstart]
-  // Imports the Google Cloud client library
+  /**
+   * TODO(developer): Uncomment these variables before running the sample.
+   */
+  // const instanceId = 'my-instance';
+  // const databaseId = 'my-database';
+  // const projectId = 'my-project-id';
+
+  // Imports the Google Cloud client library and precise date library
   const {Spanner} = require('@google-cloud/spanner');
 
-  // Creates a client
-  const spanner = new Spanner({projectId});
+  // Instantiates a client
+  const spanner = new Spanner({
+    projectId: projectId,
+  });
 
-  // Gets a reference to a Cloud Spanner instance and database
-  const instance = spanner.instance(instanceId);
-  const database = instance.database(databaseId);
+  async function quickstart() {
+    // Gets a reference to a Cloud Spanner instance and database
+    const instance = spanner.instance(instanceId);
+    const database = instance.database(databaseId);
 
-  // The query to execute
-  const query = {
-    sql: 'SELECT 1',
-  };
+    // The query to execute
+    const query = {
+      sql: 'SELECT 1',
+    };
 
-  // Execute a simple SQL statement
-  const [rows] = await database.run(query);
-  console.log(`Query: ${rows.length} found.`);
-  rows.forEach(row => console.log(row));
+    // Execute a simple SQL statement
+    const [rows] = await database.run(query);
+    console.log(`Query: ${rows.length} found.`);
+    rows.forEach(row => console.log(row));
+  }
+  quickstart().catch(console.error);
   // [END spanner_quickstart]
 }
-
-const args = process.argv.slice(2);
-quickstart(...args).catch(console.error);
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
+main(...process.argv.slice(2));

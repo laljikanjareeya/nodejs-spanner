@@ -1582,7 +1582,7 @@ class Database extends common.GrpcServiceObject {
    *   const transaction = data[0];
    * });
    *
-   * @example <caption>include:samples/transaction.js</caption>
+   * @example <caption>include:samples/transaction-read-only.js</caption>
    * region_tag:spanner_read_only_transaction
    * Read-only transaction:
    */
@@ -2478,7 +2478,7 @@ class Database extends common.GrpcServiceObject {
    *   });
    * });
    *
-   * @example <caption>include:samples/transaction.js</caption>
+   * @example <caption>include:samples/transaction-read-write.js</caption>
    * region_tag:spanner_read_write_transaction
    * Read-write transaction:
    */
