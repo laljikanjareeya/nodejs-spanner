@@ -2735,7 +2735,7 @@ class Database extends common.GrpcServiceObject {
    *     // Database schema updated successfully.
    *   });
    *
-   * @example <caption>include:samples/schema.js</caption>
+   * @example <caption>include:samples/add-column.js</caption>
    * region_tag:spanner_add_column
    * Adding a column:
    *
