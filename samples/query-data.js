@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Get Commit stats
-//  usage: node getCommitStats <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Query Data
+//  usage: node queryData <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -23,9 +23,9 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_get_commit_stats]
+  // [START spanner_query_data]
   /**
-   * TODO(developer): Uncomment the following lines before running the sample.
+   * TODO(developer): Uncomment these variables before running the sample.
    */
   // const instanceId = 'my-instance';
   // const databaseId = 'my-database';
@@ -39,35 +39,34 @@ function main(
     projectId: projectId,
   });
 
-  async function getCommitStats() {
-    // Gets a reference to a Cloud Spanner instance and database.
+  async function queryData() {
+    // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
 
-    // Instantiate Spanner table objects.
-    const albumsTable = database.table('Albums');
+    const query = {
+      sql: 'SELECT SingerId, AlbumId, AlbumTitle FROM Albums',
+    };
 
-    // Updates rows in the Venues table.
+    // Queries rows from the Albums table
     try {
-      const [response] = await albumsTable.upsert(
-        [
-          {SingerId: '1', AlbumId: '1', MarketingBudget: '200000'},
-          {SingerId: '2', AlbumId: '2', MarketingBudget: '400000'},
-        ],
-        {returnCommitStats: true}
-      );
-      console.log(
-        `Updated data with ${response.commitStats.mutationCount} mutations.`
-      );
+      const [rows] = await database.run(query);
+
+      rows.forEach(row => {
+        const json = row.toJSON();
+        console.log(
+          `SingerId: ${json.SingerId}, AlbumId: ${json.AlbumId}, AlbumTitle: ${json.AlbumTitle}`
+        );
+      });
     } catch (err) {
       console.error('ERROR:', err);
     } finally {
       // Close the database when finished.
-      database.close();
+      await database.close();
     }
   }
-  getCommitStats();
-  // [END spanner_get_commit_stats]
+  queryData().catch(console.error);
+  // [END spanner_query_data]
 }
 process.on('unhandledRejection', err => {
   console.error(err.message);
