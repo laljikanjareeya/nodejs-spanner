@@ -23,7 +23,6 @@ const pLimit = require('p-limit');
 
 const execSync = cmd => cp.execSync(cmd, {encoding: 'utf-8'});
 
-const batchCmd = 'node batch.js';
 const crudCmd = 'node crud.js';
 const schemaCmd = 'node schema.js';
 const indexingCmd = 'node indexing.js';
@@ -531,7 +530,7 @@ describe('Spanner', () => {
   // batch_client
   it('should create and execute query partitions', async () => {
     const output = execSync(
-      `${batchCmd} create-and-execute-query-partitions ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
+      `node batch-create-and-execute-query-partitions ${INSTANCE_ID} ${DATABASE_ID} ${PROJECT_ID}`
     );
     assert.match(output, /Successfully created \d query partitions\./);
     assert.match(output, /Successfully received \d from executed partitions\./);
@@ -549,7 +548,7 @@ describe('Spanner', () => {
     const partition = JSON.stringify(partitions[0]);
 
     const output = execSync(
-      `${batchCmd} execute-partition ${INSTANCE_ID} ${DATABASE_ID} '${identifier}' '${partition}' ${PROJECT_ID}`
+      `node batch-execute-partition ${INSTANCE_ID} ${DATABASE_ID} '${identifier}' '${partition}' ${PROJECT_ID}`
     );
     assert.match(output, /Successfully received \d from executed partition\./);
     await transaction.close();
