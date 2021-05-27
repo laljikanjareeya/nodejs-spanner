@@ -1,4 +1,4 @@
-// Copyright 2020 Google LLC
+// Copyright 2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // sample-metadata:
-//  title: Update Data with numeric Column
-//  usage: node updateWithNumericData <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+//  title: Create Table with datatypes
+//  usage: node createTableWithDatatypes <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
 
 'use strict';
 
@@ -23,7 +23,7 @@ function main(
   databaseId = 'my-database',
   projectId = 'my-project-id'
 ) {
-  // [START spanner_update_data_with_numeric_column]
+  // [START spanner_create_table_with_datatypes]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
@@ -39,45 +39,36 @@ function main(
     projectId: projectId,
   });
 
-  async function updateWithNumericData() {
+  async function createTableWithDatatypes() {
     // Gets a reference to a Cloud Spanner instance and database
     const instance = spanner.instance(instanceId);
     const database = instance.database(databaseId);
 
-    // Instantiate Spanner table objects.
-    const venuesTable = database.table('Venues');
-
-    const data = [
-      {
-        VenueId: '4',
-        Revenue: Spanner.numeric('35000'),
-        LastUpdateTime: 'spanner.commit_timestamp()',
-      },
-      {
-        VenueId: '19',
-        Revenue: Spanner.numeric('104500'),
-        LastUpdateTime: 'spanner.commit_timestamp()',
-      },
-      {
-        VenueId: '42',
-        Revenue: Spanner.numeric('99999999999999999999999999999.99'),
-        LastUpdateTime: 'spanner.commit_timestamp()',
-      },
+    const request = [
+      `CREATE TABLE Venues (
+                VenueId                INT64 NOT NULL,
+                VenueName              STRING(100),
+                VenueInfo              BYTES(MAX),
+                Capacity               INT64,
+                AvailableDates         ARRAY<DATE>,
+                LastContactDate        Date,
+                OutdoorVenue           BOOL,
+                PopularityScore        FLOAT64,
+                LastUpdateTime TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true)
+              ) PRIMARY KEY (VenueId)`,
     ];
 
-    // Updates rows in the Venues table.
-    try {
-      await venuesTable.update(data);
-      console.log('Updated data.');
-    } catch (err) {
-      console.error('ERROR:', err);
-    } finally {
-      // Close the database when finished.
-      database.close();
-    }
+    // Creates a table in an existing database.
+    const [operation] = await database.updateSchema(request);
+
+    console.log(`Waiting for operation on ${databaseId} to complete...`);
+
+    await operation.promise();
+
+    console.log(`Created table Venues in database ${databaseId}.`);
   }
-  updateWithNumericData().catch(console.error);
-  // [END spanner_update_data_with_numeric_column]
+  createTableWithDatatypes().catch(console.error);
+  // [END spanner_create_table_with_datatypes]
 }
 process.on('unhandledRejection', err => {
   console.error(err.message);

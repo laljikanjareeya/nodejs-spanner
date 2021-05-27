@@ -12,42 +12,56 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// sample-metadata:
+//  title: Add Numeric Column
+//  usage: node addNumericColumn <INSTANCE_ID> <DATABASE_ID> <PROJECT_ID>
+
 'use strict';
 
-async function addNumericColumn(instanceId, databaseId, projectId) {
+function main(
+  instanceId = 'my-instance',
+  databaseId = 'my-database',
+  projectId = 'my-project-id'
+) {
   // [START spanner_add_numeric_column]
-  // Imports the Google Cloud client library.
-  const {Spanner} = require('@google-cloud/spanner');
-
   /**
-   * TODO(developer): Uncomment the following lines before running the sample.
+   * TODO(developer): Uncomment these variables before running the sample.
    */
-  // const projectId = 'my-project-id';
   // const instanceId = 'my-instance';
   // const databaseId = 'my-database';
+  // const projectId = 'my-project-id';
 
-  // Creates a client
+  // Imports the Google Cloud Spanner client library
+  const {Spanner} = require('@google-cloud/spanner');
+
+  // Instantiates a client
   const spanner = new Spanner({
     projectId: projectId,
   });
 
-  // Gets a reference to a Cloud Spanner instance.
-  const instance = spanner.instance(instanceId);
-  const database = instance.database(databaseId);
+  async function addNumericColumn() {
+    // Gets a reference to a Cloud Spanner instance and database
+    const instance = spanner.instance(instanceId);
+    const database = instance.database(databaseId);
 
-  const request = ['ALTER TABLE Venues ADD COLUMN Revenue NUMERIC'];
+    const request = ['ALTER TABLE Venues ADD COLUMN Revenue NUMERIC'];
 
-  // Alter existing table to add a column.
-  const [operation] = await database.updateSchema(request);
+    // Alter existing table to add a column.
+    const [operation] = await database.updateSchema(request);
 
-  console.log(`Waiting for operation on ${databaseId} to complete...`);
+    console.log(`Waiting for operation on ${databaseId} to complete...`);
 
-  await operation.promise();
+    await operation.promise();
 
-  console.log(
-    `Added Revenue column to Venues table in database ${databaseId}.`
-  );
+    console.log(
+      `Added Revenue column to Venues table in database ${databaseId}.`
+    );
+  }
+  addNumericColumn().catch(console.error);
   // [END spanner_add_numeric_column]
 }
-
-module.exports.addNumericColumn = addNumericColumn;
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
+main(...process.argv.slice(2));
