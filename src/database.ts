@@ -48,8 +48,8 @@ import {PartialResultStream, Row} from './partial-result-stream';
 import {Session} from './session';
 import {
   isSessionNotFoundError,
+  SessionLeakError,
   SessionPool,
-  SessionPoolCloseCallback,
   SessionPoolInterface,
   SessionPoolOptions,
 } from './session-pool';
@@ -239,6 +239,10 @@ export interface RestoreOptions {
   gaxOptions?: CallOptions;
 }
 
+export interface CloseDatabaseCallback {
+  (error?: SessionLeakError): void;
+}
+
 /**
  * Create a Database object to interact with a Cloud Spanner database.
  *
@@ -407,6 +411,9 @@ class Database extends common.GrpcServiceObject {
    * @property {number} count The number of sessions to create.
    * @property {object.<string, string>} [labels] Labels to apply to each
    *     session.
+   * @property {object} [gaxOptions] Call options,
+   *     See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions}
+   *     for more details.
    */
   /**
    * @typedef {array} BatchCreateSessionsResponse
@@ -505,7 +512,7 @@ class Database extends common.GrpcServiceObject {
    * @see {@link BatchTransaction#identifier} to generate an identifier.
    *
    * @param {TransactionIdentifier} identifier The transaction identifier.
-   * @param {TransactionOptions} [options] [Transaction options](https://cloud.google.com/spanner/docs/timestamp-bounds).
+   * @param {TimestampBounds} [options] [Transaction options](https://cloud.google.com/spanner/docs/timestamp-bounds).
    * @returns {BatchTransaction} A batch transaction object.
    *
    * @example
@@ -535,7 +542,7 @@ class Database extends common.GrpcServiceObject {
     transaction.readTimestamp = identifier.timestamp as PreciseDate;
     return transaction;
   }
-  close(callback: SessionPoolCloseCallback): void;
+  close(callback: CloseDatabaseCallback): void;
   close(): Promise<DatabaseCloseResponse>;
   /**
    * @callback CloseDatabaseCallback
@@ -573,7 +580,7 @@ class Database extends common.GrpcServiceObject {
    * });
    */
   close(
-    callback?: SessionPoolCloseCallback
+    callback?: CloseDatabaseCallback
   ): void | Promise<DatabaseCloseResponse> {
     const key = this.id!.split('/').pop();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -602,7 +609,7 @@ class Database extends common.GrpcServiceObject {
   /**
    * Create a transaction that can be used for batch querying.
    *
-   * @param {TransactionOptions} [options] [Transaction options](https://cloud.google.com/spanner/docs/timestamp-bounds).
+   * @param {TimestampBounds} [options] [Transaction options](https://cloud.google.com/spanner/docs/timestamp-bounds).
    * @param {CreateTransactionCallback} [callback] Callback function.
    * @returns {Promise<CreateTransactionResponse>}
    */
@@ -685,7 +692,7 @@ class Database extends common.GrpcServiceObject {
    * @see {@link v1.SpannerClient#createSession}
    * @see [CreateSession API Documentation](https://cloud.google.com/spanner/docs/reference/rpc/google.spanner.v1#google.spanner.v1.Spanner.CreateSession)
    *
-   * @param {object} [options] Configuration object.
+   * @param {CreateSessionOptions} [options] Configuration object.
    * @param {CreateSessionCallback} [callback] Callback function.
    * @returns {Promise<CreateSessionResponse>}
    *
@@ -875,6 +882,15 @@ class Database extends common.GrpcServiceObject {
   delete(callback: DatabaseDeleteCallback): void;
   delete(gaxOptions: CallOptions, callback: DatabaseDeleteCallback): void;
   /**
+   * @typedef {array} DatabaseDeleteResponse
+   * @property {object} 0 The full API response.
+   */
+  /**
+   * @callback DatabaseDeleteCallback
+   * @param {?Error} err Request error, if any.
+   * @param {object} apiResponse The full API response.
+   */
+  /**
    * Delete the database.
    *
    * Wrapper around {@link v1.DatabaseAdminClient#dropDatabase}.
@@ -1019,6 +1035,9 @@ class Database extends common.GrpcServiceObject {
    * @param {options} [options] Configuration object.
    * @param {boolean} [options.autoCreate=false] Automatically create the
    *     object if it does not exist.
+   * @param {object} [options.gaxOptions] Call options.
+   *     See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions}
+   *     for more details.
    * @param {GetDatabaseCallback} [callback] Callback function.
    * @returns {Promise<GetDatabaseResponse>}
    *
@@ -1899,7 +1918,7 @@ class Database extends common.GrpcServiceObject {
    * When this call completes, the restore will have commenced but will not
    * necessarily have completed.
    *
-   * @param backupPath The path of the backup to restore.
+   * @param {string} backupPath The path of the backup to restore.
    * @param {object} [gaxOptions] Request configuration options,
    *     See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions}
    *     for more details.
