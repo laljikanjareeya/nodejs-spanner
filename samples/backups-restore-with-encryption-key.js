@@ -13,65 +13,75 @@
  * limitations under the License.
  */
 
+// sample-metadata:
+//  title: Restores a Cloud Spanner database from a backup with an encryption key
+//  usage: node restoreBackupWithEncryptionKey <INSTANCE_ID> <DATABASE_ID> <BACKUP_ID> <PROJECT_ID> <KEY_NAME>
+
 'use strict';
 
-async function restoreBackupWithEncryptionKey(
-  instanceId,
-  databaseId,
-  backupId,
-  projectId,
-  keyName
+function main(
+  instanceId = 'my-instance',
+  databaseId = 'my-database',
+  backupId = 'my-backup',
+  projectId = 'my-project-id',
+  keyName = 'key-name'
 ) {
   // [START spanner_restore_backup_with_encryption_key]
-  // Imports the Google Cloud client library and precise date library
-  const {Spanner} = require('@google-cloud/spanner');
-
   /**
-   * TODO(developer): Uncomment the following lines before running the sample.
+   * TODO(developer): Uncomment these variables before running the sample.
    */
-  // const projectId = 'my-project-id';
   // const instanceId = 'my-instance';
   // const databaseId = 'my-database';
   // const backupId = 'my-backup';
+  // const projectId = 'my-project-id';
   // const keyName =
   //   'projects/my-project-id/my-region/keyRings/my-key-ring/cryptoKeys/my-key';
 
-  // Creates a client
+  // Imports the Google Cloud Spanner client library
+  const {Spanner} = require('@google-cloud/spanner');
+
+  // Instantiates a client
   const spanner = new Spanner({
     projectId: projectId,
   });
 
-  // Gets a reference to a Cloud Spanner instance and database
-  const instance = spanner.instance(instanceId);
-  const database = instance.database(databaseId);
+  async function restoreBackupWithEncryptionKey() {
+    // Gets a reference to a Cloud Spanner instance and database
+    const instance = spanner.instance(instanceId);
+    const database = instance.database(databaseId);
 
-  // Restore the database
-  console.log(
-    `Restoring database ${database.formattedName_} from backup ${backupId}.`
-  );
-  const [, restoreOperation] = await database.restore(
-    `projects/${projectId}/instances/${instanceId}/backups/${backupId}`,
-    {
-      encryptionConfig: {
-        encryptionType: 'CUSTOMER_MANAGED_ENCRYPTION',
-        kmsKeyName: keyName,
-      },
-    }
-  );
+    // Restore the database
+    console.log(
+      `Restoring database ${database.formattedName_} from backup ${backupId}.`
+    );
+    const [, restoreOperation] = await database.restore(
+      `projects/${projectId}/instances/${instanceId}/backups/${backupId}`,
+      {
+        encryptionConfig: {
+          encryptionType: 'CUSTOMER_MANAGED_ENCRYPTION',
+          kmsKeyName: keyName,
+        },
+      }
+    );
 
-  // Wait for restore to complete
-  console.log('Waiting for database restore to complete...');
-  await restoreOperation.promise();
+    // Wait for restore to complete
+    console.log('Waiting for database restore to complete...');
+    await restoreOperation.promise();
 
-  console.log('Database restored from backup.');
-  const restoreInfo = await database.getRestoreInfo();
-  const [data] = await database.get();
-  console.log(
-    `Database ${restoreInfo.backupInfo.sourceDatabase} was restored ` +
-      `to ${databaseId} from backup ${restoreInfo.backupInfo.backup} ` +
-      `using encryption key ${data.metadata.encryptionConfig.kmsKeyName}.`
-  );
+    console.log('Database restored from backup.');
+    const restoreInfo = await database.getRestoreInfo();
+    const [data] = await database.get();
+    console.log(
+      `Database ${restoreInfo.backupInfo.sourceDatabase} was restored ` +
+        `to ${databaseId} from backup ${restoreInfo.backupInfo.backup} ` +
+        `using encryption key ${data.metadata.encryptionConfig.kmsKeyName}.`
+    );
+  }
+  restoreBackupWithEncryptionKey().catch(console.error);
   // [END spanner_restore_backup_with_encryption_key]
 }
-
-module.exports.restoreBackupWithEncryptionKey = restoreBackupWithEncryptionKey;
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
+main(...process.argv.slice(2));

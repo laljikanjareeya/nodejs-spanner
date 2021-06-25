@@ -13,42 +13,55 @@
  * limitations under the License.
  */
 
+// sample-metadata:
+//  title: Deletes a backup
+//  usage: node deleteBackup <INSTANCE_ID> <BACKUP_ID> <PROJECT_ID>
+
 'use strict';
 
-async function deleteBackup(instanceId, databaseId, backupId, projectId) {
+function main(
+  instanceId = 'my-instance',
+  backupId = 'my-backup',
+  projectId = 'my-project-id'
+) {
   // [START spanner_delete_backup]
-  // Imports the Google Cloud client library
+  /**
+   * TODO(developer): Uncomment these variables before running the sample.
+   */
+  // const instanceId = 'my-instance';
+  // const backupId = 'my-backup';
+  // const projectId = 'my-project-id';
+
+  // Imports the Google Cloud Spanner client library
   const {Spanner} = require('@google-cloud/spanner');
 
-  /**
-   * TODO(developer): Uncomment the following lines before running the sample.
-   */
-  // const projectId = 'my-project-id';
-  // const instanceId = 'my-instance';
-  // const databaseId = 'my-database';
-  // const backupId = 'my-backup';
-
-  // Creates a client
+  // Instantiates a client
   const spanner = new Spanner({
     projectId: projectId,
   });
 
-  // Gets a reference to a Cloud Spanner instance and backup
-  const instance = spanner.instance(instanceId);
-  const backup = instance.backup(backupId);
+  async function deleteBackup() {
+    // Gets a reference to a Cloud Spanner instance and database
+    const instance = spanner.instance(instanceId);
+    const backup = instance.backup(backupId);
 
-  // Delete the backup
-  console.log(`Deleting backup ${backupId}.`);
-  await backup.delete();
+    // Delete the backup
+    console.log(`Deleting backup ${backupId}.`);
+    await backup.delete();
 
-  // Verify backup no longer exists
-  const exists = await backup.exists();
-  if (exists) {
-    console.error('Error: backup still exists.');
-  } else {
-    console.log('Backup deleted.');
+    // Verify backup no longer exists
+    const exists = await backup.exists();
+    if (exists) {
+      console.error('Error: backup still exists.');
+    } else {
+      console.log('Backup deleted.');
+    }
   }
+  deleteBackup().catch(console.error);
   // [END spanner_delete_backup]
 }
-
-module.exports.deleteBackup = deleteBackup;
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
+main(...process.argv.slice(2));

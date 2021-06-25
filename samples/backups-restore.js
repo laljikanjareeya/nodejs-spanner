@@ -13,52 +13,67 @@
  * limitations under the License.
  */
 
+// sample-metadata:
+//  title: Restores a Cloud Spanner database from a backup
+//  usage: node restoreBackup <INSTANCE_ID> <DATABASE_ID> <BACKUP_ID> <PROJECT_ID>
+
 'use strict';
 
-async function restoreBackup(instanceId, databaseId, backupId, projectId) {
+function main(
+  instanceId = 'my-instance',
+  databaseId = 'my-database',
+  backupId = 'my-backup',
+  projectId = 'my-project-id'
+) {
   // [START spanner_restore_backup]
+  /**
+   * TODO(developer): Uncomment these variables before running the sample.
+   */
+  // const instanceId = 'my-instance';
+  // const databaseId = 'my-database';
+  // const backupId = 'my-backup';
+  // const projectId = 'my-project-id';
+
   // Imports the Google Cloud client library and precise date library
   const {Spanner} = require('@google-cloud/spanner');
   const {PreciseDate} = require('@google-cloud/precise-date');
 
-  /**
-   * TODO(developer): Uncomment the following lines before running the sample.
-   */
-  // const projectId = 'my-project-id';
-  // const instanceId = 'my-instance';
-  // const databaseId = 'my-database';
-  // const backupId = 'my-backup';
-
-  // Creates a client
+  // Instantiates a client
   const spanner = new Spanner({
     projectId: projectId,
   });
 
-  // Gets a reference to a Cloud Spanner instance and database
-  const instance = spanner.instance(instanceId);
-  const database = instance.database(databaseId);
+  async function restoreBackup() {
+    // Gets a reference to a Cloud Spanner instance and database
+    const instance = spanner.instance(instanceId);
+    const database = instance.database(databaseId);
 
-  // Restore the database
-  console.log(
-    `Restoring database ${database.formattedName_} from backup ${backupId}.`
-  );
-  const [, restoreOperation] = await database.restore(
-    `projects/${projectId}/instances/${instanceId}/backups/${backupId}`
-  );
+    // Restore the database
+    console.log(
+      `Restoring database ${database.formattedName_} from backup ${backupId}.`
+    );
+    const [, restoreOperation] = await database.restore(
+      `projects/${projectId}/instances/${instanceId}/backups/${backupId}`
+    );
 
-  // Wait for restore to complete
-  console.log('Waiting for database restore to complete...');
-  await restoreOperation.promise();
+    // Wait for restore to complete
+    console.log('Waiting for database restore to complete...');
+    await restoreOperation.promise();
 
-  console.log('Database restored from backup.');
-  const restoreInfo = await database.getRestoreInfo();
-  console.log(
-    `Database ${restoreInfo.backupInfo.sourceDatabase} was restored ` +
-      `to ${databaseId} from backup ${restoreInfo.backupInfo.backup} ` +
-      'with version time ' +
-      `${new PreciseDate(restoreInfo.backupInfo.versionTime).toISOString()}.`
-  );
+    console.log('Database restored from backup.');
+    const restoreInfo = await database.getRestoreInfo();
+    console.log(
+      `Database ${restoreInfo.backupInfo.sourceDatabase} was restored ` +
+        `to ${databaseId} from backup ${restoreInfo.backupInfo.backup} ` +
+        'with version time ' +
+        `${new PreciseDate(restoreInfo.backupInfo.versionTime).toISOString()}.`
+    );
+  }
+  restoreBackup().catch(console.error);
   // [END spanner_restore_backup]
 }
-
-module.exports.restoreBackup = restoreBackup;
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
+main(...process.argv.slice(2));

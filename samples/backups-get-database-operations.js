@@ -13,48 +13,58 @@
  * limitations under the License.
  */
 
+// sample-metadata:
+//  title: Lists all database operations in the instance
+//  usage: node getDatabaseOperations <INSTANCE_ID> <PROJECT_ID>
+
 'use strict';
 
-async function getDatabaseOperations(instanceId, projectId) {
+function main(instanceId = 'my-instance', projectId = 'my-project-id') {
   // [START spanner_list_database_operations]
+  /**
+   * TODO(developer): Uncomment these variables before running the sample.
+   */
+  // const instanceId = 'my-instance';
+  // const projectId = 'my-project-id';
+
   // Imports the Google Cloud client library
   const {Spanner, protos} = require('@google-cloud/spanner');
 
-  /**
-   * TODO(developer): Uncomment the following lines before running the sample.
-   */
-  // const projectId = 'my-project-id';
-  // const instanceId = 'my-instance';
-
-  // Creates a client
+  // Instantiates a client
   const spanner = new Spanner({
     projectId: projectId,
   });
 
-  // Gets a reference to a Cloud Spanner instance
-  const instance = spanner.instance(instanceId);
+  async function getDatabaseOperations() {
+    // Gets a reference to a Cloud Spanner instance
+    const instance = spanner.instance(instanceId);
 
-  // List database operations
-  try {
-    const [databaseOperations] = await instance.getDatabaseOperations({
-      filter:
-        '(metadata.@type:type.googleapis.com/google.spanner.admin.database.v1.OptimizeRestoredDatabaseMetadata)',
-    });
-    console.log('Optimize Database Operations:');
-    databaseOperations.forEach(databaseOperation => {
-      const metadata =
-        protos.google.spanner.admin.database.v1.OptimizeRestoredDatabaseMetadata.decode(
-          databaseOperation.metadata.value
+    // List database operations
+    try {
+      const [databaseOperations] = await instance.getDatabaseOperations({
+        filter:
+          '(metadata.@type:type.googleapis.com/google.spanner.admin.database.v1.OptimizeRestoredDatabaseMetadata)',
+      });
+      console.log('Optimize Database Operations:');
+      databaseOperations.forEach(databaseOperation => {
+        const metadata =
+          protos.google.spanner.admin.database.v1.OptimizeRestoredDatabaseMetadata.decode(
+            databaseOperation.metadata.value
+          );
+        console.log(
+          `Database ${metadata.name} restored from backup is ` +
+            `${metadata.progress.progressPercent}% optimized.`
         );
-      console.log(
-        `Database ${metadata.name} restored from backup is ` +
-          `${metadata.progress.progressPercent}% optimized.`
-      );
-    });
-  } catch (err) {
-    console.error('ERROR:', err);
+      });
+    } catch (err) {
+      console.error('ERROR:', err);
+    }
   }
+  getDatabaseOperations().catch(console.error);
   // [END spanner_list_database_operations]
 }
-
-module.exports.getDatabaseOperations = getDatabaseOperations;
+process.on('unhandledRejection', err => {
+  console.error(err.message);
+  process.exitCode = 1;
+});
+main(...process.argv.slice(2));
